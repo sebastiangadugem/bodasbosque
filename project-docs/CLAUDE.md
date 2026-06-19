@@ -2,6 +2,11 @@
 
 Contexto operativo para Claude Code. Leer antes de cualquier modificación.
 
+> 📌 **Progreso reciente:** ver [`SESSION_PROGRESS.md`](./SESSION_PROGRESS.md) — resume
+> el rediseño, la optimización de imágenes y el fix de despliegue en Vercel
+> (commit `1bfd870`). El sitio ya está en GitHub (`sebastiangadugem/bodasbosque`)
+> con deploy automático en Vercel.
+
 ---
 
 ## Proyecto
