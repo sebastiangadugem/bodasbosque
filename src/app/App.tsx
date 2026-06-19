@@ -1,0 +1,1303 @@
+import { useState, useRef, useEffect } from "react";
+
+const IMAGES = {
+  hero: "https://images.unsplash.com/photo-1769540209381-fe235a5d9355?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1600&q=85",
+  coupleForest: "https://images.unsplash.com/photo-1769540209510-ec7f53f1ef21?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1200&q=85",
+  forestTrees: "https://images.unsplash.com/photo-1477862096227-3a1bb3b08330?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1200&q=85",
+  weddingTable: "https://images.unsplash.com/photo-1773370812452-7f1bb79f6d75?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=900&q=85",
+  weddingFlowers: "https://images.unsplash.com/photo-1773370812335-cb6ab11cc37f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=900&q=85",
+  newlyweds: "https://images.unsplash.com/photo-1748451728185-496b1ba2c616?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=900&q=85",
+  forestLight: "https://images.unsplash.com/photo-1603976328254-717f448a6183?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=900&q=85",
+  ceremony: "https://images.unsplash.com/photo-1570074760215-606497449167?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=900&q=85",
+};
+
+const RINCON_IMGS = [
+  "/venues_bosque/rincon/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%203.54.43%E2%80%AFp.m..jpg",
+  "/venues_bosque/rincon/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%203.55.12%E2%80%AFp.m..jpg",
+  "/venues_bosque/rincon/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%203.55.27%E2%80%AFp.m..jpg",
+  "/venues_bosque/rincon/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%203.55.42%E2%80%AFp.m..jpg",
+  "/venues_bosque/rincon/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%203.56.06%E2%80%AFp.m..jpg",
+  "/venues_bosque/rincon/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%203.56.14%E2%80%AFp.m..jpg",
+  "/venues_bosque/rincon/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%203.56.25%E2%80%AFp.m..jpg",
+  "/venues_bosque/rincon/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%203.56.30%E2%80%AFp.m..jpg",
+  "/venues_bosque/rincon/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%203.56.37%E2%80%AFp.m..jpg",
+  "/venues_bosque/rincon/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%203.56.51%E2%80%AFp.m..jpg",
+  "/venues_bosque/rincon/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%203.57.04%E2%80%AFp.m..jpg",
+  "/venues_bosque/rincon/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%203.57.17%E2%80%AFp.m..jpg",
+  "/venues_bosque/rincon/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%203.57.45%E2%80%AFp.m..jpg",
+  "/venues_bosque/rincon/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%203.57.57%E2%80%AFp.m..jpg",
+  "/venues_bosque/rincon/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%203.58.09%E2%80%AFp.m..jpg",
+  "/venues_bosque/rincon/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%203.58.26%E2%80%AFp.m..jpg",
+  "/venues_bosque/rincon/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%203.58.46%E2%80%AFp.m..jpg",
+  "/venues_bosque/rincon/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.00.03%E2%80%AFp.m..jpg",
+  "/venues_bosque/rincon/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.00.27%E2%80%AFp.m..jpg",
+  "/venues_bosque/rincon/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.00.32%E2%80%AFp.m..jpg",
+  "/venues_bosque/rincon/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.00.43%E2%80%AFp.m..jpg",
+  "/venues_bosque/rincon/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.01.34%E2%80%AFp.m..jpg",
+];
+
+const SUSPIRO_IMGS = [
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.02.02%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.02.16%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.02.25%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.02.29%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.02.31%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.02.34%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.02.35%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.02.37%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.02.45%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.02.48%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.03.01%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.03.04%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.03.06%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.03.09%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.03.11%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.03.13%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.03.17%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.03.25%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.03.28%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.03.30%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.03.42%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.03.45%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.03.49%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.03.53%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.03.55%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.04.10%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.04.12%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.04.17%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.04.20%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.04.23%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.04.26%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.04.32%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.04.34%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.04.36%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.04.43%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.04.47%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.04.50%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.04.52%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.04.54%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.04.56%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.05.01%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.05.04%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.05.15%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.05.18%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.05.20%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.05.25%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.05.30%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.05.35%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.05.38%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.05.41%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.05.46%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.05.51%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.05.56%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.05.58%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.07.07%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.07.39%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.08.15%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.08.22%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.08.24%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.08.31%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.09.03%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.09.10%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.09.25%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.09.30%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.09.45%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.09.53%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.10.02%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.10.12%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.10.21%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.10.23%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.10.28%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.10.30%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.10.39%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.10.45%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.10.49%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.10.53%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.11.03%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.11.05%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.11.13%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.11.19%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.11.23%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.11.25%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.11.28%E2%80%AFp.m..jpg",
+  "/venues_bosque/suspiro/Captura%20de%20pantalla%202026-06-16%20a%20la%28s%29%204.11.38%E2%80%AFp.m..jpg",
+];
+
+const SPACES = [
+  {
+    key: "rincon",
+    name: "Rincón del Bosque",
+    location: "Estado de México",
+    desc: "Un claro entre encinos centenarios. Íntimo, umbroso y lleno de musgo.",
+    images: RINCON_IMGS,
+  },
+  {
+    key: "suspiro",
+    name: "Suspiro",
+    location: "Morelos",
+    desc: "Jardín forestal de piedra volcánica, ficus y luces entre las ramas.",
+    images: SUSPIRO_IMGS,
+  },
+];
+
+
+const PARTNERS = [
+  { name: "Boschetto", logo: "https://scontent-qro3-1.xx.fbcdn.net/v/t39.30808-6/463032926_122103926468566339_3063976417530509406_n.jpg?stp=dst-jpg_tt6&cstp=mx1080x1080&ctp=s1080x1080&_nc_cat=102&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=ugKiGq5obasQ7kNvwHEjCjS&_nc_oc=AdpfJygOnvW-vKdGOQHylBZXToQeSp5tJQgBBK4tA0qgSa6sOjAOfJGEoEUQuxzEjU0&_nc_zt=23&_nc_ht=scontent-qro3-1.xx&_nc_gid=0F3D-Wvi9roHl5LitoTuhA&_nc_ss=7b289&oh=00_Af_LybT4vICD6BiGoPE1jTRccP5SfBYnjIAt3PEmk6izfw&oe=6A3A197F" },
+  { name: "Rincón del Bosque", logo: "https://scontent-qro1-1.xx.fbcdn.net/v/t39.30808-6/326387606_580792463483031_5082480362902578156_n.jpg?stp=dst-jpg_tt6&cstp=mx1200x1200&ctp=s1200x1200&_nc_cat=104&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=G-xT2q68L8YQ7kNvwEFJa_B&_nc_oc=AdqS2zLxwWsJ2gfgwLUpG1fwt13CQQRJ9t0tdwulKDzLI7HpZ6SW5yuDyDXLuTAd6pw&_nc_zt=23&_nc_ht=scontent-qro1-1.xx&_nc_gid=qTR8pWtbpQ69u6Xb2nP2Tw&_nc_ss=7b289&oh=00_Af-vlikccc8Um00FNXOtRVGXRPl_3O6ebUyx_f8eUxLe5g&oe=6A3A249D" },
+  { name: "Bodas.com.mx", logo: "https://www.bodas.com.mx/assets/img/logos/gen_logoHeader.svg" },
+  { name: "Arden Wedding Garden", logo: "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/logos/logo_rden_del_bosque.png" },
+];
+
+const SOCIALS = [
+  { platform: "Instagram", handle: "@zahro_bodas", url: "https://www.instagram.com/zahro_bodas?igsh=NTc4MTIwNjQ2YQ==", net: "ig" as const },
+  { platform: "Instagram", handle: "@bodasbosquepremium", url: "https://www.instagram.com/bodasbosquepremium?igsh=dW83cnNiYzR1aW11", net: "ig" as const },
+  { platform: "Facebook", handle: "Zahro Bodas", url: "https://www.facebook.com/zahrobodas?mibextid=LQQJ4d", net: "fb" as const },
+];
+
+const CSS = `
+  @keyframes scrollPulse { 0%,100%{opacity:0.35} 50%{opacity:1} }
+  @keyframes marqueeScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .marquee-mask { -webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent); mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent); }
+  .marquee-track { display: flex; width: max-content; animation: marqueeScroll 48s linear infinite; will-change: transform; transform: translateZ(0); backface-visibility: hidden; }
+
+  /* Skip rendering/painting of off-screen sections — major scroll perf win */
+  .cv-section { content-visibility: auto; contain-intrinsic-size: auto 900px; }
+  .marquee-track:hover { animation-play-state: paused; }
+  .partner-box { width: 150px; height: 70px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; padding: 0 2.25rem; box-sizing: content-box; }
+  .partner-logo { max-height: 70px; max-width: 150px; width: auto; height: auto; object-fit: contain; opacity: 0.6; filter: grayscale(1); transition: opacity 0.4s ease, filter 0.4s ease; }
+  .partner-logo:hover { opacity: 1; filter: grayscale(0); }
+  @media (max-width: 768px) { .partner-box { width: 110px; height: 54px; padding: 0 1.25rem; } .partner-logo { max-height: 54px; max-width: 110px; } .marquee-track { animation-duration: 32s; } }
+
+  /* ── Social cards ── */
+  .social-card { display: flex; align-items: center; gap: 1rem; padding: 1.4rem 1.6rem; border: 1px solid rgba(195,202,168,0.16); background: rgba(195,202,168,0.03); text-decoration: none; transition: background 0.35s ease, border-color 0.35s ease, transform 0.35s ease; }
+  .social-card:hover { background: rgba(195,202,168,0.08); border-color: rgba(195,202,168,0.4); transform: translateY(-3px); }
+  .social-ico { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .social-arrow { margin-left: auto; color: rgba(195,202,168,0.5); transition: color 0.3s ease, transform 0.3s ease; }
+  .social-card:hover .social-arrow { color: #c3caa8; transform: translate(3px,-3px); }
+
+  /* ── Crafted button states: directional fill wipe ── */
+  .btn-wipe { position: relative; overflow: hidden; isolation: isolate; transition: color 0.4s cubic-bezier(0.65,0,0.35,1); }
+  .btn-wipe > * { position: relative; z-index: 1; }
+  .btn-wipe::after { content: ""; position: absolute; inset: 0; z-index: 0; background: var(--wipe, #2e3b2b); transform: scaleY(0); transform-origin: bottom; transition: transform 0.42s cubic-bezier(0.65,0,0.35,1); }
+  .btn-wipe:hover::after { transform: scaleY(1); }
+  .btn-wipe:active { transform: translateY(1px); }
+  /* Arrow that slides on hover with a masked swap */
+  .btn-arrow-wrap { display: inline-flex; align-items: center; gap: 0.55em; }
+  .btn-arrow { display: inline-block; transition: transform 0.4s cubic-bezier(0.65,0,0.35,1); }
+  .btn-wipe:hover .btn-arrow { transform: translateX(5px); }
+  /* Text link underline draw */
+  .link-draw { position: relative; }
+  .link-draw::after { content: ""; position: absolute; left: 0; bottom: -2px; height: 1px; width: 100%; background: currentColor; transform: scaleX(0); transform-origin: right; transition: transform 0.4s cubic-bezier(0.65,0,0.35,1); }
+  .link-draw:hover::after { transform: scaleX(1); transform-origin: left; }
+  .cta-hero:hover { color: #f9f8f4; }
+  .cta-proc:hover { color: #2e3b2b; }
+  .cta-submit:hover { color: #f9f8f4; }
+  @keyframes heroFade { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+  .hero-fade-1 { animation: heroFade 0.8s ease forwards; opacity:0; }
+  .hero-fade-2 { animation: heroFade 0.9s ease 0.12s forwards; opacity:0; }
+  .hero-fade-3 { animation: heroFade 0.9s ease 0.24s forwards; opacity:0; }
+  .hero-fade-4 { animation: heroFade 0.8s ease 0.38s forwards; opacity:0; }
+  html { scroll-behavior: smooth; }
+  * { box-sizing: border-box; }
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-thumb { background: rgba(46,59,43,0.2); border-radius: 2px; }
+
+  /* ── Spacing (desktop ≥1025px) ── */
+  section { padding-top: 4.5rem !important; padding-bottom: 4.5rem !important; }
+
+  /* ── Nav dynamic contrast ── */
+  .nav-bar { transition: background 0.45s ease, box-shadow 0.45s ease, backdrop-filter 0.45s ease; }
+  .nav-logo { transition: color 0.35s ease; }
+  .nav-link { transition: color 0.25s ease !important; }
+
+  /* ── iPad (769 – 1024px) ── */
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .nav-bar { padding-left: 2rem !important; padding-right: 2rem !important; }
+    section { padding-top: 3.5rem !important; padding-bottom: 3.5rem !important; padding-left: 2rem !important; padding-right: 2rem !important; }
+    #inicio { padding-left: 2rem !important; padding-right: 2rem !important; }
+    .four-col-grid { grid-template-columns: repeat(2, 1fr) !important; }
+    .phil-top-grid { gap: 3rem !important; margin-bottom: 3rem !important; }
+    .proc-header { gap: 2.5rem !important; }
+    .contact-grid { gap: 3.5rem !important; }
+    .pull-quote { left: -1rem !important; max-width: 200px !important; }
+    footer { flex-direction: column !important; gap: 1.5rem !important; align-items: flex-start !important; }
+  }
+  @media (min-width: 769px) {
+    .hamburger { display: none !important; }
+  }
+
+  /* ── Mobile (≤768px) ── */
+  @media (max-width: 768px) {
+    .nav-bar { padding-left: 1.25rem !important; padding-right: 1.25rem !important; padding-top: 0.85rem !important; padding-bottom: 0.85rem !important; }
+    section { padding-top: 3rem !important; padding-bottom: 3rem !important; padding-left: 1.25rem !important; padding-right: 1.25rem !important; }
+    #inicio { padding-bottom: 4rem !important; padding-left: 1.25rem !important; padding-right: 1.25rem !important; }
+    .two-col-grid { grid-template-columns: 1fr !important; gap: 2rem !important; }
+    .three-col-grid { grid-template-columns: 1fr !important; gap: 1.75rem !important; }
+    .four-col-grid { grid-template-columns: 1fr 1fr !important; gap: 1px !important; }
+    .five-col-grid { grid-template-columns: 1fr 1fr !important; }
+    .navlinks { display: none !important; }
+    .hamburger { display: flex !important; }
+    .pull-quote { display: none !important; }
+    .phil-top-grid { margin-bottom: 2rem !important; }
+    .pillar-eyebrow { margin-bottom: 1.25rem !important; }
+    .proc-header { margin-bottom: 1.75rem !important; gap: 2rem !important; }
+    .proc-cta { margin-top: 1.25rem !important; flex-direction: column !important; align-items: flex-start !important; }
+    .contact-grid { gap: 2rem !important; }
+    footer { flex-direction: column !important; gap: 1.25rem !important; padding-left: 1.25rem !important; padding-right: 1.25rem !important; }
+    .footer-links { justify-content: flex-start !important; flex-wrap: wrap !important; gap: 1.25rem !important; }
+    .hero-h1 { font-size: clamp(2.6rem, 12vw, 4rem) !important; }
+    .hero-cta-row { flex-direction: column !important; }
+    .hero-cta-row a { text-align: center !important; }
+  }
+
+  /* ── Small mobile (≤480px) ── */
+  @media (max-width: 480px) {
+    .four-col-grid { grid-template-columns: 1fr !important; }
+    .five-col-grid { grid-template-columns: 1fr !important; }
+    section { padding-top: 2.5rem !important; padding-bottom: 2.5rem !important; }
+  }
+
+  div:hover .card-line { width: 100% !important; }
+
+  /* ── Pillar card ── */
+  .pillar-card { transition: box-shadow 0.4s ease; }
+  .pillar-card:hover { box-shadow: 0 8px 32px rgba(46,59,43,0.13); }
+  .pillar-card.pillar-active { box-shadow: 0 14px 44px rgba(46,59,43,0.18); }
+  .pillar-img { transition: opacity 1000ms ease; }
+
+  /* ── Venue cinematic strip ── */
+  .venue-strip-img { transition: opacity 1200ms ease, transform 0.9s ease; }
+  .venue-strip:hover .venue-strip-img { transform: scale(1.04); }
+  .venue-desc { opacity: 0; transform: translateY(6px); transition: opacity 0.4s ease, transform 0.4s ease; }
+  .venue-strip:hover .venue-desc { opacity: 1; transform: translateY(0); }
+  .venue-strip-cta { opacity: 0; transition: opacity 0.4s ease 0.06s, color 0.3s, border-color 0.3s; }
+  .venue-strip:hover .venue-strip-cta { opacity: 1; color: #f9f8f4 !important; border-bottom-color: rgba(249,248,244,0.5) !important; }
+  @media (hover: none) { .venue-desc { opacity: 1 !important; transform: none !important; } .venue-strip-cta { opacity: 1 !important; } }
+  @media (max-width: 768px) {
+    .venue-strip { height: 55vw !important; min-height: 280px !important; }
+    .venue-strip-overlay-text { padding: 1.25rem !important; }
+    .venue-thumb-strip { padding: 0.5rem 1.25rem !important; }
+  }
+
+  /* ── Pillar hint ── */
+  .pillar-hint-text { opacity: 0.55; }
+
+  /* ── Process sequential ── */
+  .proc-card { position: relative; }
+  .proc-card:not(:last-child)::after { content: "→"; position: absolute; right: -0.9rem; top: 2.4rem; color: rgba(124,74,54,0.32); font-size: 1.1rem; z-index: 10; pointer-events: none; }
+  @media (max-width: 1025px) { .proc-card::after { display: none !important; } }
+
+  /* ── Modal ── */
+  .venue-modal-backdrop { position: fixed; inset: 0; background: rgba(15,14,12,0.92); z-index: 200; display: flex; align-items: center; justify-content: center; overflow-y: auto; padding: 1rem; }
+  .venue-modal-img { max-height: 68vh; max-width: 86vw; object-fit: contain; display: block; user-select: none; }
+  .venue-modal-btn { background: rgba(249,248,244,0.08); border: 1px solid rgba(249,248,244,0.15); color: #f9f8f4; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.25s; }
+  .venue-modal-btn:hover { background: rgba(249,248,244,0.18); }
+  @media (max-width: 768px) {
+    .venue-modal-img { max-height: 52vh; max-width: 96vw; }
+    .modal-arrows { display: none !important; }
+    .modal-inner { flex-direction: column !important; gap: 0 !important; }
+  }
+`;
+
+export default function App() {
+  /* MARKER-MAKE-KIT-INVOKED */
+
+  // All state hoisted here to avoid hook conflicts in sub-components
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [form, setForm] = useState({ nombre: "", email: "", fecha: "", mensaje: "" });
+  const [sent, setSent] = useState(false);
+
+  // Pillar gallery state
+  const [activePillar, setActivePillar] = useState<string | null>(null);
+  const [pillarIdx, setPillarIdx] = useState<Record<string, number>>({});
+  const pillarIntervals = useRef<Record<string, ReturnType<typeof setInterval>>>({});
+
+  function startPillarCycle(label: string, total: number) {
+    if (pillarIntervals.current[label]) return;
+    pillarIntervals.current[label] = setInterval(() => {
+      setPillarIdx((prev) => ({ ...prev, [label]: ((prev[label] ?? 0) + 1) % total }));
+    }, 2400);
+  }
+
+  function stopPillarCycle(label: string) {
+    clearInterval(pillarIntervals.current[label]);
+    delete pillarIntervals.current[label];
+  }
+
+  // Nav dynamic contrast
+  // "dark" = nav over a dark section → white text, transparent bg
+  // "light" = nav over a light section → forest text, frosted glass backdrop
+  const [navTheme, setNavTheme] = useState<"dark" | "light">("dark");
+
+  useEffect(() => {
+    const DARK_IDS = ["inicio", "espacios"];
+    function updateNav() {
+      const y = 50; // check point 50px from top
+      let isDark = false;
+      for (const id of DARK_IDS) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= y && rect.bottom > y) { isDark = true; break; }
+      }
+      setNavTheme(isDark ? "dark" : "light");
+    }
+    window.addEventListener("scroll", updateNav, { passive: true });
+    updateNav();
+    return () => window.removeEventListener("scroll", updateNav);
+  }, []);
+
+  // Venue modal state
+  const [venueModal, setVenueModal] = useState<{ key: string; idx: number } | null>(null);
+  const activeVenue = venueModal ? SPACES.find((s) => s.key === venueModal.key) : null;
+
+  useEffect(() => {
+    if (!venueModal || !activeVenue) return;
+    const total = activeVenue.images.length;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setVenueModal(null);
+      if (e.key === "ArrowRight") setVenueModal((m) => m ? { ...m, idx: (m.idx + 1) % total } : null);
+      if (e.key === "ArrowLeft") setVenueModal((m) => m ? { ...m, idx: (m.idx - 1 + total) % total } : null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [venueModal, activeVenue]);
+
+  // Venue cover auto-cycling — only ticks while the section is on-screen and tab is visible
+  const [venueAutoIdx, setVenueAutoIdx] = useState<Record<string, number>>({});
+  const espaciosVisible = useRef(false);
+  useEffect(() => {
+    const el = document.getElementById("espacios");
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => { espaciosVisible.current = entry.isIntersecting; },
+      { rootMargin: "100px" }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  useEffect(() => {
+    const intervals: Record<string, ReturnType<typeof setInterval>> = {};
+    SPACES.forEach((space) => {
+      intervals[space.key] = setInterval(() => {
+        if (!espaciosVisible.current || document.hidden) return;
+        setVenueAutoIdx((prev) => ({
+          ...prev,
+          [space.key]: ((prev[space.key] ?? 0) + 1) % Math.min(space.images.length, 8),
+        }));
+      }, 3800);
+    });
+    return () => { Object.values(intervals).forEach(clearInterval); };
+  }, []);
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setSent(true);
+  }
+
+  const inputStyle: React.CSSProperties = {
+    width: "100%",
+    background: "transparent",
+    border: "none",
+    borderBottom: "1px solid rgba(46,59,43,0.18)",
+    padding: "0.75rem 0",
+    fontFamily: "'DM Sans', sans-serif",
+    fontWeight: 300,
+    fontSize: "0.95rem",
+    color: "#0f0e0c",
+    outline: "none",
+    transition: "border-color 0.3s",
+    boxSizing: "border-box",
+  };
+
+  const labelStyle: React.CSSProperties = {
+    fontFamily: "'DM Sans', sans-serif",
+    fontSize: "0.68rem",
+    letterSpacing: "0.18em",
+    textTransform: "uppercase",
+    color: "#929186",
+    display: "block",
+    marginBottom: "0.4rem",
+  };
+
+  return (
+    <div style={{ fontFamily: "'DM Sans', sans-serif" }}>
+      <style>{CSS}</style>
+
+      {/* ── NAV ── */}
+      <nav
+        className="nav-bar"
+        style={{
+          position: "fixed", top: 0, left: 0, right: 0, zIndex: 50,
+          display: "flex", alignItems: "center", justifyContent: "space-between",
+          padding: "1.25rem 3rem",
+          background: navTheme === "light" ? "rgba(249,248,244,0.88)" : "transparent",
+          backdropFilter: navTheme === "light" ? "blur(14px) saturate(1.4)" : "none",
+          WebkitBackdropFilter: navTheme === "light" ? "blur(14px) saturate(1.4)" : "none",
+          boxShadow: navTheme === "light" ? "0 1px 0 rgba(46,59,43,0.08)" : "none",
+        }}
+      >
+        <div
+          className="nav-logo"
+          style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", letterSpacing: "0.04em",
+            color: navTheme === "light" ? "#2e3b2b" : "#f9f8f4" }}
+        >
+          Bodas en el Bosque
+        </div>
+        <div className="navlinks" style={{ display: "flex", gap: "2.5rem" }}>
+          {["Filosofía", "Espacios", "Galería", "Proceso", "Contacto"].map((item) => (
+            <a key={item} href={`#${item.toLowerCase()}`}
+              className="nav-link"
+              style={{
+                color: navTheme === "light" ? "rgba(46,59,43,0.65)" : "rgba(249,248,244,0.72)",
+                fontFamily: "'DM Sans', sans-serif", fontSize: "0.78rem",
+                letterSpacing: "0.14em", textTransform: "uppercase", textDecoration: "none",
+              }}
+              onMouseEnter={(e) => ((e.target as HTMLElement).style.color = navTheme === "light" ? "#2e3b2b" : "#c3caa8")}
+              onMouseLeave={(e) => ((e.target as HTMLElement).style.color = navTheme === "light" ? "rgba(46,59,43,0.65)" : "rgba(249,248,244,0.72)")}
+            >{item}</a>
+          ))}
+        </div>
+        <button onClick={() => setMenuOpen(true)} className="hamburger"
+          style={{ display: "none", background: "none", border: "none", cursor: "pointer",
+            color: navTheme === "light" ? "#2e3b2b" : "#f9f8f4", padding: "0.25rem" }} aria-label="Menú">
+          <svg width="22" height="16" viewBox="0 0 22 16" fill="none">
+            <line x1="0" y1="1" x2="22" y2="1" stroke="currentColor" strokeWidth="1.5"/>
+            <line x1="0" y1="8" x2="22" y2="8" stroke="currentColor" strokeWidth="1.5"/>
+            <line x1="0" y1="15" x2="22" y2="15" stroke="currentColor" strokeWidth="1.5"/>
+          </svg>
+        </button>
+        {menuOpen && (
+          <div style={{ position: "fixed", inset: 0, background: "#2e3b2b", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "2.5rem", zIndex: 100 }}>
+            <button onClick={() => setMenuOpen(false)}
+              style={{ position: "absolute", top: "1.5rem", right: "1.5rem", background: "none", border: "none", cursor: "pointer", color: "#c3caa8" }}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <line x1="4" y1="4" x2="20" y2="20" stroke="currentColor" strokeWidth="1.5"/>
+                <line x1="20" y1="4" x2="4" y2="20" stroke="currentColor" strokeWidth="1.5"/>
+              </svg>
+            </button>
+            {["Filosofía", "Espacios", "Galería", "Proceso", "Contacto"].map((item) => (
+              <a key={item} href={`#${item.toLowerCase()}`} onClick={() => setMenuOpen(false)}
+                style={{ color: "#c3caa8", fontFamily: "'Playfair Display', serif", fontSize: "2rem", textDecoration: "none" }}>
+                {item}
+              </a>
+            ))}
+          </div>
+        )}
+      </nav>
+
+      {/* ── HERO ── */}
+      <section id="inicio" style={{ position: "relative", height: "100dvh", minHeight: "600px", overflow: "hidden", display: "flex", alignItems: "flex-end", paddingBottom: "4rem", paddingLeft: "3rem", paddingRight: "3rem", background: "#2e3b2b" }}>
+        <img src={IMAGES.hero} alt="Pareja caminando entre secuoyas en su boda de bosque"
+          decoding="async"
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 20%" }} />
+        {/* Bimodal scrim: dark top for nav + transparent center + deep bottom for text */}
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(30,36,26,0.62) 0%, rgba(30,36,26,0.06) 22%, rgba(30,36,26,0) 42%, rgba(28,33,23,0.42) 62%, rgba(22,27,18,0.9) 100%)" }} />
+
+        <div style={{ position: "relative", zIndex: 2, maxWidth: "540px", width: "100%" }}>
+          <h1 className="hero-fade-2 hero-h1" style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(3rem, 8vw, 6.5rem)", fontWeight: 400, lineHeight: 0.96, color: "#f9f8f4", marginBottom: "1.5rem", letterSpacing: "-0.01em", textShadow: "0 2px 24px rgba(15,20,12,0.5)" }}>
+            Bodas en<br /><em style={{ fontStyle: "italic", color: "#c3caa8" }}>el Bosque</em>
+          </h1>
+
+          <p className="hero-fade-3" style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 300, fontSize: "1.05rem", lineHeight: 1.58, color: "rgba(249,248,244,0.82)", maxWidth: "420px", marginBottom: "2rem", textShadow: "0 1px 12px rgba(15,20,12,0.45)" }}>
+            Diseñamos bodas que se sienten parte del bosque — de la primera idea al último brindis.
+          </p>
+
+          {/* Social proof */}
+          <div className="hero-fade-3" style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "2rem" }}>
+            <div style={{ display: "flex" }}>
+              {(["#8a9e6b", "#b5c28a", "#6e8555"] as string[]).map((c, i) => (
+                <span key={i} style={{ width: "24px", height: "24px", borderRadius: "50%", background: c, border: "1.5px solid rgba(22,27,18,0.8)", display: "block", marginLeft: i > 0 ? "-8px" : "0" }} />
+              ))}
+            </div>
+            <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.8rem", color: "rgba(195,202,168,0.75)", fontWeight: 300 }}>+120 bodas diseñadas en bosques de México</span>
+          </div>
+
+          {/* CTAs */}
+          <div className="hero-fade-4 hero-cta-col" style={{ display: "flex", flexDirection: "column", gap: "0.65rem", maxWidth: "420px" }}>
+            <a href="#contacto" className="btn-wipe cta-hero"
+              style={{ display: "block", width: "100%", padding: "1.2rem 2rem", background: "#c3caa8", color: "#2e3b2b", fontFamily: "'DM Sans', sans-serif", fontSize: "0.8rem", fontWeight: 500, letterSpacing: "0.2em", textTransform: "uppercase", textDecoration: "none", textAlign: "center", borderRadius: "0", border: "1px solid #c3caa8", boxSizing: "border-box", ["--wipe" as string]: "#2e3b2b" }}
+            >
+              <span>Cuéntanos tu fecha</span>
+            </a>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.68rem", letterSpacing: "0.12em", color: "rgba(195,202,168,0.52)", textAlign: "center", margin: 0 }}>
+              Sin costo · Respuesta en 24 h
+            </p>
+            <a href="#galería"
+              style={{ display: "block", textAlign: "center", fontFamily: "'DM Sans', sans-serif", fontSize: "0.74rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(195,202,168,0.68)", textDecoration: "none", borderBottom: "1px solid rgba(195,202,168,0.3)", paddingBottom: "2px", transition: "color 0.3s, border-color 0.3s", marginTop: "0.5rem" }}
+              onMouseEnter={(e) => { const el = e.currentTarget as HTMLElement; el.style.color = "#c3caa8"; el.style.borderBottomColor = "#c3caa8"; }}
+              onMouseLeave={(e) => { const el = e.currentTarget as HTMLElement; el.style.color = "rgba(195,202,168,0.68)"; el.style.borderBottomColor = "rgba(195,202,168,0.3)"; }}
+            >
+              Ver bodas reales →
+            </a>
+          </div>
+        </div>
+
+        <div style={{ position: "absolute", bottom: "2.5rem", right: "3rem", zIndex: 2 }}>
+          <div style={{ width: "1px", height: "48px", background: "linear-gradient(to bottom, transparent, #c3caa8)", animation: "scrollPulse 2.2s ease-in-out infinite" }} />
+        </div>
+      </section>
+
+      {/* ── PHILOSOPHY (merged 02 + 03) ── */}
+      <section id="filosofía" className="cv-section" style={{ background: "#f9f8f4", padding: "5rem 3rem" }}>
+        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+
+          {/* Top: intro text + image */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6rem", alignItems: "center", marginBottom: "4.5rem" }} className="two-col-grid phil-top-grid">
+
+            {/* Keyframes injected inline — scoped to this block */}
+            <style>{`
+              @keyframes galleryFade {
+                0%, 20% { opacity: 1; }
+                25%, 95% { opacity: 0; }
+                100%     { opacity: 1; }
+              }
+              @keyframes dotPulse {
+                0%, 20% { transform: scaleX(1); opacity: 1; }
+                25%, 95% { transform: scaleX(0.4); opacity: 0.3; }
+                100%     { transform: scaleX(1); opacity: 1; }
+              }
+            `}</style>
+
+            <div>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.72rem", letterSpacing: "0.22em", textTransform: "uppercase", color: "#929186", marginBottom: "1.5rem" }}>Filosofía</p>
+              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2.4rem, 4vw, 3.8rem)", fontWeight: 400, lineHeight: 1.15, color: "#2e3b2b", marginBottom: "2.5rem" }}>
+                Quiénes somos
+              </h2>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 300, fontSize: "1.02rem", lineHeight: 1.88, color: "#3a3a36", marginBottom: "1.5rem", fontStyle: "italic" }}>
+                Bodas en el Bosque nace de la profunda convicción de que una boda debe sentirse tan natural y eterna como el bosque mismo.
+              </p>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 300, fontSize: "1.02rem", lineHeight: 1.88, color: "#3a3a36" }}>
+                Somos un equipo especializado en crear bodas integrales en entornos boscosos. Diseñamos y producimos cada experiencia con intención, sensibilidad y un alto nivel de detalle para que cada evento sea único e irrepetible.
+              </p>
+            </div>
+
+            {/* Auto-cycling gallery — CSS crossfade, 5 s per image */}
+            <div style={{ position: "relative" }}>
+              {/* Fixed-ratio container */}
+              <div style={{ position: "relative", width: "100%", aspectRatio: "3/4", overflow: "hidden", background: "#2e3b2b" }}>
+                {[
+                  { src: "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/whatsapp/WhatsApp%20Image%202026-06-10%20at%2007.56.50.jpeg",    delay: "0s"   },
+                  { src: "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/whatsapp/WhatsApp%20Image%202026-06-10%20at%2008.07.31%20(1).jpeg", delay: "-15s" },
+                  { src: "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/whatsapp/WhatsApp%20Image%202026-06-10%20at%2008.07.09.jpeg",       delay: "-10s" },
+                  { src: "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/whatsapp/WhatsApp%20Image%202026-06-10%20at%2008.07.02.jpeg",       delay: "-5s"  },
+                ].map(({ src, delay }, i) => (
+                  <img
+                    key={i}
+                    src={src}
+                    alt={`Boda en el bosque ${i + 1}`}
+                    loading="lazy"
+                    decoding="async"
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      objectPosition: "center",
+                      animation: "galleryFade 20s ease-in-out infinite",
+                      animationDelay: delay,
+                      opacity: i === 0 ? 1 : 0,
+                    }}
+                  />
+                ))}
+              </div>
+
+              {/* Progress dots */}
+              <div style={{ position: "absolute", bottom: "1.25rem", left: "50%", transform: "translateX(-50%)", display: "flex", gap: "6px", zIndex: 3 }}>
+                {[0, 1, 2, 3].map((i) => (
+                  <div
+                    key={i}
+                    style={{
+                      width: "24px",
+                      height: "2px",
+                      background: "#c3caa8",
+                      transformOrigin: "left",
+                      animation: "dotPulse 20s ease-in-out infinite",
+                      animationDelay: ["0s", "-15s", "-10s", "-5s"][i],
+                      opacity: i === 0 ? 1 : 0.3,
+                    }}
+                  />
+                ))}
+              </div>
+
+              {/* Pull quote */}
+              <div className="pull-quote" style={{ position: "absolute", bottom: "-2rem", left: "-2rem", background: "#2e3b2b", padding: "1.5rem 2rem", maxWidth: "260px" }}>
+                <p style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontSize: "1rem", color: "#c3caa8", lineHeight: 1.65, margin: 0 }}>
+                  "Una boda que solo podría existir para ustedes."
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+          {/* Divider */}
+          <div style={{ borderTop: "1px solid rgba(46,59,43,0.12)", marginBottom: "3rem" }} />
+
+          {/* Bottom: 4 pillars with icons */}
+          <div>
+            <p className="pillar-eyebrow" style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.72rem", letterSpacing: "0.22em", textTransform: "uppercase", color: "#929186", marginBottom: "2rem", textAlign: "center" }}>
+              Nuestros pilares
+            </p>
+
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "1px", background: "rgba(46,59,43,0.08)" }} className="four-col-grid">
+              {([
+                {
+                  label: "Calma",
+                  desc: "Un proceso humano y claro para que vivas la organización con tranquilidad.",
+                  images: [
+                    "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/bodas_bosque_wha/Calma/rincon_bosque_fachada_lat.jpeg",
+                    "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/bodas_bosque_wha/Calma/WhatsApp%20Image%202026-06-10%20at%2008.07.02%20(1).jpeg",
+                    "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/bodas_bosque_wha/Calma/WhatsApp%20Image%202026-06-10%20at%2008.07.02.jpeg",
+                    "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/bodas_bosque_wha/Calma/WhatsApp%20Image%202026-06-10%20at%2008.07.23%20(1).jpeg",
+                    "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/bodas_bosque_wha/Calma/WhatsApp%20Image%202026-06-10%20at%2008.07.24%20(3).jpeg",
+                    "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/bodas_bosque_wha/Calma/WhatsApp%20Image%202026-06-10%20at%2008.07.24.jpeg",
+                  ],
+                  icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a10 10 0 0 1 0 20"/><path d="M12 6v6l4 2"/></svg>,
+                },
+                {
+                  label: "Equilibrio",
+                  desc: "La belleza natural del bosque combinada con diseño sofisticado y funcional.",
+                  images: [
+                    "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/bodas_bosque_wha/Equilibrio/Copia%20de%20WhatsApp%20Image%202026-06-10%20at%2007.56.42.jpeg",
+                    "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/bodas_bosque_wha/Equilibrio/rincon_bosque_salon.jpeg",
+                    "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/bodas_bosque_wha/Equilibrio/salon_bosque_beige.jpeg",
+                    "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/bodas_bosque_wha/Equilibrio/WhatsApp%20Image%202026-06-10%20at%2007.56.43%20(2).jpeg",
+                    "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/bodas_bosque_wha/Equilibrio/WhatsApp%20Image%202026-06-10%20at%2007.56.43.jpeg",
+                    "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/bodas_bosque_wha/Equilibrio/WhatsApp%20Image%202026-06-10%20at%2007.56.49%20(1).jpeg",
+                    "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/bodas_bosque_wha/Equilibrio/WhatsApp%20Image%202026-06-10%20at%2007.56.49%20(3).jpeg",
+                    "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/bodas_bosque_wha/Equilibrio/WhatsApp%20Image%202026-06-10%20at%2007.56.51%20(1).jpeg",
+                    "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/bodas_bosque_wha/Equilibrio/WhatsApp%20Image%202026-06-10%20at%2007.56.51.jpeg",
+                    "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/bodas_bosque_wha/Equilibrio/WhatsApp%20Image%202026-06-10%20at%2008.07.09.jpeg",
+                  ],
+                  icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="3" x2="12" y2="21"/><path d="M5 7h14"/><path d="M5 17h14"/></svg>,
+                },
+                {
+                  label: "Intención",
+                  desc: "Cada decisión responde a tu historia como pareja.",
+                  images: [
+                    "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/bodas_bosque_wha/Intencion/mesa_banq.jpeg",
+                    "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/bodas_bosque_wha/Intencion/WhatsApp%20Image%202026-06-10%20at%2007.56.48.jpeg",
+                    "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/bodas_bosque_wha/Intencion/WhatsApp%20Image%202026-06-10%20at%2007.56.50%20(1).jpeg",
+                    "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/bodas_bosque_wha/Intencion/WhatsApp%20Image%202026-06-10%20at%2007.56.50%20(2).jpeg",
+                    "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/bodas_bosque_wha/Intencion/WhatsApp%20Image%202026-06-10%20at%2007.56.50.jpeg",
+                    "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/bodas_bosque_wha/Intencion/WhatsApp%20Image%202026-06-10%20at%2008.07.31.jpeg",
+                  ],
+                  icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1l2.1-2.1M17 7l2.1-2.1"/></svg>,
+                },
+                {
+                  label: "Presencia",
+                  desc: "Te acompañamos de cerca en cada etapa, especialmente el día de tu boda.",
+                  images: [
+                    "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/bodas_bosque_wha/Presencia/cena_bosque.jpeg",
+                    "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/bodas_bosque_wha/Presencia/votos_bosque_dram.jpeg",
+                    "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/bodas_bosque_wha/Presencia/WhatsApp%20Image%202026-06-10%20at%2007.56.47.jpeg",
+                    "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/bodas_bosque_wha/Presencia/WhatsApp%20Image%202026-06-10%20at%2008.07.10.jpeg",
+                    "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/bodas_bosque_wha/Presencia/WhatsApp%20Image%202026-06-10%20at%2008.07.11.jpeg",
+                    "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/bodas_bosque_wha/Presencia/WhatsApp%20Image%202026-06-10%20at%2008.07.13.jpeg",
+                    "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/bodas_bosque_wha/Presencia/WhatsApp%20Image%202026-06-10%20at%2008.07.31%20(1).jpeg",
+                    "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/bodas_bosque_wha/Presencia/WhatsApp%20Image%202026-06-10%20at%2008.07.32.jpeg",
+                  ],
+                  icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="3"/><path d="M6 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M17 11c1.7-1 3.5 0 3.5 2s-1.5 3.5-3.5 5"/><path d="M7 11c-1.7-1-3.5 0-3.5 2s1.5 3.5 3.5 5"/></svg>,
+                },
+              ] as Array<{ label: string; desc: string; images: string[]; icon: React.ReactNode }>).map((pillar) => {
+                const isActive = activePillar === pillar.label;
+                const currentIdx = pillarIdx[pillar.label] ?? 0;
+                return (
+                <div
+                  key={pillar.label}
+                  className={`pillar-card${isActive ? " pillar-active" : ""}`}
+                  style={{ background: "#f9f8f4", display: "flex", flexDirection: "column", cursor: "pointer" }}
+                  onMouseEnter={() => {
+                    if (isActive) return;
+                    startPillarCycle(pillar.label, pillar.images.length);
+                  }}
+                  onMouseLeave={() => {
+                    if (isActive) return;
+                    stopPillarCycle(pillar.label);
+                    setPillarIdx((prev) => ({ ...prev, [pillar.label]: 0 }));
+                  }}
+                  onClick={() => {
+                    if (isActive) {
+                      setActivePillar(null);
+                      stopPillarCycle(pillar.label);
+                    } else {
+                      if (activePillar) stopPillarCycle(activePillar);
+                      stopPillarCycle(pillar.label);
+                      setActivePillar(pillar.label);
+                    }
+                  }}
+                >
+                  {/* Image area */}
+                  <div style={{ position: "relative", width: "100%", aspectRatio: "4/5", overflow: "hidden", background: "#2e3b2b", flexShrink: 0 }}>
+                    {pillar.images.map((src, i) => (
+                      <img
+                        key={src}
+                        src={src}
+                        alt={`${pillar.label} ${i + 1}`}
+                        className="pillar-img"
+                        loading="lazy"
+                        decoding="async"
+                        style={{
+                          position: "absolute",
+                          inset: 0,
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          objectPosition: "center",
+                          opacity: i === currentIdx ? 1 : 0,
+                        }}
+                      />
+                    ))}
+                    {/* Active state: prev/next arrows */}
+                    {isActive && (
+                      <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "flex-end", justifyContent: "center", padding: "1rem", gap: "0.5rem", zIndex: 4 }}>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); setPillarIdx((prev) => ({ ...prev, [pillar.label]: (currentIdx - 1 + pillar.images.length) % pillar.images.length })); }}
+                          style={{ width: "32px", height: "32px", background: "rgba(15,14,12,0.5)", border: "1px solid rgba(195,202,168,0.3)", color: "#c3caa8", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(4px)", transition: "background 0.2s" }}
+                          onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "rgba(15,14,12,0.75)"; }}
+                          onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "rgba(15,14,12,0.5)"; }}
+                        >
+                          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M6 2L3 5l3 3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                        </button>
+                        {/* Dots */}
+                        <div style={{ display: "flex", gap: "4px", alignItems: "center" }}>
+                          {pillar.images.map((_, di) => (
+                            <div
+                              key={di}
+                              onClick={(e) => { e.stopPropagation(); setPillarIdx((prev) => ({ ...prev, [pillar.label]: di })); }}
+                              style={{ width: di === currentIdx ? "16px" : "6px", height: "2px", background: di === currentIdx ? "#c3caa8" : "rgba(195,202,168,0.4)", transition: "width 0.3s ease, background 0.3s ease", cursor: "pointer" }}
+                            />
+                          ))}
+                        </div>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); setPillarIdx((prev) => ({ ...prev, [pillar.label]: (currentIdx + 1) % pillar.images.length })); }}
+                          style={{ width: "32px", height: "32px", background: "rgba(15,14,12,0.5)", border: "1px solid rgba(195,202,168,0.3)", color: "#c3caa8", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(4px)", transition: "background 0.2s" }}
+                          onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "rgba(15,14,12,0.75)"; }}
+                          onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "rgba(15,14,12,0.5)"; }}
+                        >
+                          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M4 2l3 3-3 3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                        </button>
+                      </div>
+                    )}
+                    {/* Active indicator dot */}
+                    {isActive && (
+                      <div style={{ position: "absolute", top: "0.85rem", left: "0.85rem", width: "6px", height: "6px", borderRadius: "50%", background: "#c3caa8", zIndex: 5 }} />
+                    )}
+                  </div>
+
+                  {/* Text area */}
+                  <div style={{ padding: "2rem 1.75rem 2.5rem", display: "flex", flexDirection: "column", gap: "0.9rem", flexGrow: 1 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.65rem" }}>
+                      <span style={{ color: "#7c4a36", display: "flex", flexShrink: 0 }}>{pillar.icon}</span>
+                      <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.15rem", fontWeight: 400, color: "#2e3b2b", margin: 0 }}>
+                        {pillar.label}
+                      </h3>
+                    </div>
+                    <p style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 300, fontSize: "0.84rem", lineHeight: 1.78, color: "#929186", margin: 0 }}>
+                      {pillar.desc}
+                    </p>
+                    <div style={{ marginTop: "auto", paddingTop: "1rem", position: "relative", height: "1px", background: "rgba(46,59,43,0.12)" }}>
+                      <div style={{ position: "absolute", bottom: 0, left: 0, height: "1px", width: isActive ? "100%" : "28px", background: "#7c4a36", transition: "width 0.5s ease" }} />
+                    </div>
+                  </div>
+                </div>
+                );
+              })}
+            </div>
+            <p className="pillar-hint-text" style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.62rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "#929186", textAlign: "center", marginTop: "1.25rem" }}>
+              Presiona un pilar para explorar su galería
+            </p>
+          </div>
+
+        </div>
+      </section>
+
+      {/* ── SPACES ── */}
+      <section id="espacios" className="cv-section" style={{ background: "#0f0e0c", paddingTop: "4.5rem", paddingBottom: 0 }}>
+        {/* Header */}
+        <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 3rem 3rem" }}>
+          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.72rem", letterSpacing: "0.22em", textTransform: "uppercase", color: "#929186", marginBottom: "1.25rem" }}>Nuestro trabajo</p>
+          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2rem, 3.5vw, 3.2rem)", fontWeight: 400, color: "#f9f8f4", lineHeight: 1.15, marginBottom: "1.5rem" }}>
+            El bosque se transforma<br /><em style={{ fontStyle: "italic", color: "#c3caa8" }}>en tu boda</em>
+          </h2>
+          <p style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 300, fontSize: "1rem", lineHeight: 1.82, color: "#929186", maxWidth: "520px" }}>
+            Cada boda que creamos es única porque cada pareja y cada espacio lo es. Transformamos entornos boscosos en escenarios mágicos y profundamente personales.
+          </p>
+        </div>
+
+        {/* Cinematic venue strips */}
+        {SPACES.map((space, si) => {
+          const previewCount = Math.min(space.images.length, 8);
+          const curIdx = venueAutoIdx[space.key] ?? 0;
+          return (
+            <div key={space.key} style={{ marginBottom: si < SPACES.length - 1 ? "2px" : 0 }}>
+              {/* Main photo area */}
+              <div
+                className="venue-strip"
+                onClick={() => setVenueModal({ key: space.key, idx: curIdx })}
+                style={{ position: "relative", height: "65vh", minHeight: "380px", overflow: "hidden", cursor: "pointer" }}
+              >
+                {space.images.slice(0, previewCount).map((src, i) => (
+                  <img
+                    key={src}
+                    src={src}
+                    alt={`${space.name} ${i + 1}`}
+                    className="venue-strip-img"
+                    loading="lazy"
+                    decoding="async"
+                    style={{
+                      position: "absolute", inset: 0, width: "100%", height: "100%",
+                      objectFit: "cover", objectPosition: "center",
+                      opacity: i === curIdx ? 1 : 0,
+                    }}
+                  />
+                ))}
+                {/* Gradient — sólo en la franja inferior, ligero */}
+                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(15,14,12,0.72) 0%, rgba(15,14,12,0.18) 38%, transparent 58%)", zIndex: 2, pointerEvents: "none" }} />
+                {/* Text overlay */}
+                <div className="venue-strip-overlay-text" style={{ position: "absolute", bottom: 0, left: 0, right: 0, zIndex: 3, padding: "2rem 3rem" }}>
+                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.65rem", letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(195,202,168,0.55)", marginBottom: "0.4rem" }}>{space.location}</p>
+                  <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(1.6rem, 3vw, 2.6rem)", fontWeight: 400, color: "#f9f8f4", marginBottom: "0.65rem", lineHeight: 1.1 }}>{space.name}</h3>
+                  <p className="venue-desc" style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 300, fontSize: "0.88rem", color: "rgba(195,202,168,0.8)", lineHeight: 1.7, marginBottom: "1.25rem", maxWidth: "400px" }}>{space.desc}</p>
+                  <span className="venue-strip-cta" style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.68rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "#c3caa8", borderBottom: "1px solid rgba(195,202,168,0.35)", paddingBottom: "3px", display: "inline-block" }}>
+                    Ver galería completa ({space.images.length} fotos) →
+                  </span>
+                </div>
+                {/* Galería badge — siempre visible */}
+                <div style={{ position: "absolute", top: "1.25rem", right: "1.25rem", zIndex: 3, background: "rgba(15,14,12,0.42)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)", padding: "0.35rem 0.8rem", display: "flex", alignItems: "center", gap: "0.4rem" }}>
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="rgba(195,202,168,0.7)" strokeWidth="1.8" strokeLinecap="round"><rect x="3" y="7" width="18" height="13" rx="1"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><circle cx="12" cy="13" r="2.5"/></svg>
+                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.6rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(195,202,168,0.65)" }}>{space.images.length} fotos</span>
+                </div>
+              </div>
+              {/* Thumbnail strip */}
+              <div className="venue-thumb-strip" style={{ background: "#0a0a08", padding: "0.65rem 3rem", display: "flex", gap: "3px", overflowX: "auto" }}>
+                {space.images.slice(0, previewCount).map((src, i) => (
+                  <div
+                    key={i}
+                    onClick={() => setVenueAutoIdx((prev) => ({ ...prev, [space.key]: i }))}
+                    style={{ width: "64px", height: "44px", flexShrink: 0, overflow: "hidden", cursor: "pointer", opacity: i === curIdx ? 1 : 0.35, outline: i === curIdx ? "1px solid rgba(195,202,168,0.55)" : "none", transition: "opacity 0.3s, outline 0.3s" }}
+                  >
+                    <img src={src} alt="" loading="lazy" decoding="async" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                  </div>
+                ))}
+                {space.images.length > previewCount && (
+                  <div
+                    onClick={() => setVenueModal({ key: space.key, idx: 0 })}
+                    style={{ width: "64px", height: "44px", flexShrink: 0, background: "rgba(195,202,168,0.07)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "background 0.25s" }}
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "rgba(195,202,168,0.14)"; }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "rgba(195,202,168,0.07)"; }}
+                  >
+                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.58rem", letterSpacing: "0.1em", color: "#929186", textAlign: "center", lineHeight: 1.4 }}>+{space.images.length - previewCount}<br />más</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })}
+        <div style={{ height: "4.5rem" }} />
+      </section>
+
+      {/* ── TRUST / PARTNERS ── */}
+      <section id="galería" className="cv-section" style={{ background: "#ffffff", padding: "4.5rem 0", overflow: "hidden" }}>
+        <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 3rem", textAlign: "center", marginBottom: "3rem" }}>
+          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.72rem", letterSpacing: "0.22em", textTransform: "uppercase", color: "#929186", marginBottom: "1.25rem" }}>Confían en nosotros</p>
+          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2rem, 3.5vw, 3.2rem)", fontWeight: 400, color: "#2e3b2b", lineHeight: 1.15 }}>
+            Espacios y marcas<br /><em style={{ fontStyle: "italic" }}>que nos respaldan</em>
+          </h2>
+        </div>
+
+        {/* Slow infinite marquee */}
+        <div className="marquee-mask">
+          <div className="marquee-track">
+            {[...PARTNERS, ...PARTNERS].map((partner, i) => (
+              <div key={i} className="partner-box">
+                <img
+                  src={partner.logo}
+                  alt={partner.name}
+                  title={partner.name}
+                  className="partner-logo"
+                  loading="lazy"
+                  decoding="async"
+                  referrerPolicy="no-referrer"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── PROCESS ── */}
+      <section id="proceso" className="cv-section" style={{ background: "#f4f2ec", padding: "5rem 3rem" }}>
+        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+
+          {/* Header row: label + headline left, statement right */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "5rem", alignItems: "flex-end", marginBottom: "3.5rem" }} className="two-col-grid proc-header">
+            <div>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.72rem", letterSpacing: "0.22em", textTransform: "uppercase", color: "#929186", marginBottom: "1.25rem" }}>Cómo trabajamos</p>
+              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2rem, 3.5vw, 3.2rem)", fontWeight: 400, color: "#2e3b2b", lineHeight: 1.15 }}>
+                Acompañamiento único<br /><em style={{ fontStyle: "italic" }}>y personalizado</em>
+              </h2>
+            </div>
+            <div>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 300, fontSize: "1.05rem", lineHeight: 1.85, color: "#3a3a36", borderLeft: "2px solid #7c4a36", paddingLeft: "1.5rem" }}>
+                Nos esforzamos para que cada experiencia sea única en su tipo, como la historia única de cada pareja. Entregamos el alma en cada boda, acompañando de cerca a la pareja y plasmando sus ideas en una experiencia verdaderamente inolvidable.
+              </p>
+            </div>
+          </div>
+
+          {/* Cards */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "1.5rem" }} className="four-col-grid">
+            {[
+              {
+                overhead: "01",
+                label: "Acompañamiento Total",
+                desc: "Desde la primera conversación hasta el cierre del evento, estamos contigo en cada decisión y cada detalle.",
+                icon: (
+                  <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="10" cy="9" r="3.5" />
+                    <path d="M3 23c0-4 3.1-7 7-7s7 3 7 7" />
+                    <circle cx="20" cy="9" r="3.5" />
+                    <path d="M17 23c0-4 3.1-7 7-7" />
+                  </svg>
+                ),
+              },
+              {
+                overhead: "02",
+                label: "Diseño Único",
+                desc: "Ninguna boda se parece a otra. Todo se crea a la medida de quiénes son, su historia y el alma del espacio.",
+                icon: (
+                  <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M14 4 L17 11 L25 11 L19 16 L21 24 L14 19 L7 24 L9 16 L3 11 L11 11 Z" />
+                  </svg>
+                ),
+              },
+              {
+                overhead: "03",
+                label: "Tranquilidad Absoluta",
+                desc: "Nos encargamos de la coordinación completa para que tú solo vivas el momento. Cero estrés, pura magia.",
+                icon: (
+                  <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M14 3 C7 3 3 8 3 14 C3 20 7 25 14 25 C21 25 25 20 25 14" />
+                    <path d="M18 3 C20 5 22 8 22 11" />
+                    <path d="M9 13 L13 17 L22 7" />
+                  </svg>
+                ),
+              },
+              {
+                overhead: "04",
+                label: "Atención al Detalle",
+                desc: "Cada elemento —floral, iluminación, mobiliario, ambientación— pensado para crear un todo coherente y memorable.",
+                icon: (
+                  <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="7" />
+                    <line x1="17.5" y1="17.5" x2="24" y2="24" />
+                    <line x1="12" y1="9" x2="12" y2="15" />
+                    <line x1="9" y1="12" x2="15" y2="12" />
+                  </svg>
+                ),
+              },
+            ].map((item) => (
+              <div
+                key={item.label}
+                className="proc-card"
+                style={{
+                  background: "#f9f8f4",
+                  border: "1px solid rgba(46,59,43,0.1)",
+                  padding: "2.5rem 2rem 2.5rem",
+                  position: "relative",
+                  overflow: "hidden",
+                  cursor: "default",
+                  transition: "transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 0.35s, border-color 0.35s",
+                }}
+                onMouseEnter={(e) => {
+                  const el = e.currentTarget as HTMLElement;
+                  el.style.transform = "translateY(-6px)";
+                  el.style.boxShadow = "0 16px 40px rgba(46,59,43,0.1)";
+                  el.style.borderColor = "rgba(124,74,54,0.3)";
+                  const icon = el.querySelector(".card-icon") as HTMLElement;
+                  if (icon) { icon.style.color = "#7c4a36"; icon.style.background = "rgba(124,74,54,0.08)"; }
+                }}
+                onMouseLeave={(e) => {
+                  const el = e.currentTarget as HTMLElement;
+                  el.style.transform = "translateY(0)";
+                  el.style.boxShadow = "none";
+                  el.style.borderColor = "rgba(46,59,43,0.1)";
+                  const icon = el.querySelector(".card-icon") as HTMLElement;
+                  if (icon) { icon.style.color = "#929186"; icon.style.background = "rgba(46,59,43,0.05)"; }
+                }}
+                onMouseMove={(e) => {
+                  const el = e.currentTarget as HTMLElement;
+                  const rect = el.getBoundingClientRect();
+                  const x = e.clientX - rect.left;
+                  const y = e.clientY - rect.top;
+                  el.style.background = `radial-gradient(200px circle at ${x}px ${y}px, rgba(195,202,168,0.18) 0%, #f9f8f4 70%)`;
+                }}
+              >
+                {/* Overhead number */}
+                <p style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 400, color: "#7c4a36", marginBottom: "1.25rem", opacity: 0.7 }}>
+                  {item.overhead}
+                </p>
+
+                {/* Icon */}
+                <div
+                  className="card-icon"
+                  style={{
+                    width: "48px",
+                    height: "48px",
+                    background: "rgba(46,59,43,0.05)",
+                    borderRadius: "50%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "#929186",
+                    marginBottom: "1.75rem",
+                    transition: "color 0.35s, background 0.35s",
+                  }}
+                >
+                  {item.icon}
+                </div>
+
+                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", fontWeight: 400, color: "#2e3b2b", marginBottom: "0.85rem", lineHeight: 1.3 }}>
+                  {item.label}
+                </h3>
+                <p style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 300, fontSize: "0.84rem", lineHeight: 1.8, color: "#929186", margin: 0 }}>
+                  {item.desc}
+                </p>
+
+                {/* Bottom accent line that grows on hover */}
+                <div
+                  className="card-line"
+                  style={{
+                    position: "absolute",
+                    bottom: 0,
+                    left: 0,
+                    height: "2px",
+                    width: "0%",
+                    background: "#7c4a36",
+                    transition: "width 0.4s cubic-bezier(0.25,0.46,0.45,0.94)",
+                  }}
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* Bottom CTA strip */}
+          <div className="proc-cta" style={{ marginTop: "2.5rem", display: "flex", alignItems: "center", justifyContent: "center", padding: "3rem 2rem", background: "#2e3b2b" }}>
+            <a href="#contacto" className="btn-wipe cta-proc"
+              style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.85rem", letterSpacing: "0.22em", textTransform: "uppercase", color: "#2e3b2b", background: "#c3caa8", padding: "1.25rem 3.5rem", textDecoration: "none", display: "inline-block", textAlign: "center", ["--wipe" as string]: "#f9f8f4" }}
+            >
+              <span className="btn-arrow-wrap">Comencemos a diseñar la tuya <span className="btn-arrow">→</span></span>
+            </a>
+          </div>
+
+        </div>
+      </section>
+
+      {/* ── CONTACT ── */}
+      <section id="contacto" className="cv-section" style={{ background: "#f9f8f4", padding: "5rem 3rem" }}>
+        <div style={{ maxWidth: "1200px", margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6rem", alignItems: "start" }} className="two-col-grid contact-grid">
+          <div>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.72rem", letterSpacing: "0.22em", textTransform: "uppercase", color: "#929186", marginBottom: "1.5rem" }}>Contacto</p>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2rem, 3.5vw, 3.5rem)", fontWeight: 400, color: "#2e3b2b", lineHeight: 1.15, marginBottom: "1.25rem" }}>
+              Comencemos a diseñar<br /><em style={{ fontStyle: "italic" }}>tu boda en el bosque</em>
+            </h2>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 300, fontSize: "1rem", lineHeight: 1.88, color: "#3a3a36", marginBottom: "2rem" }}>
+              Cuéntanos sobre tu fecha aproximada, tu visión y cómo imaginas este momento tan especial. Te responderemos de forma personalizada y te acompañaremos desde el primer mensaje.
+            </p>
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              {[
+                { icon: "💬", text: "WhatsApp: +52 777 135 8375", href: "https://wa.me/5217771358375" },
+                { icon: "✉", text: "Bodasenelbosque@gmail.com", href: "mailto:Bodasenelbosque@gmail.com" },
+              ].map((c) => (
+                <a key={c.text} href={c.href} target={c.href.startsWith("http") ? "_blank" : undefined} rel="noopener noreferrer"
+                  style={{ display: "flex", alignItems: "flex-start", gap: "0.9rem", fontFamily: "'DM Sans', sans-serif", fontSize: "0.88rem", color: "#2e3b2b", textDecoration: "none", padding: "1.25rem 0", borderBottom: "1px solid rgba(46,59,43,0.1)", transition: "color 0.3s" }}
+                  onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "#7c4a36")}
+                  onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "#2e3b2b")}
+                >
+                  <span style={{ color: "#7c4a36", flexShrink: 0 }}>{c.icon}</span>
+                  {c.text}
+                </a>
+              ))}
+            </div>
+          </div>
+          <div>
+            {sent ? (
+              <div style={{ padding: "4rem 3rem", background: "#2e3b2b", textAlign: "center" }}>
+                <p style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontSize: "1.5rem", color: "#c3caa8", marginBottom: "1rem" }}>Gracias por escribirnos</p>
+                <p style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 300, fontSize: "0.9rem", color: "rgba(195,202,168,0.7)", lineHeight: 1.8 }}>Nos pondremos en contacto en las próximas 24 horas. El bosque ya sabe su nombre.</p>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
+                {[
+                  { label: "Nombre completo", key: "nombre", type: "text", placeholder: "Elena & Rodrigo", required: true },
+                  { label: "Correo electrónico", key: "email", type: "email", placeholder: "hola@tucorreo.com", required: true },
+                  { label: "Fecha aproximada de la boda", key: "fecha", type: "text", placeholder: "Otoño 2025 / Noviembre 2025", required: false },
+                ].map((field) => (
+                  <div key={field.key}>
+                    <label style={labelStyle}>{field.label}</label>
+                    <input type={field.type} required={field.required} placeholder={field.placeholder}
+                      value={form[field.key as keyof typeof form]}
+                      onChange={(e) => setForm({ ...form, [field.key]: e.target.value })}
+                      style={inputStyle}
+                      onFocus={(e) => ((e.target as HTMLElement).style.borderBottomColor = "#2e3b2b")}
+                      onBlur={(e) => ((e.target as HTMLElement).style.borderBottomColor = "rgba(46,59,43,0.18)")}
+                    />
+                  </div>
+                ))}
+                <div>
+                  <label style={labelStyle}>Cuéntanos algo de ustedes</label>
+                  <textarea rows={4} placeholder="¿Dónde se conocieron? ¿Qué los hace únicos? ¿Cómo imaginan ese día?"
+                    value={form.mensaje}
+                    onChange={(e) => setForm({ ...form, mensaje: e.target.value })}
+                    style={{ ...inputStyle, resize: "none" }}
+                    onFocus={(e) => ((e.target as HTMLElement).style.borderBottomColor = "#2e3b2b")}
+                    onBlur={(e) => ((e.target as HTMLElement).style.borderBottomColor = "rgba(46,59,43,0.18)")}
+                  />
+                </div>
+                <button type="submit" className="btn-wipe cta-submit"
+                  style={{ padding: "1.1rem 3rem", background: "#2e3b2b", border: "none", color: "#c3caa8", fontFamily: "'DM Sans', sans-serif", fontSize: "0.75rem", letterSpacing: "0.18em", textTransform: "uppercase", cursor: "pointer", alignSelf: "flex-start", ["--wipe" as string]: "#7c4a36" }}
+                >
+                  <span>Enviar mensaje</span>
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* ── SOCIAL ── */}
+      <section className="cv-section" style={{ background: "#0f0e0c", padding: "4.5rem 3rem 0" }}>
+        <div style={{ maxWidth: "1000px", margin: "0 auto", textAlign: "center" }}>
+          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.72rem", letterSpacing: "0.22em", textTransform: "uppercase", color: "#929186", marginBottom: "2.5rem" }}>Sigue de cerca nuestro trabajo</p>
+          <div className="three-col-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem", textAlign: "left" }}>
+            {SOCIALS.map((s) => (
+              <a key={s.handle} href={s.url} target="_blank" rel="noopener noreferrer" className="social-card">
+                <span className="social-ico" style={{ background: s.net === "ig" ? "linear-gradient(135deg,#feda75,#d62976 45%,#962fbf 80%,#4f5bd5)" : "#1877f2" }}>
+                  {s.net === "ig" ? (
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#fff" stroke="none"/></svg>
+                  ) : (
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M14 8.5h2.5V5.5H14c-2 0-3.5 1.5-3.5 3.5v2H8.5v3h2v6.5h3V14h2.3l.4-3H13.5V9.3c0-.5.2-.8.5-.8z"/></svg>
+                  )}
+                </span>
+                <span style={{ display: "flex", flexDirection: "column", gap: "0.2rem", minWidth: 0 }}>
+                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.66rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "#929186" }}>{s.platform}</span>
+                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.92rem", color: "#f9f8f4", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{s.handle}</span>
+                </span>
+                <svg className="social-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M5 11L11 5M11 5H6M11 5V10" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── FOOTER ── */}
+      <footer style={{ background: "#0f0e0c", padding: "3rem 3rem", borderTop: "1px solid rgba(195,202,168,0.06)", marginTop: "4.5rem" }}>
+        <div style={{ maxWidth: "1200px", margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "2rem" }}>
+          <div>
+            <p style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", color: "#f9f8f4", marginBottom: "0.4rem" }}>Bodas en el Bosque</p>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.76rem", color: "#929186", fontWeight: 300 }}>Servicio integral de bodas en entornos naturales · México</p>
+          </div>
+          <div className="footer-links" style={{ display: "flex", gap: "2.5rem" }}>
+            {[
+              { label: "Instagram", href: "https://www.instagram.com/zahro_bodas?igsh=NTc4MTIwNjQ2YQ==" },
+              { label: "Facebook", href: "https://www.facebook.com/zahrobodas?mibextid=LQQJ4d" },
+              { label: "WhatsApp", href: "https://wa.me/5217771358375" },
+            ].map((s) => (
+              <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
+                style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.73rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "#929186", textDecoration: "none", transition: "color 0.3s" }}
+                onMouseEnter={(e) => ((e.target as HTMLElement).style.color = "#c3caa8")}
+                onMouseLeave={(e) => ((e.target as HTMLElement).style.color = "#929186")}
+              >{s.label}</a>
+            ))}
+          </div>
+          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.72rem", color: "#929186", fontWeight: 300 }}>© 2025 Bodas en el Bosque. Todos los derechos reservados.</p>
+        </div>
+      </footer>
+
+      {/* ── VENUE MODAL ── */}
+      {venueModal && activeVenue && (
+        <div
+          className="venue-modal-backdrop"
+          onClick={() => setVenueModal(null)}
+        >
+          {/* Main image */}
+          <div
+            className="modal-inner"
+            onClick={(e) => e.stopPropagation()}
+            style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center", gap: "1rem", maxWidth: "95vw" }}
+          >
+            {/* Prev */}
+            <button
+              className="venue-modal-btn modal-arrows"
+              style={{ width: "48px", height: "48px", flexShrink: 0, borderRadius: "50%" }}
+              onClick={() => setVenueModal((m) => m ? { ...m, idx: (m.idx - 1 + activeVenue.images.length) % activeVenue.images.length } : null)}
+            >
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            </button>
+
+            {/* Image + info */}
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.75rem" }}>
+              <img
+                src={activeVenue.images[venueModal.idx]}
+                alt={`${activeVenue.name} ${venueModal.idx + 1}`}
+                className="venue-modal-img"
+                decoding="async"
+              />
+              <div style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
+                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.72rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "#929186" }}>
+                  {activeVenue.name} — {venueModal.idx + 1} / {activeVenue.images.length}
+                </span>
+              </div>
+              {/* Thumbnail strip — max 12 visible */}
+              <div style={{ display: "flex", gap: "3px", maxWidth: "80vw", overflowX: "auto" }}>
+                {activeVenue.images.slice(Math.max(0, venueModal.idx - 5), venueModal.idx + 7).map((src, i) => {
+                  const realIdx = Math.max(0, venueModal.idx - 5) + i;
+                  return (
+                    <div
+                      key={realIdx}
+                      onClick={() => setVenueModal((m) => m ? { ...m, idx: realIdx } : null)}
+                      style={{ width: "52px", height: "38px", flexShrink: 0, overflow: "hidden", cursor: "pointer", opacity: realIdx === venueModal.idx ? 1 : 0.45, outline: realIdx === venueModal.idx ? "1px solid #c3caa8" : "none", transition: "opacity 0.2s" }}
+                    >
+                      <img src={src} alt="" loading="lazy" decoding="async" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Next */}
+            <button
+              className="venue-modal-btn modal-arrows"
+              style={{ width: "48px", height: "48px", flexShrink: 0, borderRadius: "50%" }}
+              onClick={() => setVenueModal((m) => m ? { ...m, idx: (m.idx + 1) % activeVenue.images.length } : null)}
+            >
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            </button>
+
+            {/* Close */}
+            <button
+              className="venue-modal-btn"
+              onClick={() => setVenueModal(null)}
+              style={{ position: "absolute", top: "-3rem", right: 0, width: "36px", height: "36px", borderRadius: "50%" }}
+            >
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><line x1="2" y1="2" x2="12" y2="12" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/><line x1="12" y1="2" x2="2" y2="12" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/></svg>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ── WHATSAPP FAB ── */}
+      <a href="https://wa.me/5217771358375?text=Hola,%20me%20gustar%C3%ADa%20saber%20m%C3%A1s%20sobre%20Bodas%20en%20el%20Bosque"
+        target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp"
+        style={{ position: "fixed", bottom: "2rem", right: "2rem", zIndex: 99, width: "52px", height: "52px", background: "#2e3b2b", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 20px rgba(46,59,43,0.35)", transition: "transform 0.3s, box-shadow 0.3s", textDecoration: "none" }}
+        onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.transform = "scale(1.1)"; (e.currentTarget as HTMLElement).style.boxShadow = "0 6px 28px rgba(46,59,43,0.5)"; }}
+        onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.transform = "scale(1)"; (e.currentTarget as HTMLElement).style.boxShadow = "0 4px 20px rgba(46,59,43,0.35)"; }}
+      >
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#c3caa8">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
+        </svg>
+      </a>
+    </div>
+  );
+}
