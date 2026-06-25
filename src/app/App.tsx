@@ -147,6 +147,30 @@ const PARTNERS = [
   { name: "Bodas.com.mx", logo: "https://www.bodas.com.mx/assets/img/logos/gen_logoHeader.svg" },
 ];
 
+// Recomendaciones reales (bucket Supabase: photos/testimonios_recomendaciones)
+// TODO: sustituir por las URLs públicas reales del bucket. Placeholder temporal con imágenes existentes.
+const TESTI_BASE = "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/testimonios_recomendaciones/";
+const TESTIMONIO_FILES: string[] = [
+  "Captura de pantalla 2026-06-25 a la(s) 3.39.05 a.m..png",
+  "Captura de pantalla 2026-06-25 a la(s) 3.46.14 a.m..png",
+  "Captura de pantalla 2026-06-25 a la(s) 3.47.05 a.m..png",
+  "Captura de pantalla 2026-06-25 a la(s) 3.47.44 a.m..png",
+  "Captura de pantalla 2026-06-25 a la(s) 3.48.07 a.m..png",
+  "Captura de pantalla 2026-06-25 a la(s) 3.52.02 a.m..png",
+  "Captura de pantalla 2026-06-25 a la(s) 3.53.05 a.m..png",
+  "Captura de pantalla 2026-06-25 a la(s) 3.53.20 a.m..png",
+];
+const TESTIMONIO_PLACEHOLDER = [
+  "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/whatsapp/WhatsApp%20Image%202026-06-10%20at%2007.56.50.jpeg",
+  "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/whatsapp/WhatsApp%20Image%202026-06-10%20at%2008.07.09.jpeg",
+  "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/whatsapp/WhatsApp%20Image%202026-06-10%20at%2008.07.31%20(1).jpeg",
+  "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/whatsapp/WhatsApp%20Image%202026-06-10%20at%2008.07.02.jpeg",
+  "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/whatsapp/WhatsApp%20Image%202026-06-10%20at%2008.07.31.jpeg",
+];
+const TESTIMONIO_IMGS = TESTIMONIO_FILES.length
+  ? TESTIMONIO_FILES.map((f) => TESTI_BASE + encodeURIComponent(f))
+  : TESTIMONIO_PLACEHOLDER;
+
 const SOCIALS = [
   { platform: "Instagram", handle: "@bodasbosquepremium", url: "https://www.instagram.com/bodasbosquepremium?igsh=dW83cnNiYzR1aW11", net: "ig" as const },
   { platform: "Instagram", handle: "@ardenbodasdelbosque", url: "https://www.instagram.com/ardenbodasdelbosque?igsh=YTAweHk3cGRkNnRy", net: "ig" as const },
@@ -251,7 +275,7 @@ const CSS = `
     .contact-grid { gap: 2rem !important; }
     footer { flex-direction: column !important; gap: 1.25rem !important; padding-left: 1.25rem !important; padding-right: 1.25rem !important; }
     .footer-links { justify-content: flex-start !important; flex-wrap: wrap !important; gap: 1.25rem !important; }
-    .hero-h1 { font-size: clamp(2.6rem, 12vw, 4rem) !important; }
+    .hero-h1 { font-size: clamp(40px, 11vw, 64px) !important; line-height: 1.1 !important; }
     .hero-cta-row { flex-direction: column !important; }
     .hero-cta-row a { text-align: center !important; }
   }
@@ -261,6 +285,7 @@ const CSS = `
     .four-col-grid { grid-template-columns: 1fr !important; }
     .five-col-grid { grid-template-columns: 1fr !important; }
     section { padding-top: 2.5rem !important; padding-bottom: 2.5rem !important; }
+    .hero-h1 { font-size: clamp(36px, 10vw, 48px) !important; line-height: 1.1 !important; }
   }
 
   div:hover .card-line { width: 100% !important; }
@@ -311,6 +336,39 @@ const CSS = `
     .venue-modal-img { max-height: 52vh; max-width: 96vw; }
     .modal-arrows { display: none !important; }
     .modal-inner { flex-direction: column !important; gap: 0 !important; }
+  }
+
+  /* ── Editorial body font (Cormorant Garamond) for philosophy + quotes ── */
+  .philosophy-text, blockquote, .quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.22rem;
+    line-height: 1.7;
+    font-style: italic;
+  }
+
+  /* ── Testimonials carousel (editorial) ── */
+  .testi-stage { position: relative; height: 46vh; max-height: 430px; min-height: 320px; display: flex; align-items: center; justify-content: center; }
+  .testi-frame { position: absolute; margin: 0; height: 100%; max-width: 30%; display: flex; align-items: center; justify-content: center; transition: transform 0.7s cubic-bezier(0.22,1,0.36,1), opacity 0.7s ease, filter 0.7s ease; will-change: transform, opacity; }
+  .testi-frame img { max-height: 100%; max-width: 100%; width: auto; height: auto; object-fit: contain; display: block; background: #ffffff; box-shadow: 0 18px 50px rgba(46,59,43,0.16); border: 1px solid rgba(46,59,43,0.06); image-rendering: -webkit-optimize-contrast; }
+  .testi-arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 5; width: 44px; height: 44px; border-radius: 50%; background: rgba(249,248,244,0.85); border: 1px solid rgba(46,59,43,0.14); color: #2e3b2b; cursor: pointer; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(6px); transition: background 0.25s, transform 0.25s; }
+  .testi-arrow:hover { background: #ffffff; }
+
+  /* ── Sound toggle: animated equalizer bars ── */
+  .sound-bars { display: flex; align-items: flex-end; justify-content: center; gap: 2.5px; height: 16px; }
+  .sound-bars > span { width: 2.5px; background: #c3caa8; border-radius: 2px; height: 40%; animation: soundBar 1s ease-in-out infinite; }
+  .sound-bars > span:nth-child(1) { animation-delay: 0s; }
+  .sound-bars > span:nth-child(2) { animation-delay: 0.22s; }
+  .sound-bars > span:nth-child(3) { animation-delay: 0.44s; }
+  .sound-bars > span:nth-child(4) { animation-delay: 0.12s; }
+  @keyframes soundBar { 0%,100% { height: 28%; } 50% { height: 100%; } }
+  @media (prefers-reduced-motion: reduce) { .sound-bars > span { animation: none; height: 60%; } }
+  .testi-arrow-prev { left: 0; }
+  .testi-arrow-next { right: 0; }
+  @media (max-width: 768px) {
+    .testi-stage { height: 52vh; min-height: 300px; max-height: 400px; }
+    .testi-frame { max-width: 62%; }
+    .testi-frame img { box-shadow: 0 10px 28px rgba(46,59,43,0.16); }
+    .testi-arrow { width: 36px; height: 36px; }
   }
 `;
 
@@ -364,6 +422,195 @@ export default function App() {
     updateNav();
     return () => window.removeEventListener("scroll", updateNav);
   }, []);
+
+  // Testimonials carousel
+  const [testiIdx, setTestiIdx] = useState(0);
+  const [testiZoom, setTestiZoom] = useState<string | null>(null);
+  const testiHover = useRef(false);
+  const testiTouchX = useRef<number | null>(null);
+  useEffect(() => {
+    if (TESTIMONIO_IMGS.length < 2) return;
+    const id = setInterval(() => {
+      if (testiHover.current || document.hidden || testiZoom) return;
+      setTestiIdx((i) => (i + 1) % TESTIMONIO_IMGS.length);
+    }, 4500);
+    return () => clearInterval(id);
+  }, [testiZoom]);
+  useEffect(() => {
+    if (!testiZoom) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setTestiZoom(null); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [testiZoom]);
+
+  // ── Soundscape: clics sutiles (Web Audio) + ambiente de bosque en loop ──
+  const [soundOn, setSoundOn] = useState<boolean>(() => {
+    try { return localStorage.getItem("bb-sound") !== "off"; } catch { return true; }
+  });
+  const soundOnRef = useRef(soundOn);
+  useEffect(() => { soundOnRef.current = soundOn; }, [soundOn]);
+  const audioCtxRef = useRef<AudioContext | null>(null);
+  const ambientRef = useRef<HTMLAudioElement | null>(null);
+  // "Earth" ASMR texture (granular brown noise) driven by cursor movement
+  const earthGainRef = useRef<GainNode | null>(null);
+  const earthFilterRef = useRef<BiquadFilterNode | null>(null);
+  const earthSrcRef = useRef<AudioBufferSourceNode | null>(null);
+  const earthTargetRef = useRef(0);
+  const lastPtRef = useRef<{ x: number; y: number; t: number } | null>(null);
+
+  function fadeAudio(audio: HTMLAudioElement, target: number, done?: () => void) {
+    const start = audio.volume;
+    const steps = 22;
+    const delta = (target - start) / steps;
+    let i = 0;
+    const id = setInterval(() => {
+      i++;
+      const v = i >= steps ? target : start + delta * i;
+      audio.volume = Math.max(0, Math.min(1, v));
+      if (i >= steps) { clearInterval(id); done?.(); }
+    }, 38);
+  }
+
+  function ensureCtx(): AudioContext | null {
+    if (!audioCtxRef.current) {
+      const AC = window.AudioContext || (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+      if (AC) audioCtxRef.current = new AC();
+    }
+    if (audioCtxRef.current && audioCtxRef.current.state === "suspended") audioCtxRef.current.resume();
+    return audioCtxRef.current;
+  }
+
+  // ASMR click + cursor "earth" texture
+  useEffect(() => {
+    // Realistic mouse click: two ultra-short bright noise transients (press + release)
+    function clickBurst(ctx: AudioContext, t0: number, level: number) {
+      const dur = 0.016;
+      const buf = ctx.createBuffer(1, Math.max(1, Math.ceil(ctx.sampleRate * dur)), ctx.sampleRate);
+      const d = buf.getChannelData(0);
+      for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 6);
+      const src = ctx.createBufferSource();
+      src.buffer = buf;
+      const hp = ctx.createBiquadFilter();
+      hp.type = "highpass"; hp.frequency.value = 1400;
+      const bp = ctx.createBiquadFilter();
+      bp.type = "bandpass"; bp.frequency.value = 3400; bp.Q.value = 0.8;
+      const g = ctx.createGain(); g.gain.value = level;
+      src.connect(hp).connect(bp).connect(g).connect(ctx.destination);
+      src.start(t0);
+    }
+    function tick() {
+      if (!soundOnRef.current) return;
+      const ctx = ensureCtx();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      clickBurst(ctx, now, 0.13);          // press
+      clickBurst(ctx, now + 0.013, 0.06);  // release (softer, slightly later)
+    }
+
+    // Lazily build the looping dry "leaves rustling" voice (bright filtered white noise)
+    function initEarth(ctx: AudioContext) {
+      if (earthSrcRef.current) return;
+      const len = ctx.sampleRate * 2;
+      const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+      const d = buf.getChannelData(0);
+      for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1; // white noise → dry/leafy
+      const src = ctx.createBufferSource();
+      src.buffer = buf; src.loop = true;
+      const hp = ctx.createBiquadFilter();
+      hp.type = "highpass"; hp.frequency.value = 1800; // strip low rumble → "dry"
+      const bp = ctx.createBiquadFilter();
+      bp.type = "bandpass"; bp.frequency.value = 4200; bp.Q.value = 0.55;
+      const gain = ctx.createGain(); gain.gain.value = 0;
+      src.connect(hp).connect(bp).connect(gain).connect(ctx.destination);
+      src.start();
+      earthSrcRef.current = src; earthFilterRef.current = bp; earthGainRef.current = gain;
+    }
+
+    const CLICK_SEL = 'a, button, [role="button"], input[type="submit"], label, summary, .testi-frame, .pillar-card, .social-card, .venue-strip, .proc-card, .partner-box';
+    // Elements whose hover animation follows the cursor ("moving earth" feel)
+    const EARTH_SEL = '.proc-card, .pillar-card, .venue-strip, #inicio';
+
+    function onClick(e: MouseEvent) {
+      const t = e.target as HTMLElement | null;
+      if (t && t.closest(CLICK_SEL)) tick();
+    }
+    function onMove(e: MouseEvent) {
+      if (!soundOnRef.current) { earthTargetRef.current = 0; return; }
+      const t = e.target as HTMLElement | null;
+      const over = t && t.closest(EARTH_SEL);
+      const now = performance.now();
+      const last = lastPtRef.current;
+      lastPtRef.current = { x: e.clientX, y: e.clientY, t: now };
+      if (!over) return;
+      const ctx = ensureCtx();
+      if (!ctx) return;
+      initEarth(ctx);
+      if (last) {
+        const dist = Math.hypot(e.clientX - last.x, e.clientY - last.y);
+        const dt = Math.max(12, now - last.t);
+        const speed = dist / dt; // px/ms
+        earthTargetRef.current = Math.max(earthTargetRef.current, Math.min(0.12, speed * 0.05));
+        if (earthFilterRef.current) earthFilterRef.current.frequency.setTargetAtTime(3200 + Math.min(speed, 4) * 950, ctx.currentTime, 0.04);
+      }
+    }
+
+    document.addEventListener("click", onClick, true);
+    document.addEventListener("pointermove", onMove, { passive: true });
+    return () => {
+      document.removeEventListener("click", onClick, true);
+      document.removeEventListener("pointermove", onMove);
+    };
+  }, []);
+
+  // Smooth the earth-texture gain: rises with movement, fades when the cursor rests
+  useEffect(() => {
+    let raf = 0;
+    function loop() {
+      const g = earthGainRef.current;
+      const ctx = audioCtxRef.current;
+      if (g && ctx) {
+        earthTargetRef.current *= 0.82;
+        if (earthTargetRef.current < 0.0004) earthTargetRef.current = 0;
+        const target = soundOnRef.current ? earthTargetRef.current : 0;
+        g.gain.setTargetAtTime(target, ctx.currentTime, 0.03);
+      }
+      raf = requestAnimationFrame(loop);
+    }
+    raf = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
+  // Ambient forest loop — starts softly on the first user gesture (autoplay-safe)
+  useEffect(() => {
+    const audio = ambientRef.current;
+    if (!audio) return;
+    audio.volume = 0;
+    function onGesture() {
+      ensureCtx();
+      if (!soundOnRef.current || !audio) return;
+      audio.play().then(() => fadeAudio(audio, 0.16)).catch(() => {});
+    }
+    document.addEventListener("pointerdown", onGesture, { once: true });
+    document.addEventListener("keydown", onGesture, { once: true });
+    return () => {
+      document.removeEventListener("pointerdown", onGesture);
+      document.removeEventListener("keydown", onGesture);
+    };
+  }, []);
+
+  function toggleSound() {
+    setSoundOn((prev) => {
+      const next = !prev;
+      try { localStorage.setItem("bb-sound", next ? "on" : "off"); } catch { /* ignore */ }
+      const audio = ambientRef.current;
+      if (audio) {
+        if (next) { audio.play().then(() => fadeAudio(audio, 0.16)).catch(() => {}); }
+        else { fadeAudio(audio, 0, () => audio.pause()); }
+      }
+      if (next && audioCtxRef.current && audioCtxRef.current.state === "suspended") audioCtxRef.current.resume();
+      return next;
+    });
+  }
 
   // Venue modal state
   const [venueModal, setVenueModal] = useState<{ key: string; idx: number } | null>(null);
@@ -545,7 +792,7 @@ export default function App() {
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(30,36,26,0.62) 0%, rgba(30,36,26,0.06) 22%, rgba(30,36,26,0) 42%, rgba(28,33,23,0.42) 62%, rgba(22,27,18,0.9) 100%)" }} />
 
         <div style={{ position: "relative", zIndex: 2, maxWidth: "540px", width: "100%" }}>
-          <h1 className="hero-fade-2 hero-h1" style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(3rem, 8vw, 6.5rem)", fontWeight: 400, lineHeight: 0.96, color: "#f9f8f4", marginBottom: "1.5rem", letterSpacing: "-0.01em", textShadow: "0 2px 24px rgba(15,20,12,0.5)" }}>
+          <h1 className="hero-fade-2 hero-h1" style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(3rem, 8vw, 6.5rem)", fontWeight: 400, lineHeight: 1.08, color: "#f9f8f4", marginBottom: "1.5rem", letterSpacing: "-0.01em", textShadow: "0 2px 24px rgba(15,20,12,0.5)" }}>
             Bodas en<br /><em style={{ fontStyle: "italic", color: "#c3caa8" }}>el Bosque</em>
           </h1>
 
@@ -570,7 +817,7 @@ export default function App() {
             >
               <span>Cuéntanos tu fecha</span>
             </a>
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.68rem", letterSpacing: "0.12em", color: "rgba(195,202,168,0.52)", textAlign: "center", margin: 0 }}>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.68rem", letterSpacing: "0.12em", color: "rgba(249,248,244,0.9)", textAlign: "center", margin: 0, textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
               Sin costo · Respuesta en 24 h
             </p>
             <a href="#galería"
@@ -578,7 +825,7 @@ export default function App() {
               onMouseEnter={(e) => { const el = e.currentTarget as HTMLElement; el.style.color = "#c3caa8"; el.style.borderBottomColor = "#c3caa8"; }}
               onMouseLeave={(e) => { const el = e.currentTarget as HTMLElement; el.style.color = "rgba(195,202,168,0.68)"; el.style.borderBottomColor = "rgba(195,202,168,0.3)"; }}
             >
-              Ver bodas reales →
+              Revisa nuestro trabajo →
             </a>
           </div>
         </div>
@@ -614,12 +861,16 @@ export default function App() {
               <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2.4rem, 4vw, 3.8rem)", fontWeight: 400, lineHeight: 1.15, color: "#2e3b2b", marginBottom: "2.5rem" }}>
                 Quiénes somos
               </h2>
-              <p style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 300, fontSize: "1.02rem", lineHeight: 1.88, color: "#3a3a36", marginBottom: "1.5rem", fontStyle: "italic" }}>
+              <p className="philosophy-text" style={{ fontWeight: 400, color: "#2e3b2b", marginBottom: "1.5rem" }}>
                 Bodas en el Bosque nace de la profunda convicción de que una boda debe sentirse tan natural y eterna como el bosque mismo.
               </p>
               <p style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 300, fontSize: "1.02rem", lineHeight: 1.88, color: "#3a3a36" }}>
                 Somos un equipo especializado en crear bodas integrales en entornos boscosos. Diseñamos y producimos cada experiencia con intención, sensibilidad y un alto nivel de detalle para que cada evento sea único e irrepetible.
               </p>
+              {/* Intermediate CTA (#7) — keeps a conversion path visible early in the scroll */}
+              <a href="#contacto" className="link-draw" style={{ display: "inline-block", marginTop: "1.75rem", fontFamily: "'DM Sans', sans-serif", fontWeight: 400, fontSize: "0.95rem", color: "#2e3b2b", textDecoration: "none" }}>
+                ¿Lista para imaginar tu boda? → Cuéntanos tu fecha
+              </a>
             </div>
 
             {/* Auto-cycling gallery — CSS crossfade, 5 s per image */}
@@ -635,7 +886,7 @@ export default function App() {
                   <img
                     key={i}
                     src={src}
-                    alt={`Boda en el bosque ${i + 1}`}
+                    alt={`Boda real en el bosque diseñada por Bodas en el Bosque — imagen ${i + 1}`}
                     loading="lazy"
                     decoding="async"
                     style={{
@@ -798,7 +1049,7 @@ export default function App() {
                       <img
                         key={src}
                         src={src}
-                        alt={`${pillar.label} ${i + 1}`}
+                        alt={`${pillar.label} — detalle de boda en el bosque, imagen ${i + 1}`}
                         className="pillar-img"
                         loading="lazy"
                         decoding="async"
@@ -906,7 +1157,7 @@ export default function App() {
                   <img
                     key={src}
                     src={src}
-                    alt={`${space.name} ${i + 1}`}
+                    alt={`${space.name}, boda en el bosque en ${space.location} — foto ${i + 1}`}
                     className="venue-strip-img"
                     loading="lazy"
                     decoding="async"
@@ -986,6 +1237,78 @@ export default function App() {
                   referrerPolicy="no-referrer"
                 />
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── TESTIMONIALS (#3) — carrusel editorial de recomendaciones reales ── */}
+      <section id="testimonios" className="cv-section" style={{ background: "#f9f8f4", padding: "5rem 3rem", overflow: "hidden" }}>
+        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: "3.5rem" }}>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.72rem", letterSpacing: "0.22em", textTransform: "uppercase", color: "#929186", marginBottom: "1.25rem" }}>Bodas reales</p>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2rem, 3.5vw, 3.2rem)", fontWeight: 400, color: "#2e3b2b", lineHeight: 1.15 }}>
+              Momentos mágicos <em style={{ fontStyle: "italic" }}>que hemos creado</em>
+            </h2>
+          </div>
+
+          {/* Stage: imagen activa centrada con vecinas atenuadas (estilo revista) */}
+          <div
+            className="testi-stage"
+            onMouseEnter={() => { testiHover.current = true; }}
+            onMouseLeave={() => { testiHover.current = false; }}
+            onTouchStart={(e) => { testiTouchX.current = e.touches[0].clientX; }}
+            onTouchEnd={(e) => {
+              if (testiTouchX.current == null) return;
+              const dx = e.changedTouches[0].clientX - testiTouchX.current;
+              testiTouchX.current = null;
+              if (Math.abs(dx) < 40) return;
+              const n = TESTIMONIO_IMGS.length;
+              setTestiIdx((i) => (dx < 0 ? (i + 1) % n : (i - 1 + n) % n));
+            }}
+          >
+            {TESTIMONIO_IMGS.map((src, i) => {
+              const n = TESTIMONIO_IMGS.length;
+              let pos = i - testiIdx;
+              if (pos > n / 2) pos -= n;
+              if (pos < -n / 2) pos += n;
+              const isActive = pos === 0;
+              const isNeighbor = Math.abs(pos) === 1;
+              if (!isActive && !isNeighbor) return null;
+              return (
+                <figure
+                  key={src}
+                  className="testi-frame"
+                  onClick={() => { if (isActive) setTestiZoom(src); else setTestiIdx(i); }}
+                  style={{
+                    transform: `translateX(${pos * 64}%) scale(${isActive ? 1 : 0.78})`,
+                    opacity: isActive ? 1 : 0.32,
+                    filter: isActive ? "none" : "blur(1px)",
+                    zIndex: isActive ? 3 : 1,
+                    cursor: "pointer",
+                  }}
+                >
+                  <img src={src} alt={`Momento de boda real en el bosque ${i + 1}`} loading="lazy" decoding="async" />
+                </figure>
+              );
+            })}
+
+            {/* Flechas */}
+            <button className="testi-arrow testi-arrow-prev" aria-label="Anterior"
+              onClick={() => setTestiIdx((i) => (i - 1 + TESTIMONIO_IMGS.length) % TESTIMONIO_IMGS.length)}>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            </button>
+            <button className="testi-arrow testi-arrow-next" aria-label="Siguiente"
+              onClick={() => setTestiIdx((i) => (i + 1) % TESTIMONIO_IMGS.length)}>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            </button>
+          </div>
+
+          {/* Dots */}
+          <div style={{ display: "flex", gap: "6px", justifyContent: "center", marginTop: "2.25rem" }}>
+            {TESTIMONIO_IMGS.map((_, i) => (
+              <button key={i} aria-label={`Ir a recomendación ${i + 1}`} onClick={() => setTestiIdx(i)}
+                style={{ width: i === testiIdx ? "22px" : "7px", height: "7px", borderRadius: "999px", border: "none", padding: 0, cursor: "pointer", background: i === testiIdx ? "#2e3b2b" : "rgba(46,59,43,0.22)", transition: "width 0.3s ease, background 0.3s ease" }} />
             ))}
           </div>
         </div>
@@ -1188,11 +1511,15 @@ export default function App() {
           <div>
             {sent ? (
               <div className="success-panel" style={{ padding: "3.75rem 2.75rem", background: "rgba(46,59,43,0.05)", border: "1px solid rgba(46,59,43,0.14)", backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)", textAlign: "center" }}>
-                <span style={{ width: "52px", height: "52px", borderRadius: "50%", border: "1px solid rgba(124,74,54,0.35)", display: "inline-flex", alignItems: "center", justifyContent: "center", color: "#7c4a36", marginBottom: "1.75rem" }}>
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-                </span>
-                <p style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontSize: "1.7rem", color: "#2e3b2b", marginBottom: "0.85rem" }}>Gracias por escribirnos</p>
-                <p style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 300, fontSize: "0.92rem", color: "#6b6b62", lineHeight: 1.8, margin: 0 }}>Nos pondremos en contacto en las próximas 24 horas.</p>
+                <span style={{ fontSize: "2rem", display: "block", marginBottom: "1.25rem" }} aria-hidden="true">🌿</span>
+                <p style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontSize: "1.7rem", color: "#2e3b2b", marginBottom: "0.85rem" }}>¡Recibimos tu mensaje!</p>
+                <p style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 300, fontSize: "0.92rem", color: "#6b6b62", lineHeight: 1.8, marginBottom: "1.75rem" }}>
+                  Te responderemos en menos de 24 horas. Mientras tanto, explora nuestras bodas reales en Instagram.
+                </p>
+                <a href="https://www.instagram.com/bodasbosquepremium?igsh=dW83cnNiYzR1aW11" target="_blank" rel="noopener noreferrer" className="link-draw"
+                  style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.8rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "#7c4a36", textDecoration: "none" }}>
+                  Ver Instagram →
+                </a>
               </div>
             ) : (
               <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
@@ -1264,26 +1591,50 @@ export default function App() {
       </section>
 
       {/* ── FOOTER ── */}
-      <footer style={{ background: "#0f0e0c", padding: "3rem 3rem", borderTop: "1px solid rgba(195,202,168,0.06)", marginTop: "4.5rem" }}>
-        <div style={{ maxWidth: "1200px", margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "2rem" }}>
-          <div>
-            <p style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", color: "#f9f8f4", marginBottom: "0.4rem" }}>Bodas en el Bosque</p>
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.76rem", color: "#929186", fontWeight: 300 }}>Servicio integral de bodas en entornos naturales · México</p>
+      <footer style={{ background: "#0f0e0c", padding: "3rem 3rem 2rem", borderTop: "1px solid rgba(195,202,168,0.06)", marginTop: "4.5rem" }}>
+        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "2.5rem" }}>
+            <div>
+              <p style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", color: "#f9f8f4", marginBottom: "0.4rem" }}>Bodas en el Bosque</p>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.76rem", color: "#929186", fontWeight: 300, marginBottom: "0.3rem" }}>Servicio integral de bodas en entornos naturales · México</p>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.76rem", color: "#929186", fontWeight: 300 }}>Servicio en Estado de México, Morelos y CDMX</p>
+            </div>
+            {/* Contacto directo (#9) */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+              {[
+                { label: "+52 777 135 8375", href: "tel:+5217771358375" },
+                { label: "Bodasenelbosque@gmail.com", href: "mailto:Bodasenelbosque@gmail.com" },
+              ].map((c) => (
+                <a key={c.href} href={c.href}
+                  style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.8rem", color: "#c3caa8", textDecoration: "none", transition: "color 0.3s" }}
+                  onMouseEnter={(e) => ((e.target as HTMLElement).style.color = "#f9f8f4")}
+                  onMouseLeave={(e) => ((e.target as HTMLElement).style.color = "#c3caa8")}
+                >{c.label}</a>
+              ))}
+            </div>
+            <div className="footer-links" style={{ display: "flex", gap: "2.5rem" }}>
+              {[
+                { label: "Bodas Premium", href: "https://www.instagram.com/bodasbosquepremium?igsh=dW83cnNiYzR1aW11" },
+                { label: "Arden del Bosque", href: "https://www.instagram.com/ardenbodasdelbosque?igsh=YTAweHk3cGRkNnRy" },
+                { label: "WhatsApp", href: "https://wa.me/5217771358375" },
+              ].map((s) => (
+                <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
+                  style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.73rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "#929186", textDecoration: "none", transition: "color 0.3s" }}
+                  onMouseEnter={(e) => ((e.target as HTMLElement).style.color = "#c3caa8")}
+                  onMouseLeave={(e) => ((e.target as HTMLElement).style.color = "#929186")}
+                >{s.label}</a>
+              ))}
+            </div>
           </div>
-          <div className="footer-links" style={{ display: "flex", gap: "2.5rem" }}>
-            {[
-              { label: "Bodas Premium", href: "https://www.instagram.com/bodasbosquepremium?igsh=dW83cnNiYzR1aW11" },
-              { label: "Arden del Bosque", href: "https://www.instagram.com/ardenbodasdelbosque?igsh=YTAweHk3cGRkNnRy" },
-              { label: "WhatsApp", href: "https://wa.me/5217771358375" },
-            ].map((s) => (
-              <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
-                style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.73rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "#929186", textDecoration: "none", transition: "color 0.3s" }}
-                onMouseEnter={(e) => ((e.target as HTMLElement).style.color = "#c3caa8")}
-                onMouseLeave={(e) => ((e.target as HTMLElement).style.color = "#929186")}
-              >{s.label}</a>
-            ))}
+          {/* Bottom bar */}
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem", marginTop: "2.5rem", paddingTop: "1.5rem", borderTop: "1px solid rgba(195,202,168,0.08)" }}>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.72rem", color: "#929186", fontWeight: 300, margin: 0 }}>© {new Date().getFullYear()} Bodas en el Bosque. Todos los derechos reservados.</p>
+            {/* TODO: enlazar a la página real del Aviso de Privacidad (LFPDPPP) */}
+            <a href="/aviso-de-privacidad" style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.72rem", letterSpacing: "0.08em", color: "#929186", textDecoration: "none", transition: "color 0.3s" }}
+              onMouseEnter={(e) => ((e.target as HTMLElement).style.color = "#c3caa8")}
+              onMouseLeave={(e) => ((e.target as HTMLElement).style.color = "#929186")}
+            >Aviso de Privacidad</a>
           </div>
-          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.72rem", color: "#929186", fontWeight: 300 }}>© 2025 Bodas en el Bosque. Todos los derechos reservados.</p>
         </div>
       </footer>
 
@@ -1312,7 +1663,7 @@ export default function App() {
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.75rem" }}>
               <img
                 src={activeVenue.images[venueModal.idx]}
-                alt={`${activeVenue.name} ${venueModal.idx + 1}`}
+                alt={`${activeVenue.name} en ${activeVenue.location} — galería de boda en el bosque, foto ${venueModal.idx + 1} de ${activeVenue.images.length}`}
                 className="venue-modal-img"
                 decoding="async"
               />
@@ -1357,6 +1708,47 @@ export default function App() {
             </button>
           </div>
         </div>
+      )}
+
+      {/* ── TESTIMONIO ZOOM ── */}
+      {testiZoom && (
+        <div className="venue-modal-backdrop" onClick={() => setTestiZoom(null)}>
+          <div onClick={(e) => e.stopPropagation()} style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <img src={testiZoom} alt="Momento de boda real en el bosque" decoding="async" className="venue-modal-img" />
+            <button className="venue-modal-btn" onClick={() => setTestiZoom(null)} aria-label="Cerrar"
+              style={{ position: "absolute", top: "-3rem", right: 0, width: "36px", height: "36px", borderRadius: "50%" }}>
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><line x1="2" y1="2" x2="12" y2="12" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/><line x1="12" y1="2" x2="2" y2="12" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/></svg>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ── AMBIENT FOREST AUDIO ── */}
+      <audio ref={ambientRef} src="https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/AMBForst_Forest%20(ID%200100)_BigSoundBank.com.mp3" loop preload="auto" aria-hidden="true" />
+
+      {/* ── SOUND TOGGLE ── */}
+      {!menuOpen && (
+        <button
+          onClick={toggleSound}
+          aria-label={soundOn ? "Silenciar ambiente" : "Activar ambiente de bosque"}
+          aria-pressed={soundOn}
+          title={soundOn ? "Silenciar ambiente" : "Activar ambiente de bosque"}
+          style={{ position: "fixed", bottom: "2rem", left: "2rem", zIndex: 99, width: "46px", height: "46px", background: "rgba(46,59,43,0.92)", borderRadius: "50%", border: "1px solid rgba(195,202,168,0.25)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", boxShadow: "0 4px 18px rgba(15,14,12,0.3)", backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)", transition: "transform 0.3s, box-shadow 0.3s", color: "#c3caa8" }}
+          onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.transform = "scale(1.08)"; }}
+          onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.transform = "scale(1)"; }}
+        >
+          {soundOn ? (
+            <span className="sound-bars" aria-hidden="true">
+              <span /><span /><span /><span />
+            </span>
+          ) : (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M4 9v6h4l5 4V5L8 9H4z" />
+              <line x1="17" y1="9" x2="23" y2="15" />
+              <line x1="23" y1="9" x2="17" y2="15" />
+            </svg>
+          )}
+        </button>
       )}
 
       {/* ── WHATSAPP FAB ── */}

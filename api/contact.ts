@@ -1,14 +1,12 @@
 // Vercel Serverless Function — proxies the contact form to the private webhook.
-// The secret token lives ONLY here (server-side env var, never shipped to the client).
+// The webhook URL + secret live ONLY in server-side env vars, never in the repo
+// and never shipped to the client bundle.
 //
 // Required env vars (set in Vercel → Settings → Environment Variables):
-//   WEBHOOK_TOKEN  — shared secret; sent as "Authorization: Bearer <token>"
-//   WEBHOOK_URL    — (optional) overrides the default endpoint below
+//   WEBHOOK_URL    — full n8n webhook endpoint (kept out of source on purpose)
+//   WEBHOOK_TOKEN  — (optional) shared secret; sent as "Authorization: Bearer <token>"
 //
 // The n8n webhook should validate the Authorization header against WEBHOOK_TOKEN.
-
-const DEFAULT_WEBHOOK_URL =
-  "https://lowcode.morelos.gob.mx/webhook-test/4d7a115f-efc7-4f23-897b-683353d4faf4";
 
 export default async function handler(req: any, res: any) {
   if (req.method !== "POST") {
@@ -16,8 +14,13 @@ export default async function handler(req: any, res: any) {
     return;
   }
 
-  const url = process.env.WEBHOOK_URL || DEFAULT_WEBHOOK_URL;
+  const url = process.env.WEBHOOK_URL;
   const token = process.env.WEBHOOK_TOKEN;
+
+  if (!url) {
+    res.status(500).json({ error: "Webhook no configurado" });
+    return;
+  }
 
   try {
     const body =
