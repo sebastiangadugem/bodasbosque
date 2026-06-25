@@ -133,25 +133,23 @@ const SPACES = [
   },
   {
     key: "suspiro",
-    name: "Suspiro",
+    name: "Jardín de las Hadas",
     location: "Morelos",
-    desc: "Jardín forestal de piedra volcánica, ficus y luces entre las ramas.",
+    desc: "Jardín forestal con ficus centenarios y luces cálidas entre las ramas.",
     images: SUSPIRO_IMGS,
   },
 ];
 
 
 const PARTNERS = [
-  { name: "Boschetto", logo: "https://scontent-qro3-1.xx.fbcdn.net/v/t39.30808-6/463032926_122103926468566339_3063976417530509406_n.jpg?stp=dst-jpg_tt6&cstp=mx1080x1080&ctp=s1080x1080&_nc_cat=102&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=ugKiGq5obasQ7kNvwHEjCjS&_nc_oc=AdpfJygOnvW-vKdGOQHylBZXToQeSp5tJQgBBK4tA0qgSa6sOjAOfJGEoEUQuxzEjU0&_nc_zt=23&_nc_ht=scontent-qro3-1.xx&_nc_gid=0F3D-Wvi9roHl5LitoTuhA&_nc_ss=7b289&oh=00_Af_LybT4vICD6BiGoPE1jTRccP5SfBYnjIAt3PEmk6izfw&oe=6A3A197F" },
-  { name: "Rincón del Bosque", logo: "https://scontent-qro1-1.xx.fbcdn.net/v/t39.30808-6/326387606_580792463483031_5082480362902578156_n.jpg?stp=dst-jpg_tt6&cstp=mx1200x1200&ctp=s1200x1200&_nc_cat=104&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=G-xT2q68L8YQ7kNvwEFJa_B&_nc_oc=AdqS2zLxwWsJ2gfgwLUpG1fwt13CQQRJ9t0tdwulKDzLI7HpZ6SW5yuDyDXLuTAd6pw&_nc_zt=23&_nc_ht=scontent-qro1-1.xx&_nc_gid=qTR8pWtbpQ69u6Xb2nP2Tw&_nc_ss=7b289&oh=00_Af-vlikccc8Um00FNXOtRVGXRPl_3O6ebUyx_f8eUxLe5g&oe=6A3A249D" },
+  { name: "Boschetto", logo: "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/logos/Captura%20de%20pantalla%202026-06-24%20a%20la(s)%206.53.14%20p.m..png" },
+  { name: "Rincón del Bosque", logo: "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/logos/logo_rden_del_bosque.png" },
   { name: "Bodas.com.mx", logo: "https://www.bodas.com.mx/assets/img/logos/gen_logoHeader.svg" },
-  { name: "Arden Wedding Garden", logo: "https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/logos/logo_rden_del_bosque.png" },
 ];
 
 const SOCIALS = [
-  { platform: "Instagram", handle: "@zahro_bodas", url: "https://www.instagram.com/zahro_bodas?igsh=NTc4MTIwNjQ2YQ==", net: "ig" as const },
   { platform: "Instagram", handle: "@bodasbosquepremium", url: "https://www.instagram.com/bodasbosquepremium?igsh=dW83cnNiYzR1aW11", net: "ig" as const },
-  { platform: "Facebook", handle: "Zahro Bodas", url: "https://www.facebook.com/zahrobodas?mibextid=LQQJ4d", net: "fb" as const },
+  { platform: "Instagram", handle: "@ardenbodasdelbosque", url: "https://www.instagram.com/ardenbodasdelbosque?igsh=YTAweHk3cGRkNnRy", net: "ig" as const },
 ];
 
 const CSS = `
@@ -176,7 +174,7 @@ const CSS = `
   .social-card:hover .social-arrow { color: #c3caa8; transform: translate(3px,-3px); }
 
   /* ── Crafted button states: directional fill wipe ── */
-  .btn-wipe { position: relative; overflow: hidden; isolation: isolate; transition: color 0.4s cubic-bezier(0.65,0,0.35,1); }
+  .btn-wipe { position: relative; overflow: hidden; isolation: isolate; transition: color 0.22s ease 0.2s; }
   .btn-wipe > * { position: relative; z-index: 1; }
   .btn-wipe::after { content: ""; position: absolute; inset: 0; z-index: 0; background: var(--wipe, #2e3b2b); transform: scaleY(0); transform-origin: bottom; transition: transform 0.42s cubic-bezier(0.65,0,0.35,1); }
   .btn-wipe:hover::after { transform: scaleY(1); }
@@ -189,9 +187,9 @@ const CSS = `
   .link-draw { position: relative; }
   .link-draw::after { content: ""; position: absolute; left: 0; bottom: -2px; height: 1px; width: 100%; background: currentColor; transform: scaleX(0); transform-origin: right; transition: transform 0.4s cubic-bezier(0.65,0,0.35,1); }
   .link-draw:hover::after { transform: scaleX(1); transform-origin: left; }
-  .cta-hero:hover { color: #f9f8f4; }
+  .cta-hero:hover { color: #ffffff; }
   .cta-proc:hover { color: #2e3b2b; }
-  .cta-submit:hover { color: #f9f8f4; }
+  .cta-submit:hover { color: #ffffff; }
   @keyframes heroFade { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
   .hero-fade-1 { animation: heroFade 0.8s ease forwards; opacity:0; }
   .hero-fade-2 { animation: heroFade 0.9s ease 0.12s forwards; opacity:0; }
@@ -273,6 +271,12 @@ const CSS = `
   .venue-strip-cta { opacity: 0; transition: opacity 0.4s ease 0.06s, color 0.3s, border-color 0.3s; }
   .venue-strip:hover .venue-strip-cta { opacity: 1; color: #f9f8f4 !important; border-bottom-color: rgba(249,248,244,0.5) !important; }
   @media (hover: none) { .venue-desc { opacity: 1 !important; transform: none !important; } .venue-strip-cta { opacity: 1 !important; } }
+  /* Desktop: contain the venue block and match the photo aspect ratio so the
+     image isn't cropped to a thin band by an over-wide container */
+  @media (min-width: 769px) {
+    .venue-block { max-width: 1180px; margin: 0 auto; }
+    .venue-strip { height: auto !important; aspect-ratio: 3 / 2; max-height: 82vh; }
+  }
   @media (max-width: 768px) {
     .venue-strip { height: 55vw !important; min-height: 280px !important; }
     .venue-strip-overlay-text { padding: 1.25rem !important; }
@@ -306,11 +310,14 @@ export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [form, setForm] = useState({ nombre: "", email: "", fecha: "", mensaje: "" });
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState(false);
 
   // Pillar gallery state
   const [activePillar, setActivePillar] = useState<string | null>(null);
   const [pillarIdx, setPillarIdx] = useState<Record<string, number>>({});
   const pillarIntervals = useRef<Record<string, ReturnType<typeof setInterval>>>({});
+  const pillarTouchX = useRef<number | null>(null);
 
   function startPillarCycle(label: string, total: number) {
     if (pillarIntervals.current[label]) return;
@@ -390,9 +397,24 @@ export default function App() {
     return () => { Object.values(intervals).forEach(clearInterval); };
   }, []);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setSent(true);
+    if (sending) return;
+    setSending(true);
+    setSendError(false);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) throw new Error("request failed");
+      setSent(true);
+    } catch {
+      setSendError(true);
+    } finally {
+      setSending(false);
+    }
   }
 
   const inputStyle: React.CSSProperties = {
@@ -729,7 +751,21 @@ export default function App() {
                   }}
                 >
                   {/* Image area */}
-                  <div style={{ position: "relative", width: "100%", aspectRatio: "4/5", overflow: "hidden", background: "#2e3b2b", flexShrink: 0 }}>
+                  <div
+                    style={{ position: "relative", width: "100%", aspectRatio: "4/5", overflow: "hidden", background: "#2e3b2b", flexShrink: 0, touchAction: isActive ? "pan-y" : undefined }}
+                    onTouchStart={isActive ? (e) => { pillarTouchX.current = e.touches[0].clientX; } : undefined}
+                    onTouchEnd={isActive ? (e) => {
+                      if (pillarTouchX.current == null) return;
+                      const dx = e.changedTouches[0].clientX - pillarTouchX.current;
+                      pillarTouchX.current = null;
+                      if (Math.abs(dx) < 40) return;
+                      const n = pillar.images.length;
+                      setPillarIdx((prev) => {
+                        const cur = prev[pillar.label] ?? 0;
+                        return { ...prev, [pillar.label]: dx < 0 ? (cur + 1) % n : (cur - 1 + n) % n };
+                      });
+                    } : undefined}
+                  >
                     {pillar.images.map((src, i) => (
                       <img
                         key={src}
@@ -831,7 +867,7 @@ export default function App() {
           const previewCount = Math.min(space.images.length, 8);
           const curIdx = venueAutoIdx[space.key] ?? 0;
           return (
-            <div key={space.key} style={{ marginBottom: si < SPACES.length - 1 ? "2px" : 0 }}>
+            <div key={space.key} className="venue-block" style={{ marginBottom: si < SPACES.length - 1 ? "2.5rem" : 0 }}>
               {/* Main photo area */}
               <div
                 className="venue-strip"
@@ -1155,11 +1191,16 @@ export default function App() {
                     onBlur={(e) => ((e.target as HTMLElement).style.borderBottomColor = "rgba(46,59,43,0.18)")}
                   />
                 </div>
-                <button type="submit" className="btn-wipe cta-submit"
-                  style={{ padding: "1.1rem 3rem", background: "#2e3b2b", border: "none", color: "#c3caa8", fontFamily: "'DM Sans', sans-serif", fontSize: "0.75rem", letterSpacing: "0.18em", textTransform: "uppercase", cursor: "pointer", alignSelf: "flex-start", ["--wipe" as string]: "#7c4a36" }}
+                <button type="submit" className="btn-wipe cta-submit" disabled={sending}
+                  style={{ padding: "1.1rem 3rem", background: "#2e3b2b", border: "none", color: "#c3caa8", fontFamily: "'DM Sans', sans-serif", fontSize: "0.75rem", letterSpacing: "0.18em", textTransform: "uppercase", cursor: sending ? "wait" : "pointer", opacity: sending ? 0.7 : 1, alignSelf: "flex-start", ["--wipe" as string]: "#7c4a36" }}
                 >
-                  <span>Enviar mensaje</span>
+                  <span>{sending ? "Enviando…" : "Enviar mensaje"}</span>
                 </button>
+                {sendError && (
+                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.82rem", color: "#a8543b", margin: 0 }}>
+                    No se pudo enviar. Intenta de nuevo o escríbenos por WhatsApp.
+                  </p>
+                )}
               </form>
             )}
           </div>
@@ -1168,9 +1209,9 @@ export default function App() {
 
       {/* ── SOCIAL ── */}
       <section className="cv-section" style={{ background: "#0f0e0c", padding: "4.5rem 3rem 0" }}>
-        <div style={{ maxWidth: "1000px", margin: "0 auto", textAlign: "center" }}>
+        <div style={{ maxWidth: "760px", margin: "0 auto", textAlign: "center" }}>
           <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.72rem", letterSpacing: "0.22em", textTransform: "uppercase", color: "#929186", marginBottom: "2.5rem" }}>Sigue de cerca nuestro trabajo</p>
-          <div className="three-col-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem", textAlign: "left" }}>
+          <div className="three-col-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "1rem", textAlign: "left" }}>
             {SOCIALS.map((s) => (
               <a key={s.handle} href={s.url} target="_blank" rel="noopener noreferrer" className="social-card">
                 <span className="social-ico" style={{ background: s.net === "ig" ? "linear-gradient(135deg,#feda75,#d62976 45%,#962fbf 80%,#4f5bd5)" : "#1877f2" }}>
@@ -1200,8 +1241,8 @@ export default function App() {
           </div>
           <div className="footer-links" style={{ display: "flex", gap: "2.5rem" }}>
             {[
-              { label: "Instagram", href: "https://www.instagram.com/zahro_bodas?igsh=NTc4MTIwNjQ2YQ==" },
-              { label: "Facebook", href: "https://www.facebook.com/zahrobodas?mibextid=LQQJ4d" },
+              { label: "Bodas Premium", href: "https://www.instagram.com/bodasbosquepremium?igsh=dW83cnNiYzR1aW11" },
+              { label: "Arden del Bosque", href: "https://www.instagram.com/ardenbodasdelbosque?igsh=YTAweHk3cGRkNnRy" },
               { label: "WhatsApp", href: "https://wa.me/5217771358375" },
             ].map((s) => (
               <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
