@@ -190,6 +190,14 @@ const CSS = `
   .cta-hero:hover { color: #ffffff; }
   .cta-proc:hover { color: #2e3b2b; }
   .cta-submit:hover { color: #ffffff; }
+  /* Success panel reveal */
+  @keyframes successReveal { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  .success-panel { animation: successReveal 0.9s cubic-bezier(0.22,1,0.36,1) both; }
+  /* Mobile menu reveal + staggered links */
+  @keyframes menuFade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes menuLink { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  .menu-overlay { animation: menuFade 0.35s ease both; }
+  .menu-overlay a.menu-link { animation: menuLink 0.55s cubic-bezier(0.22,1,0.36,1) both; }
   @keyframes heroFade { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
   .hero-fade-1 { animation: heroFade 0.8s ease forwards; opacity:0; }
   .hero-fade-2 { animation: heroFade 0.9s ease 0.12s forwards; opacity:0; }
@@ -271,14 +279,15 @@ const CSS = `
   .venue-strip-cta { opacity: 0; transition: opacity 0.4s ease 0.06s, color 0.3s, border-color 0.3s; }
   .venue-strip:hover .venue-strip-cta { opacity: 1; color: #f9f8f4 !important; border-bottom-color: rgba(249,248,244,0.5) !important; }
   @media (hover: none) { .venue-desc { opacity: 1 !important; transform: none !important; } .venue-strip-cta { opacity: 1 !important; } }
-  /* Desktop: contain the venue block and match the photo aspect ratio so the
-     image isn't cropped to a thin band by an over-wide container */
+  /* Large photographic 3:2 frame so the gallery fills the screen on desktop
+     while keeping crop minimal; full images are shown in the lightbox modal. */
+  .venue-strip { background: #0a0a08; }
   @media (min-width: 769px) {
-    .venue-block { max-width: 1180px; margin: 0 auto; }
-    .venue-strip { height: auto !important; aspect-ratio: 3 / 2; max-height: 82vh; }
+    .venue-block { max-width: 1440px; margin: 0 auto; }
+    .venue-strip { height: auto !important; aspect-ratio: 3 / 2; max-height: 90vh; }
   }
   @media (max-width: 768px) {
-    .venue-strip { height: 55vw !important; min-height: 280px !important; }
+    .venue-strip { height: 80vw !important; min-height: 320px !important; }
     .venue-strip-overlay-text { padding: 1.25rem !important; }
     .venue-thumb-strip { padding: 0.5rem 1.25rem !important; }
   }
@@ -490,20 +499,37 @@ export default function App() {
           </svg>
         </button>
         {menuOpen && (
-          <div style={{ position: "fixed", inset: 0, background: "#2e3b2b", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "2.5rem", zIndex: 100 }}>
-            <button onClick={() => setMenuOpen(false)}
-              style={{ position: "absolute", top: "1.5rem", right: "1.5rem", background: "none", border: "none", cursor: "pointer", color: "#c3caa8" }}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <line x1="4" y1="4" x2="20" y2="20" stroke="currentColor" strokeWidth="1.5"/>
-                <line x1="20" y1="4" x2="4" y2="20" stroke="currentColor" strokeWidth="1.5"/>
-              </svg>
-            </button>
-            {["Filosofía", "Espacios", "Galería", "Proceso", "Contacto"].map((item) => (
-              <a key={item} href={`#${item.toLowerCase()}`} onClick={() => setMenuOpen(false)}
-                style={{ color: "#c3caa8", fontFamily: "'Playfair Display', serif", fontSize: "2rem", textDecoration: "none" }}>
-                {item}
+          <div className="menu-overlay" style={{ position: "fixed", inset: 0, background: "rgba(18,23,15,0.96)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", display: "flex", flexDirection: "column", zIndex: 100 }}>
+            {/* Top bar */}
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "1.35rem 1.5rem", borderBottom: "1px solid rgba(195,202,168,0.1)" }}>
+              <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.05rem", letterSpacing: "0.04em", color: "#f9f8f4" }}>Bodas en el Bosque</span>
+              <button onClick={() => setMenuOpen(false)} aria-label="Cerrar menú"
+                style={{ background: "none", border: "none", cursor: "pointer", color: "#c3caa8", padding: "0.25rem", display: "flex" }}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <line x1="5" y1="5" x2="19" y2="19" stroke="currentColor" strokeWidth="1.5"/>
+                  <line x1="19" y1="5" x2="5" y2="19" stroke="currentColor" strokeWidth="1.5"/>
+                </svg>
+              </button>
+            </div>
+            {/* Links */}
+            <nav style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: "0.4rem", padding: "0 1.75rem" }}>
+              {["Filosofía", "Espacios", "Galería", "Proceso", "Contacto"].map((item, i) => (
+                <a key={item} href={`#${item.toLowerCase()}`} onClick={() => setMenuOpen(false)} className="menu-link"
+                  style={{ display: "flex", alignItems: "center", justifyContent: "space-between", color: "#f9f8f4", fontFamily: "'Playfair Display', serif", fontSize: "1.85rem", textDecoration: "none", padding: "0.95rem 0", borderBottom: "1px solid rgba(195,202,168,0.1)", animationDelay: `${0.08 + i * 0.06}s` }}>
+                  {item}
+                  <span style={{ color: "#7c4a36", display: "flex" }}>
+                    <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M5 11L11 5M11 5H6M11 5V10" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  </span>
+                </a>
+              ))}
+            </nav>
+            {/* Bottom CTA */}
+            <div style={{ padding: "1.5rem 1.75rem 2.5rem" }}>
+              <a href="https://wa.me/5217771358375" target="_blank" rel="noopener noreferrer" onClick={() => setMenuOpen(false)}
+                style={{ display: "block", textAlign: "center", padding: "1.1rem", background: "#c3caa8", color: "#2e3b2b", fontFamily: "'DM Sans', sans-serif", fontSize: "0.78rem", fontWeight: 500, letterSpacing: "0.18em", textTransform: "uppercase", textDecoration: "none" }}>
+                Escríbenos por WhatsApp
               </a>
-            ))}
+            </div>
           </div>
         )}
       </nav>
@@ -1139,7 +1165,7 @@ export default function App() {
               Comencemos a diseñar<br /><em style={{ fontStyle: "italic" }}>tu boda en el bosque</em>
             </h2>
             <p style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 300, fontSize: "1rem", lineHeight: 1.88, color: "#3a3a36", marginBottom: "2rem" }}>
-              Cuéntanos sobre tu fecha aproximada, tu visión y cómo imaginas este momento tan especial. Te responderemos de forma personalizada y te acompañaremos desde el primer mensaje.
+              Cuéntanos sobre tu fecha aproximada, tu visión y cómo imaginas este momento tan especial.
             </p>
             <div style={{ display: "flex", flexDirection: "column" }}>
               {[
@@ -1159,9 +1185,12 @@ export default function App() {
           </div>
           <div>
             {sent ? (
-              <div style={{ padding: "4rem 3rem", background: "#2e3b2b", textAlign: "center" }}>
-                <p style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontSize: "1.5rem", color: "#c3caa8", marginBottom: "1rem" }}>Gracias por escribirnos</p>
-                <p style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 300, fontSize: "0.9rem", color: "rgba(195,202,168,0.7)", lineHeight: 1.8 }}>Nos pondremos en contacto en las próximas 24 horas. El bosque ya sabe su nombre.</p>
+              <div className="success-panel" style={{ padding: "3.75rem 2.75rem", background: "rgba(46,59,43,0.05)", border: "1px solid rgba(46,59,43,0.14)", backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)", textAlign: "center" }}>
+                <span style={{ width: "52px", height: "52px", borderRadius: "50%", border: "1px solid rgba(124,74,54,0.35)", display: "inline-flex", alignItems: "center", justifyContent: "center", color: "#7c4a36", marginBottom: "1.75rem" }}>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                </span>
+                <p style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontSize: "1.7rem", color: "#2e3b2b", marginBottom: "0.85rem" }}>Gracias por escribirnos</p>
+                <p style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 300, fontSize: "0.92rem", color: "#6b6b62", lineHeight: 1.8, margin: 0 }}>Nos pondremos en contacto en las próximas 24 horas.</p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
@@ -1329,6 +1358,7 @@ export default function App() {
       )}
 
       {/* ── WHATSAPP FAB ── */}
+      {!menuOpen && (
       <a href="https://wa.me/5217771358375?text=Hola,%20me%20gustar%C3%ADa%20saber%20m%C3%A1s%20sobre%20Bodas%20en%20el%20Bosque"
         target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp"
         style={{ position: "fixed", bottom: "2rem", right: "2rem", zIndex: 99, width: "52px", height: "52px", background: "#2e3b2b", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 20px rgba(46,59,43,0.35)", transition: "transform 0.3s, box-shadow 0.3s", textDecoration: "none" }}
@@ -1339,6 +1369,7 @@ export default function App() {
           <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
         </svg>
       </a>
+      )}
     </div>
   );
 }

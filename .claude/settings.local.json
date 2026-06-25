@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(ln -sf ../../venues_bosque /Users/gadu/Downloads/bodas_bosque_vip/public/venues_bosque)",
-      "Bash(python3 -c \"import sys,urllib.parse; [print\\(urllib.parse.quote\\(l.strip\\(\\)\\)\\) for l in sys.stdin]\")",
-      "Bash(python3)"
-    ]
-  }
-}
