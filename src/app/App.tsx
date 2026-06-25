@@ -279,17 +279,19 @@ const CSS = `
   .venue-strip-cta { opacity: 0; transition: opacity 0.4s ease 0.06s, color 0.3s, border-color 0.3s; }
   .venue-strip:hover .venue-strip-cta { opacity: 1; color: #f9f8f4 !important; border-bottom-color: rgba(249,248,244,0.5) !important; }
   @media (hover: none) { .venue-desc { opacity: 1 !important; transform: none !important; } .venue-strip-cta { opacity: 1 !important; } }
-  /* Large photographic 3:2 frame so the gallery fills the screen on desktop
-     while keeping crop minimal; full images are shown in the lightbox modal. */
+  /* Single 1200px content column shared by header, photo and thumbnails so
+     everything aligns and stays centered. Photo = full column width, 3:2,
+     no max-height (which previously shrank the width and broke centering). */
   .venue-strip { background: #0a0a08; }
+  .venue-block { margin: 0 auto; }
   @media (min-width: 769px) {
-    .venue-block { max-width: 1440px; margin: 0 auto; }
-    .venue-strip { height: auto !important; aspect-ratio: 3 / 2; max-height: 90vh; }
+    .venue-block { max-width: 1200px; padding: 0 3rem; }
+    .venue-strip { width: 100%; height: auto !important; aspect-ratio: 3 / 2; }
   }
   @media (max-width: 768px) {
     .venue-strip { height: 80vw !important; min-height: 320px !important; }
     .venue-strip-overlay-text { padding: 1.25rem !important; }
-    .venue-thumb-strip { padding: 0.5rem 1.25rem !important; }
+    .venue-thumb-strip { padding: 0.5rem 0 !important; }
   }
 
   /* ── Pillar hint ── */
@@ -933,7 +935,7 @@ export default function App() {
                 </div>
               </div>
               {/* Thumbnail strip */}
-              <div className="venue-thumb-strip" style={{ background: "#0a0a08", padding: "0.65rem 3rem", display: "flex", gap: "3px", overflowX: "auto" }}>
+              <div className="venue-thumb-strip" style={{ background: "#0a0a08", padding: "0.65rem 0", display: "flex", gap: "3px", overflowX: "auto" }}>
                 {space.images.slice(0, previewCount).map((src, i) => (
                   <div
                     key={i}
