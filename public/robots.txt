@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://bodasbosquevip.vercel.app/sitemap.xml

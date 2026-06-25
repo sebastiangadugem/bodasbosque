@@ -549,7 +549,7 @@ export default function App() {
         const dist = Math.hypot(e.clientX - last.x, e.clientY - last.y);
         const dt = Math.max(12, now - last.t);
         const speed = dist / dt; // px/ms
-        earthTargetRef.current = Math.max(earthTargetRef.current, Math.min(0.12, speed * 0.05));
+        earthTargetRef.current = Math.max(earthTargetRef.current, Math.min(0.045, speed * 0.02));
         if (earthFilterRef.current) earthFilterRef.current.frequency.setTargetAtTime(3200 + Math.min(speed, 4) * 950, ctx.currentTime, 0.04);
       }
     }
@@ -886,7 +886,7 @@ export default function App() {
                   <img
                     key={i}
                     src={src}
-                    alt={`Boda real en el bosque diseñada por Bodas en el Bosque — imagen ${i + 1}`}
+                    alt={`Boda en el bosque diseñada por Bodas en el Bosque — imagen ${i + 1}`}
                     loading="lazy"
                     decoding="async"
                     style={{
@@ -1246,7 +1246,7 @@ export default function App() {
       <section id="testimonios" className="cv-section" style={{ background: "#f9f8f4", padding: "5rem 3rem", overflow: "hidden" }}>
         <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: "3.5rem" }}>
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.72rem", letterSpacing: "0.22em", textTransform: "uppercase", color: "#929186", marginBottom: "1.25rem" }}>Bodas reales</p>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.72rem", letterSpacing: "0.22em", textTransform: "uppercase", color: "#929186", marginBottom: "1.25rem" }}>Nuestras bodas</p>
             <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2rem, 3.5vw, 3.2rem)", fontWeight: 400, color: "#2e3b2b", lineHeight: 1.15 }}>
               Momentos mágicos <em style={{ fontStyle: "italic" }}>que hemos creado</em>
             </h2>
@@ -1288,7 +1288,7 @@ export default function App() {
                     cursor: "pointer",
                   }}
                 >
-                  <img src={src} alt={`Momento de boda real en el bosque ${i + 1}`} loading="lazy" decoding="async" />
+                  <img src={src} alt={`Momento de boda en el bosque ${i + 1}`} loading="lazy" decoding="async" />
                 </figure>
               );
             })}
@@ -1514,7 +1514,7 @@ export default function App() {
                 <span style={{ fontSize: "2rem", display: "block", marginBottom: "1.25rem" }} aria-hidden="true">🌿</span>
                 <p style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontSize: "1.7rem", color: "#2e3b2b", marginBottom: "0.85rem" }}>¡Recibimos tu mensaje!</p>
                 <p style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 300, fontSize: "0.92rem", color: "#6b6b62", lineHeight: 1.8, marginBottom: "1.75rem" }}>
-                  Te responderemos en menos de 24 horas. Mientras tanto, explora nuestras bodas reales en Instagram.
+                  Te responderemos en menos de 24 horas. Mientras tanto, explora nuestras bodas en Instagram.
                 </p>
                 <a href="https://www.instagram.com/bodasbosquepremium?igsh=dW83cnNiYzR1aW11" target="_blank" rel="noopener noreferrer" className="link-draw"
                   style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.8rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "#7c4a36", textDecoration: "none" }}>
@@ -1714,7 +1714,7 @@ export default function App() {
       {testiZoom && (
         <div className="venue-modal-backdrop" onClick={() => setTestiZoom(null)}>
           <div onClick={(e) => e.stopPropagation()} style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <img src={testiZoom} alt="Momento de boda real en el bosque" decoding="async" className="venue-modal-img" />
+            <img src={testiZoom} alt="Momento de boda en el bosque" decoding="async" className="venue-modal-img" />
             <button className="venue-modal-btn" onClick={() => setTestiZoom(null)} aria-label="Cerrar"
               style={{ position: "absolute", top: "-3rem", right: 0, width: "36px", height: "36px", borderRadius: "50%" }}>
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><line x1="2" y1="2" x2="12" y2="12" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/><line x1="12" y1="2" x2="2" y2="12" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/></svg>
