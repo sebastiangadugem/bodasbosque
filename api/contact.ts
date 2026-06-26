@@ -25,7 +25,7 @@ export default async function handler(req: any, res: any) {
   try {
     const body =
       typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body || {};
-    const { nombre, email, fecha, mensaje } = body;
+    const { nombre, email, telefono, fecha, mensaje } = body;
 
     if (!nombre || !email) {
       res.status(400).json({ error: "Faltan campos obligatorios" });
@@ -41,6 +41,7 @@ export default async function handler(req: any, res: any) {
       body: JSON.stringify({
         nombre,
         email,
+        telefono: telefono || "",
         fecha: fecha || "",
         mensaje: mensaje || "",
         source: "bodas-en-el-bosque-web",
