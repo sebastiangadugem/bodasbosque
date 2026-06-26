@@ -1,89 +1,112 @@
-# Progreso de sesión — Junio 2026
+# Progreso de sesión · Bodas en el Bosque
 
-> Bitácora de los cambios hechos en la conversación con Claude. Léela para entender
-> en qué estado quedó el proyecto y qué falta. Complementa a `CLAUDE.md`.
-
-**Última actualización:** 2026-06-19
-**Commit de referencia:** `1bfd870` (rama `main`, ya en GitHub)
+> Bitácora de los cambios hechos en cada sesión de trabajo con Claude.
+> Complementa a `CLAUDE.md`. Ver `CHANGELOG.md` para historial completo.
 
 ---
 
-## 1. Estado del despliegue (LO MÁS IMPORTANTE)
+## Sesión 2026-06-25 — Mejoras de producto y despliegue a producción
 
-- **Repo GitHub:** `sebastiangadugem/bodasbosque` — `main` tiene la versión correcta.
-- **Vercel:** conectado a ese repo vía integración Git.
-- **Build verificado localmente:** `npm run build` → `dist/` incluye `dist/venues_bosque/...`.
+**Commits de referencia:** `640b08b`, `47d7cd8` (rama `main`, auto-desplegado en Vercel)
+
+---
+
+### 1. Carrusel editorial de imágenes reales (Supabase)
+
+- **Sección:** "Momentos mágicos que hemos creado" (antes: "Lo que dicen nuestras parejas").
+- Fotos servidas desde el bucket `testimonios_recomendaciones` de Supabase (público).
+- Array `TESTIMONIO_FILES` en `App.tsx` con 8 archivos (filenames con caracteres especiales codificados con `encodeURIComponent`).
+- Estilo editorial tipo revista: `.testi-stage` / `.testi-frame`. Auto-advance cada 4.5 s.
+- Imágenes pequeñas y nítidas, sin overlay de UI de Supabase (foto `...3.39.52 a.m..png` eliminada del array porque mostraba el dashboard).
+
+### 2. Sistema de audio (Web Audio API — 100% sintético)
+
+No se instalaron dependencias. Todo el audio se genera en el navegador.
+
+| Elemento | Descripción |
+|----------|-------------|
+| Click ASMR | Dos transitorios (gain 0.13 + 0.06). Highpass 1400 Hz + bandpass 3400 Hz. Función `tick()`. |
+| Textura "hojas" | Noise blanco granular. Highpass 1800 Hz + bandpass 4200 Hz. Gain máx **0.045** (reducido desde 0.12). Speed del cursor multiplica gain × 0.02. Función `initEarth()`. |
+| Ambient forestal | Loop MP3 desde Supabase. Volumen 0.16 (`fadeAudio()`). Fade-in en primer gesto, fade-out al silenciar. |
+| Toggle UI | Botón con `.sound-bars` — tres barras animadas tipo ecualizador (keyframe `soundBar`). |
+| Arranque | Solo tras primer gesto del usuario (`pointerdown` / `keydown`). Seguro para auto-play policy. |
+
+**Función central:** `ensureCtx()` — crea `AudioContext` si no existe. `toggleSound()` — alterna on/off con fade. `fadeAudio()` — ajusta volumen ambient gradualmente.
+
+URL del ambient:
+```
+https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/AMBForst_Forest%20(ID%200100)_BigSoundBank.com.mp3
+```
+
+### 3. SEO completo
+
+| Asset / Tag | Detalle |
+|-------------|---------|
+| `public/hero-og.jpg` | Crop 1200×630 de la foto hero para compartir en redes |
+| `public/robots.txt` | `Allow: /`, apunta a `sitemap.xml` |
+| `public/sitemap.xml` | URL raíz, `lastmod 2026-06-25`, `priority 1.0` |
+| JSON-LD | Schema `ProfessionalService` (name, description, url, image, email, telephone, priceRange, areaServed, address, sameAs) |
+| Open Graph | type, site_name, title, description, image (con dimensiones y alt), url, locale |
+| Twitter Card | `summary_large_image`, image:alt |
+| `theme-color` | `#2e3b2b` |
+| keywords | 8 términos de long-tail bodas bosque México |
+| canonical | `https://bodasbosquevip.vercel.app/` |
+
+### 4. Seguridad del webhook (formulario de contacto)
+
+- `WEBHOOK_URL` eliminado del código fuente. Vive **solo** en Vercel → Settings → Environment Variables (cifradas, todos los entornos).
+- `api/contact.ts` devuelve 500 si `process.env.WEBHOOK_URL` no está definido.
+- Variable opcional `WEBHOOK_TOKEN` para Bearer auth en n8n.
+- URL de producción: `https://lowcode.morelos.gob.mx/webhook/4d7a115f-efc7-4f23-897b-683353d4faf4`
+
+### 5. Secciones eliminadas
+
+- **Equipo** ("Quiénes estarán contigo") — removida completamente del JSX.
+- **Criterios** ("Este servicio es para ti si buscas:") — removida completamente.
+
+### 6. Cambios de texto y contenido
+
+- CTA secundario Hero: "Ver bodas reales" → **"Revisa nuestro trabajo"**.
+- Toda mención de "bodas reales" / "boda real" eliminada del texto visible.
+- Título carrusel: **"Momentos mágicos que hemos creado"**.
+- Footer: teléfono real `+52 777 135 8375` (`tel:+5217771358375`), email real `Bodasenelbosque@gmail.com`.
+- Footer: links a Instagram reales (`@bodasbosquepremium`, `@ardenbodasdelbosque`), Aviso de Privacidad (`/aviso-de-privacidad` — placeholder).
+- Footer: año dinámico (`new Date().getFullYear()`).
+- Panel de éxito post-formulario: emoji 🌿 + link a Instagram.
+- CTA intermedio en sección Filosofía: "Comencemos a diseñar la tuya →" → `#contacto`.
+
+### 7. Tipografía
+
+- **Cormorant Garamond** añadida a `src/styles/fonts.css` (junto a Playfair Display y DM Sans).
+
+---
+
+## Pendientes conocidos (2026-06-25)
+
+| Prioridad | Tarea |
+|-----------|-------|
+| 🔴 Alta | **Rotar credenciales S3 de Supabase** — key `6c9c7ae…` fue expuesta en chat. Regenerar en Supabase → Settings → Storage → S3 Access. |
+| 🟡 Media | **Crear página `/aviso-de-privacidad`** real (obligatorio LFPDPPP México). El footer ya apunta a esa ruta. |
+| 🟡 Media | **Probar formulario de contacto en producción** end-to-end (no se hizo para no contaminar n8n con datos de prueba). |
+| 🟢 Baja | Verificar indexación SEO en Google Search Console tras 2–4 semanas. |
+
+---
+
+## Sesión 2026-06-19 — Rediseño inicial y optimización de imágenes
+
+**Commit de referencia:** `1bfd870`
+
+### Resumen
+
+- Hero rediseñado: prueba social (avatares + "+120 bodas diseñadas en bosques de México"), CTA "Cuéntanos tu fecha".
+- Pilares con transición fade (1000ms), hover/click, auto-cycle por pilar.
+- Espacios: dos venues (Rincón del Bosque / Suspiro), modal lightbox con teclado.
+- 106 fotos de venues convertidas de PNG → JPEG (8× más ligeras, de ~350 MB a ~45 MB).
+- Symlink `public/venues_bosque` reemplazado por carpeta real (fix crítico para Vercel).
+- `.gitignore` creado.
 
 ### Problema resuelto: imágenes no cargaban en Vercel
-**Causa raíz #1 — symlink absoluto.** `public/venues_bosque` era un *enlace simbólico*
-a una ruta absoluta del Mac (`/Users/gadu/...`). En Vercel esa ruta no existe → las
-imágenes daban 404. **Solución:** se reemplazó por una **carpeta real** dentro de
-`public/venues_bosque/` con los archivos `.jpg`.
 
-**Causa raíz #2 — deploy viejo de drag-and-drop.** El primer deploy se subió manualmente
-(drag-and-drop) con el symlink roto. Darle "Redeploy" reconstruía ese mismo snapshot, no
-git. **Solución:** forzar deploy desde git con un push nuevo (la integración Git de Vercel
-construye automáticamente en cada push a `main`).
+Symlink absoluto del Mac no existe en Vercel → solución: carpeta real con archivos `.jpg`. Commit forzado desde git (no drag-and-drop) activa el build correcto.
 
-> ⚠️ Si las imágenes vuelven a fallar: verificar que Vercel esté desplegando el **commit
-> de git** (no un deploy manual) y que `public/venues_bosque/` exista como carpeta real
-> (no symlink). Comando: `git ls-files public/venues_bosque | wc -l` debe dar **106**.
-
----
-
-## 2. Optimización de imágenes
-
-- Las 106 fotos de venues eran PNG (~3.5 MB c/u, 350 MB total) → el push a GitHub
-  fallaba por tamaño (HTTP 408) y el scroll se trababa por decodificar PNGs pesados.
-- **Convertidas a JPEG** con `sips` (nativo macOS): máx 1600px, calidad 72 → **~430 KB
-  promedio (8× más ligeras)**. Originales `.png` eliminados.
-- **Repo:** de ~395 MB a ~45 MB. Historial reescrito (commit raíz) para que los PNG
-  nunca entraran a git.
-- Rutas en `App.tsx` actualizadas de `.png` → `.jpg`.
-
----
-
-## 3. Rediseño y features (todo en `src/app/App.tsx`)
-
-- **Hero:** rediseño con título "Bodas en el Bosque", prueba social (avatares +
-  "+120 bodas diseñadas en bosques de México"), CTA cuadrado "Cuéntanos tu fecha".
-- **Pilares (Filosofía):** tarjetas con transición fade (1000ms), hover/click,
-  auto-cycle de imágenes por pilar.
-- **Espacios:** dos venues (Rincón del Bosque / Suspiro) con imagen principal
-  auto-cíclica, badge "N fotos", tira de miniaturas y modal lightbox con teclado
-  (ESC / flechas).
-- **Confían en nosotros:** carrusel marquee (48s) de logos en cajas de tamaño
-  uniforme (`.partner-box`), fondo blanco.
-- **Síguenos (redes):** eyebrow "SIGUE DE CERCA NUESTRO TRABAJO" + 3 tarjetas
-  (Instagram @zahro_bodas, @bodasbosquepremium, Facebook Zahro Bodas) con iconos
-  de marca y flecha animada.
-- **Contacto:** sin fila de ubicación; email `Bodasenelbosque@gmail.com`;
-  WhatsApp `+52 777 135 8375` (`wa.me/5217771358375`).
-
-### Estados de botón "crafteados" (evitando animaciones genéricas)
-- `.btn-wipe`: relleno que sube con `scaleY` + cambio de color del texto sincronizado.
-  Hero (texto → crema `#f9f8f4` para contraste), Proceso, Submit.
-- Flecha deslizante en CTA de proceso; `.link-draw` (subrayado dibujado).
-
-### Performance
-- `content-visibility: auto` en 6 secciones (omite render fuera de viewport).
-- Auto-cycle de venues pausado cuando la sección no está visible / pestaña oculta
-  (IntersectionObserver + `document.hidden`).
-- Aceleración GPU en marquee; `loading="lazy"` + `decoding="async"` en imágenes.
-
----
-
-## 4. Higiene de repo
-- `.gitignore` creado: `node_modules/`, `dist/`, `.env`, `.env.*`, `.DS_Store`, `*.log`.
-
----
-
-## 5. Pendientes / riesgos conocidos
-
-1. **Logos de Facebook** (Boschetto, Rincón del Bosque) en `App.tsx` usan URLs del CDN
-   de Facebook con **token que expira en días** (`oe=...`). Cuando dejen de verse,
-   descargarlos a `public/` y servirlos local (como se hizo con los venues).
-   Bodas.com.mx y Arden son estables.
-2. **Token de GitHub** `ghp_…` fue expuesto en chat → **debe revocarse/regenerarse**.
-3. Tras confirmar el deploy, considerar quitar `<meta name="robots" content="noindex">`
-   de `index.html` si se quiere que Google indexe el sitio.
+> ⚠️ Si las imágenes vuelven a fallar: verificar `git ls-files public/venues_bosque | wc -l` → debe dar **106**.

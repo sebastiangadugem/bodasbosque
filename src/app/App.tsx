@@ -377,7 +377,7 @@ export default function App() {
 
   // All state hoisted here to avoid hook conflicts in sub-components
   const [menuOpen, setMenuOpen] = useState(false);
-  const [form, setForm] = useState({ nombre: "", email: "", fecha: "", mensaje: "" });
+  const [form, setForm] = useState({ nombre: "", email: "", telefono: "", fecha: "", mensaje: "" });
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
   const [sendError, setSendError] = useState(false);
@@ -1526,6 +1526,7 @@ export default function App() {
                 {[
                   { label: "Nombre completo", key: "nombre", type: "text", placeholder: "Elena & Rodrigo", required: true },
                   { label: "Correo electrónico", key: "email", type: "email", placeholder: "hola@tucorreo.com", required: true },
+                  { label: "Teléfono celular", key: "telefono", type: "tel", placeholder: "+52 777 123 4567", required: false },
                   { label: "Fecha aproximada de la boda", key: "fecha", type: "text", placeholder: "Otoño 2025 / Noviembre 2025", required: false },
                 ].map((field) => (
                   <div key={field.key}>

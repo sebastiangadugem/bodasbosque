@@ -32,7 +32,8 @@ Todo lo marcado **INMUTABLE** no debe modificarse sin solicitud explícita Tipo 
 ## Tipografía · `src/styles/fonts.css` (INMUTABLE)
 
 **Playfair Display** (serif) → H1, H2, H3, logo, pull quotes  
-**DM Sans** (sans-serif) → párrafos, labels, botones, links, eyebrows
+**DM Sans** (sans-serif) → párrafos, labels, botones, links, eyebrows  
+**Cormorant Garamond** (serif display) → subtítulos alternativos, carrusel editorial
 
 | Elemento | Tamaño | Weight | Line-height |
 |----------|--------|--------|-------------|
@@ -85,6 +86,7 @@ Todo lo marcado **INMUTABLE** no debe modificarse sin solicitud explícita Tipo 
 | `scrollPulse` | opacity 0.35→1→0.35 | 2.2s ∞ | Indicador scroll |
 | `galleryFade` | crossfade imágenes | 20s ∞ | Galería S02.A |
 | `dotPulse` | scaleX + opacity | 20s ∞ | Dots S02.A |
+| `soundBar` | scaleY 0.3→1→0.3 con delays escalonados | 1.1–1.3s ∞ | Ecualizador toggle de sonido |
 
 ### Transiciones hover
 
@@ -101,6 +103,47 @@ Todo lo marcado **INMUTABLE** no debe modificarse sin solicitud explícita Tipo 
 | Cards Pilares — activo | sombra elevada, flechas + dots, `.pillar-active` | — |
 | Botón submit | `#2e3b2b` → `#7c4a36` | 0.35s |
 | FAB WhatsApp | scale(1.1) | 0.3s |
+| Carrusel `.testi-frame` | opacity crossfade | 0.6s ease |
+
+---
+
+## Sistema de audio · `src/app/App.tsx`
+
+Todo el audio se genera en el navegador con la Web Audio API. No hay archivos `.mp3` de SFX en el repo.
+
+### Arquitectura
+
+| Función | Descripción |
+|---------|-------------|
+| `ensureCtx()` | Crea `AudioContext` la primera vez que el usuario interactúa. |
+| `tick()` | Sintetiza un clic ASMR: dos transitorios de ruido blanco (gain 0.13 + 0.06), highpass 1400 Hz, bandpass 3400 Hz. |
+| `initEarth()` | Inicia la textura de hojas: ruido blanco granular, highpass 1800 Hz, bandpass 4200 Hz. El gain se escala con la velocidad del cursor (multiplier 0.02, máx **0.045**). |
+| `toggleSound()` | Alterna on/off. En off: fade a 0 + `.sound-bars` se pausa. |
+| `fadeAudio()` | Rampa de volumen del ambient (target 0.16, 800 ms). |
+
+### Valores de referencia
+
+| Parámetro | Valor | Notas |
+|-----------|-------|-------|
+| Ambient volume | 0.16 | Objetivo de `fadeAudio()` |
+| Leaves gain máx | 0.045 | Reducido desde 0.12 para equilibrio con ambient |
+| Leaves speed multiplier | 0.02 | Escala la velocidad del cursor a gain |
+| Click transient 1 | 0.13 | Primer pico del clic |
+| Click transient 2 | 0.06 | Segundo pico (eco) |
+| Click highpass | 1400 Hz | Filtra frecuencias bajas del clic |
+| Click bandpass | 3400 Hz | Timbre del clic |
+| Leaves highpass | 1800 Hz | Filtra graves de la textura |
+| Leaves bandpass | 4200 Hz | Textura "crujido" ASMR |
+
+### Audio ambient
+
+URL del archivo en Supabase (CC0, BigSoundBank):
+```
+https://vlmoncatqrdlrneznpma.supabase.co/storage/v1/object/public/photos/AMBForst_Forest%20(ID%200100)_BigSoundBank.com.mp3
+```
+- Elemento `<audio>` en el JSX apuntado a esta URL.
+- **Sin** atributo `crossOrigin` (Supabase no envía los headers CORS necesarios para Web Audio API). El ambient no pasa por el grafo de Web Audio — se controla con `.volume` directamente.
+- Auto-play: solo tras primer `pointerdown` / `keydown`.
 
 ---
 
