@@ -370,6 +370,25 @@ const CSS = `
     .testi-frame img { box-shadow: 0 10px 28px rgba(46,59,43,0.16); }
     .testi-arrow { width: 36px; height: 36px; }
   }
+
+  /* ── Tendencias 2027 Campaign Modal ── */
+  @keyframes tendOverlay { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes tendModal { from { opacity: 0; transform: translateY(28px) scale(0.965); } to { opacity: 1; transform: translateY(0) scale(1); } }
+  .tend-overlay { animation: tendOverlay 0.5s ease both; background: rgba(15,14,12,0.82); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); position: fixed; inset: 0; z-index: 300; display: flex; align-items: center; justify-content: center; padding: 1rem; overflow-y: auto; }
+  .tend-modal { animation: tendModal 0.72s cubic-bezier(0.22,1,0.36,1) 0.08s both; max-width: 900px; width: 100%; display: flex; max-height: 92vh; overflow: hidden; box-shadow: 0 32px 80px rgba(15,14,12,0.5); }
+  .tend-left { background: #2e3b2b; padding: 3rem 2.5rem; display: flex; flex-direction: column; justify-content: center; flex: 0 0 42%; position: relative; overflow: hidden; }
+  .tend-right { background: #f9f8f4; padding: 3rem 2.5rem; flex: 1; min-width: 0; overflow-y: auto; position: relative; }
+  .tend-input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(46,59,43,0.16); padding: 0.75rem 0; font-family: 'DM Sans', sans-serif; font-weight: 300; font-size: 0.95rem; color: #0f0e0c; outline: none; transition: border-color 0.3s; }
+  .tend-input:focus { border-bottom-color: #2e3b2b; }
+  .tend-input::placeholder { color: rgba(46,59,43,0.3); }
+  .tend-pill { position: fixed; bottom: 6rem; right: 2rem; z-index: 98; display: flex; align-items: center; gap: 0.5rem; padding: 0.62rem 1.1rem; background: rgba(46,59,43,0.94); border: 1px solid rgba(195,202,168,0.28); color: #c3caa8; font-family: 'DM Sans', sans-serif; font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 4px 20px rgba(15,14,12,0.28); transition: background 0.3s, transform 0.25s; }
+  .tend-pill:hover { background: rgba(46,59,43,1); transform: translateY(-2px); }
+  @media (max-width: 768px) {
+    .tend-modal { flex-direction: column; max-height: 96vh; }
+    .tend-left { flex: none; padding: 2rem 1.5rem; }
+    .tend-right { padding: 2rem 1.5rem; }
+    .tend-pill { bottom: 5.8rem; right: 1.25rem; }
+  }
 `;
 
 export default function App() {
@@ -381,6 +400,12 @@ export default function App() {
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
   const [sendError, setSendError] = useState(false);
+
+  // Tendencias 2027 modal
+  const [tendenciasOpen, setTendenciasOpen] = useState(false);
+  const [tendenciasForm, setTendenciasForm] = useState({ nombres: "", email: "", telefono: "", ubicacion: "" });
+  const [tendenciasSent, setTendenciasSent] = useState(false);
+  const [tendenciasSending, setTendenciasSending] = useState(false);
 
   // Pillar gallery state
   const [activePillar, setActivePillar] = useState<string | null>(null);
@@ -610,6 +635,42 @@ export default function App() {
       if (next && audioCtxRef.current && audioCtxRef.current.state === "suspended") audioCtxRef.current.resume();
       return next;
     });
+  }
+
+  // Tendencias 2027 — auto-open once per session, close on ESC
+  useEffect(() => {
+    if (sessionStorage.getItem("bb-tend-seen")) return;
+    const t = setTimeout(() => {
+      setTendenciasOpen(true);
+      sessionStorage.setItem("bb-tend-seen", "1");
+    }, 2800);
+    return () => clearTimeout(t);
+  }, []);
+
+  useEffect(() => {
+    if (!tendenciasOpen) return;
+    const fn = (e: KeyboardEvent) => { if (e.key === "Escape") setTendenciasOpen(false); };
+    window.addEventListener("keydown", fn);
+    return () => window.removeEventListener("keydown", fn);
+  }, [tendenciasOpen]);
+
+  async function handleTendenciasSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (tendenciasSending) return;
+    setTendenciasSending(true);
+    try {
+      const res = await fetch("/api/tendencias", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(tendenciasForm),
+      });
+      if (!res.ok) throw new Error("failed");
+      setTendenciasSent(true);
+    } catch {
+      // allow retry
+    } finally {
+      setTendenciasSending(false);
+    }
   }
 
   // Venue modal state
@@ -1722,6 +1783,173 @@ export default function App() {
             </button>
           </div>
         </div>
+      )}
+
+      {/* ── TENDENCIAS 2027 MODAL ── */}
+      {tendenciasOpen && (
+        <div className="tend-overlay" onClick={() => setTendenciasOpen(false)}>
+          <div className="tend-modal" onClick={(e) => e.stopPropagation()}>
+
+            {/* ─── LEFT PANEL ─── */}
+            <div className="tend-left">
+              {/* Botanical corner decoration top-right */}
+              <svg style={{ position: "absolute", top: 0, right: 0, opacity: 0.13, width: "130px", pointerEvents: "none" }} viewBox="0 0 130 130" fill="none">
+                <path d="M130 0 C95 18, 78 55, 55 130" stroke="#c3caa8" strokeWidth="0.7" fill="none"/>
+                <path d="M130 22 C105 38, 88 65, 72 130" stroke="#c3caa8" strokeWidth="0.5" fill="none"/>
+                <ellipse cx="88" cy="38" rx="17" ry="7" transform="rotate(-38 88 38)" fill="#c3caa8"/>
+                <ellipse cx="72" cy="68" rx="13" ry="5.5" transform="rotate(-26 72 68)" fill="#c3caa8"/>
+                <ellipse cx="57" cy="98" rx="10" ry="4" transform="rotate(-14 57 98)" fill="#c3caa8"/>
+              </svg>
+              {/* Botanical corner decoration bottom-left */}
+              <svg style={{ position: "absolute", bottom: 0, left: 0, opacity: 0.1, width: "90px", pointerEvents: "none" }} viewBox="0 0 90 90" fill="none">
+                <path d="M0 90 C18 72, 48 62, 90 72" stroke="#c3caa8" strokeWidth="0.7" fill="none"/>
+                <ellipse cx="28" cy="68" rx="13" ry="4.5" transform="rotate(22 28 68)" fill="#c3caa8"/>
+                <ellipse cx="58" cy="70" rx="10" ry="3.5" transform="rotate(10 58 70)" fill="#c3caa8"/>
+              </svg>
+
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.6rem", letterSpacing: "0.28em", textTransform: "uppercase", color: "rgba(195,202,168,0.55)", marginBottom: "0.85rem" }}>
+                10 años · 2017 – 2027
+              </p>
+              <div style={{ width: "2rem", height: "1px", background: "rgba(195,202,168,0.3)", marginBottom: "1.2rem" }} />
+
+              <p style={{ fontFamily: "'Playfair Display', serif", fontSize: "0.72rem", letterSpacing: "0.26em", textTransform: "uppercase", color: "rgba(195,202,168,0.6)", marginBottom: "0.3rem", fontStyle: "italic" }}>
+                Décimo aniversario
+              </p>
+              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2rem, 4vw, 2.8rem)", fontWeight: 400, lineHeight: 1.05, color: "#f9f8f4", letterSpacing: "0.08em", textTransform: "uppercase", margin: 0 }}>
+                TENDENCIAS
+              </h2>
+              <p style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2.8rem, 5.5vw, 4.2rem)", fontWeight: 400, lineHeight: 1, color: "#b8996a", letterSpacing: "0.02em", margin: "0.15rem 0 0" }}>
+                2027
+              </p>
+
+              <div style={{ display: "flex", alignItems: "center", gap: "0.55rem", margin: "1.2rem 0" }}>
+                <div style={{ flex: 1, height: "1px", background: "rgba(195,202,168,0.18)" }} />
+                <span style={{ color: "rgba(195,202,168,0.4)", fontSize: "0.65rem" }}>♡</span>
+                <div style={{ flex: 1, height: "1px", background: "rgba(195,202,168,0.18)" }} />
+              </div>
+
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.58rem", letterSpacing: "0.24em", textTransform: "uppercase", color: "rgba(195,202,168,0.45)", marginBottom: "1.4rem" }}>
+                Bodas Bosque
+              </p>
+
+              <p style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.55rem", fontStyle: "italic", fontWeight: 400, color: "#f9f8f4", lineHeight: 1.35, marginBottom: "1.75rem" }}>
+                24, 25 y 26<br /><span style={{ fontSize: "1rem", color: "rgba(249,248,244,0.75)" }}>de julio</span>
+              </p>
+
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.55rem" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(195,202,168,0.5)" strokeWidth="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.7rem", color: "rgba(249,248,244,0.6)", letterSpacing: "0.03em" }}>10:00 AM – 6:00 PM · Evento gratuito</span>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(195,202,168,0.5)" strokeWidth="1.5"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.7rem", color: "rgba(249,248,244,0.6)", letterSpacing: "0.03em" }}>Rincón del Bosque</span>
+                </div>
+              </div>
+
+              <div style={{ marginTop: "2rem", paddingTop: "1.4rem", borderTop: "1px solid rgba(195,202,168,0.1)" }}>
+                <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+                  {["Muebles", "Decoración", "Iluminación"].map((item) => (
+                    <span key={item} style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.56rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(195,202,168,0.35)" }}>{item}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* ─── RIGHT PANEL ─── */}
+            <div className="tend-right">
+              {/* Close */}
+              <button onClick={() => setTendenciasOpen(false)} aria-label="Cerrar"
+                style={{ position: "absolute", top: "1.1rem", right: "1.1rem", background: "none", border: "none", cursor: "pointer", color: "#929186", display: "flex", padding: "0.3rem", transition: "color 0.2s" }}
+                onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "#2e3b2b")}
+                onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "#929186")}>
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round">
+                  <line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/>
+                </svg>
+              </button>
+
+              {!tendenciasSent ? (
+                <>
+                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.62rem", letterSpacing: "0.24em", textTransform: "uppercase", color: "#929186", marginBottom: "0.55rem" }}>Registro previo</p>
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem" }}>
+                    <div style={{ flex: 1, height: "1px", background: "rgba(46,59,43,0.08)" }} />
+                    <span style={{ color: "rgba(46,59,43,0.25)", fontSize: "0.65rem" }}>♡</span>
+                    <div style={{ flex: 1, height: "1px", background: "rgba(46,59,43,0.08)" }} />
+                  </div>
+                  <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.7rem", fontWeight: 400, fontStyle: "italic", color: "#2e3b2b", lineHeight: 1.2, marginBottom: "1rem" }}>
+                    de parejas
+                  </h3>
+                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 300, fontSize: "0.86rem", lineHeight: 1.75, color: "#929186", marginBottom: "2rem" }}>
+                    Conecta, disfruta y crea recuerdos en un entorno natural inolvidable.
+                  </p>
+
+                  <form onSubmit={handleTendenciasSubmit} style={{ display: "flex", flexDirection: "column", gap: "1.4rem" }}>
+                    <div>
+                      <label style={labelStyle}>Nombres</label>
+                      <input className="tend-input" type="text" required placeholder="Tu nombre completo"
+                        value={tendenciasForm.nombres}
+                        onChange={(e) => setTendenciasForm((f) => ({ ...f, nombres: e.target.value }))} />
+                    </div>
+                    <div>
+                      <label style={labelStyle}>Correo electrónico</label>
+                      <input className="tend-input" type="email" required placeholder="correo@ejemplo.com"
+                        value={tendenciasForm.email}
+                        onChange={(e) => setTendenciasForm((f) => ({ ...f, email: e.target.value }))} />
+                    </div>
+                    <div>
+                      <label style={labelStyle}>Teléfono celular</label>
+                      <input className="tend-input" type="tel" placeholder="55 1234 5678"
+                        value={tendenciasForm.telefono}
+                        onChange={(e) => setTendenciasForm((f) => ({ ...f, telefono: e.target.value }))} />
+                    </div>
+                    <div>
+                      <label style={labelStyle}>Ciudad o ubicación</label>
+                      <input className="tend-input" type="text" placeholder="¿Desde dónde nos escribes?"
+                        value={tendenciasForm.ubicacion}
+                        onChange={(e) => setTendenciasForm((f) => ({ ...f, ubicacion: e.target.value }))} />
+                    </div>
+
+                    <button type="submit" disabled={tendenciasSending}
+                      className="btn-wipe cta-hero"
+                      style={{ width: "100%", padding: "1.1rem 2rem", background: "#2e3b2b", color: "#c3caa8", border: "1px solid #2e3b2b", fontFamily: "'DM Sans', sans-serif", fontSize: "0.72rem", fontWeight: 500, letterSpacing: "0.2em", textTransform: "uppercase", cursor: tendenciasSending ? "not-allowed" : "pointer", opacity: tendenciasSending ? 0.65 : 1, ["--wipe" as string]: "#7c4a36" }}>
+                      <span className="btn-arrow-wrap">
+                        <span>{tendenciasSending ? "Enviando…" : "Registrarme"}</span>
+                        {!tendenciasSending && <span className="btn-arrow">→</span>}
+                      </span>
+                    </button>
+
+                    <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.63rem", letterSpacing: "0.08em", color: "#929186", textAlign: "center", lineHeight: 1.65 }}>
+                      Evento gratuito · Cupo limitado por parejas<br />
+                      <span style={{ opacity: 0.6 }}>Recibirás confirmación por correo</span>
+                    </p>
+                  </form>
+                </>
+              ) : (
+                <div className="success-panel" style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "380px", textAlign: "center", padding: "2.5rem 0" }}>
+                  <div style={{ width: "50px", height: "50px", borderRadius: "50%", background: "rgba(46,59,43,0.07)", border: "1px solid rgba(46,59,43,0.12)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "1.5rem" }}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2e3b2b" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  </div>
+                  <p style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.45rem", fontStyle: "italic", color: "#2e3b2b", marginBottom: "0.75rem" }}>¡Nos vemos pronto!</p>
+                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 300, fontSize: "0.87rem", color: "#929186", lineHeight: 1.75, maxWidth: "240px" }}>
+                    Tu registro para Tendencias 2027 fue recibido. Te confirmaremos por correo.
+                  </p>
+                  <button onClick={() => setTendenciasOpen(false)}
+                    style={{ marginTop: "2rem", background: "none", border: "1px solid rgba(46,59,43,0.16)", padding: "0.72rem 1.6rem", fontFamily: "'DM Sans', sans-serif", fontSize: "0.66rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "#2e3b2b", cursor: "pointer", transition: "border-color 0.25s" }}>
+                    Cerrar
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── TENDENCIAS PILL — reopens modal after dismiss ── */}
+      {!tendenciasOpen && !menuOpen && (
+        <button className="tend-pill" onClick={() => setTendenciasOpen(true)} aria-label="Ver Tendencias 2027">
+          <span style={{ color: "#b8996a" }}>♡</span>
+          <span>Tendencias 2027</span>
+        </button>
       )}
 
       {/* ── AMBIENT FOREST AUDIO ── */}
