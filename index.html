@@ -64,6 +64,24 @@
       }
       </script>
 
+      <!-- Google Analytics 4 (gtag.js) -->
+      <!-- Reemplaza G-XXXXXXXXXX con tu ID de medición de https://analytics.google.com -->
+      <script>
+        (function () {
+          var GA_MEASUREMENT_ID = 'G-XXXXXXXXXX';
+          if (GA_MEASUREMENT_ID.indexOf('XXXXXXXXXX') !== -1) return; // aún sin configurar
+          var s = document.createElement('script');
+          s.async = true;
+          s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_MEASUREMENT_ID;
+          document.head.appendChild(s);
+          window.dataLayer = window.dataLayer || [];
+          function gtag() { dataLayer.push(arguments); }
+          window.gtag = gtag;
+          gtag('js', new Date());
+          gtag('config', GA_MEASUREMENT_ID);
+        })();
+      </script>
+
       <style>html, body { margin: 0; overflow-x: hidden; } body { min-height: 100%; }</style>
 
     </head>
