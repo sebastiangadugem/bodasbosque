@@ -383,13 +383,42 @@ const CSS = `
   .tend-input::placeholder { color: rgba(46,59,43,0.3); }
   .tend-pill { position: fixed; bottom: 6rem; right: 2rem; z-index: 98; display: flex; align-items: center; gap: 0.5rem; padding: 0.62rem 1.1rem; background: rgba(46,59,43,0.94); border: 1px solid rgba(195,202,168,0.28); color: #c3caa8; font-family: 'DM Sans', sans-serif; font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 4px 20px rgba(15,14,12,0.28); transition: background 0.3s, transform 0.25s; }
   .tend-pill:hover { background: rgba(46,59,43,1); transform: translateY(-2px); }
+  .tend-badge { display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.4rem 0.85rem; border: 1px solid rgba(184,153,106,0.5); background: rgba(184,153,106,0.1); align-self: flex-start; margin-bottom: 1.1rem; }
+  .tend-badge-dot { width: 5px; height: 5px; border-radius: 50%; background: #b8996a; flex: none; }
+  .tend-badge-text { font-family: 'DM Sans', sans-serif; font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: #b8996a; font-weight: 500; }
+  .tend-countdown { display: flex; gap: 0.65rem; margin: 1.3rem 0 1.6rem; }
+  .tend-countdown-unit { display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 46px; padding: 0.55rem 0.3rem; background: rgba(249,248,244,0.05); border: 1px solid rgba(195,202,168,0.15); }
+  .tend-countdown-num { font-family: 'Playfair Display', serif; font-size: 1.25rem; color: #f9f8f4; line-height: 1; }
+  .tend-countdown-label { font-family: 'DM Sans', sans-serif; font-size: 0.5rem; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(195,202,168,0.55); margin-top: 0.28rem; }
   @media (max-width: 768px) {
-    .tend-modal { flex-direction: column; max-height: 96vh; }
-    .tend-left { flex: none; padding: 2rem 1.5rem; }
-    .tend-right { padding: 2rem 1.5rem; }
+    .tend-overlay { padding: 0; align-items: flex-end; }
+    .tend-modal { flex-direction: column; max-height: 100dvh; height: 100%; max-width: 100%; }
+    .tend-left { flex: none; padding: 1.75rem 1.5rem 1.4rem; }
+    .tend-right { padding: 1.6rem 1.5rem 2rem; }
     .tend-pill { bottom: 5.8rem; right: 1.25rem; }
+    .tend-countdown { gap: 0.45rem; margin: 1rem 0 1.3rem; }
+    .tend-countdown-unit { min-width: 0; flex: 1; padding: 0.5rem 0.2rem; }
+    .tend-countdown-num { font-size: 1.1rem; }
+  }
+  @media (max-width: 420px) {
+    .tend-left { padding: 1.5rem 1.15rem 1.2rem; }
+    .tend-right { padding: 1.4rem 1.15rem 1.75rem; }
+    .tend-countdown-num { font-size: 1rem; }
+    .tend-countdown-label { font-size: 0.46rem; }
   }
 `;
+
+/* Reads the Tendencias campaign state from the current URL — supports both
+   /tendencias (clean path, needs the vercel.json rewrite) and ?tendencias=1
+   (works with zero server config) so ad campaigns can land directly on the form. */
+function getTendenciasCampaignState() {
+  if (typeof window === "undefined") return { isLanding: false, isGracias: false };
+  const params = new URLSearchParams(window.location.search);
+  const path = window.location.pathname.replace(/\/$/, "");
+  const isGracias = params.get("tendencias") === "gracias" || path === "/tendencias/gracias";
+  const isLanding = isGracias || params.get("tendencias") === "1" || path === "/tendencias";
+  return { isLanding, isGracias };
+}
 
 export default function App() {
   /* MARKER-MAKE-KIT-INVOKED */
@@ -406,6 +435,20 @@ export default function App() {
   const [tendenciasForm, setTendenciasForm] = useState({ nombres: "", email: "", telefono: "", ubicacion: "" });
   const [tendenciasSent, setTendenciasSent] = useState(false);
   const [tendenciasSending, setTendenciasSending] = useState(false);
+
+  // Countdown to the Tendencias 2027 event (24 de julio, 10:00 AM, hora del centro de México)
+  const TEND_EVENT_TIME = "2026-07-24T10:00:00-06:00";
+  const [tendCountdown, setTendCountdown] = useState(() => Math.max(0, new Date(TEND_EVENT_TIME).getTime() - Date.now()));
+  useEffect(() => {
+    const id = setInterval(() => {
+      setTendCountdown(Math.max(0, new Date(TEND_EVENT_TIME).getTime() - Date.now()));
+    }, 1000);
+    return () => clearInterval(id);
+  }, []);
+  const tendDays = Math.floor(tendCountdown / 86400000);
+  const tendHours = Math.floor((tendCountdown % 86400000) / 3600000);
+  const tendMinutes = Math.floor((tendCountdown % 3600000) / 60000);
+  const tendSeconds = Math.floor((tendCountdown % 60000) / 1000);
 
   // Pillar gallery state
   const [activePillar, setActivePillar] = useState<string | null>(null);
@@ -639,6 +682,13 @@ export default function App() {
 
   // Tendencias 2027 — auto-open once per session, close on ESC
   useEffect(() => {
+    const { isLanding, isGracias } = getTendenciasCampaignState();
+    if (isLanding) {
+      setTendenciasOpen(true);
+      if (isGracias) setTendenciasSent(true);
+      sessionStorage.setItem("bb-tend-seen", "1");
+      return;
+    }
     if (sessionStorage.getItem("bb-tend-seen")) return;
     const t = setTimeout(() => {
       setTendenciasOpen(true);
@@ -666,6 +716,28 @@ export default function App() {
       });
       if (!res.ok) throw new Error("failed");
       setTendenciasSent(true);
+      // Landed via the campaign link → move to a distinct confirmation URL and
+      // fire a page_view so Google Ads can track it as a conversion.
+      try {
+        const url = new URL(window.location.href);
+        const onCampaignPath = url.pathname.replace(/\/$/, "") === "/tendencias";
+        if (onCampaignPath) {
+          url.pathname = "/tendencias/gracias";
+        } else {
+          url.searchParams.set("tendencias", "gracias");
+        }
+        window.history.replaceState({}, "", url.toString());
+        const gtag = (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag;
+        if (typeof gtag === "function") {
+          gtag("event", "page_view", {
+            page_location: url.toString(),
+            page_path: url.pathname + url.search,
+            page_title: document.title,
+          });
+        }
+      } catch {
+        // non-critical: confirmation URL/tracking is best-effort
+      }
     } catch {
       // allow retry
     } finally {
@@ -1807,6 +1879,11 @@ export default function App() {
                 <ellipse cx="58" cy="70" rx="10" ry="3.5" transform="rotate(10 58 70)" fill="#c3caa8"/>
               </svg>
 
+              <div className="tend-badge">
+                <span className="tend-badge-dot" />
+                <span className="tend-badge-text">Entrada gratuita</span>
+              </div>
+
               <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.6rem", letterSpacing: "0.28em", textTransform: "uppercase", color: "rgba(195,202,168,0.55)", marginBottom: "0.85rem" }}>
                 10 años · 2017 – 2027
               </p>
@@ -1835,6 +1912,23 @@ export default function App() {
               <p style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.55rem", fontStyle: "italic", fontWeight: 400, color: "#f9f8f4", lineHeight: 1.35, marginBottom: "1.75rem" }}>
                 24, 25 y 26<br /><span style={{ fontSize: "1rem", color: "rgba(249,248,244,0.75)" }}>de julio</span>
               </p>
+
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.56rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(195,202,168,0.4)", marginBottom: "0.4rem" }}>
+                Faltan
+              </p>
+              <div className="tend-countdown">
+                {[
+                  { label: "Días", value: tendDays },
+                  { label: "Hrs", value: tendHours },
+                  { label: "Min", value: tendMinutes },
+                  { label: "Seg", value: tendSeconds },
+                ].map((u) => (
+                  <div key={u.label} className="tend-countdown-unit">
+                    <span className="tend-countdown-num">{String(u.value).padStart(2, "0")}</span>
+                    <span className="tend-countdown-label">{u.label}</span>
+                  </div>
+                ))}
+              </div>
 
               <div style={{ display: "flex", flexDirection: "column", gap: "0.55rem" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>

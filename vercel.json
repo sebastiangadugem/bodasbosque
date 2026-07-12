@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/tendencias", "destination": "/index.html" },
+    { "source": "/tendencias/(.*)", "destination": "/index.html" }
+  ]
+}
