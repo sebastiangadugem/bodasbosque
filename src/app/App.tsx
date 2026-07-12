@@ -373,38 +373,43 @@ const CSS = `
 
   /* ── Tendencias 2027 Campaign Modal ── */
   @keyframes tendOverlay { from { opacity: 0; } to { opacity: 1; } }
-  @keyframes tendModal { from { opacity: 0; transform: translateY(28px) scale(0.965); } to { opacity: 1; transform: translateY(0) scale(1); } }
-  .tend-overlay { animation: tendOverlay 0.5s ease both; background: rgba(15,14,12,0.82); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); position: fixed; inset: 0; z-index: 300; display: flex; align-items: center; justify-content: center; padding: 1rem; overflow-y: auto; }
-  .tend-modal { animation: tendModal 0.72s cubic-bezier(0.22,1,0.36,1) 0.08s both; max-width: 900px; width: 100%; display: flex; max-height: 92vh; overflow: hidden; box-shadow: 0 32px 80px rgba(15,14,12,0.5); }
+  @keyframes tendModal { from { opacity: 0; transform: translateY(18px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+  .tend-overlay { animation: tendOverlay 0.35s ease both; background: rgba(15,14,12,0.8); backdrop-filter: blur(7px); -webkit-backdrop-filter: blur(7px); position: fixed; inset: 0; z-index: 300; display: flex; align-items: center; justify-content: center; padding: 1rem; overflow-y: auto; }
+  .tend-modal { animation: tendModal 0.45s cubic-bezier(0.22,1,0.36,1) 0.05s both; max-width: 900px; width: 100%; display: flex; max-height: 92vh; overflow: hidden; box-shadow: 0 32px 80px rgba(15,14,12,0.5); }
   .tend-left { background: #2e3b2b; padding: 3rem 2.5rem; display: flex; flex-direction: column; justify-content: center; flex: 0 0 42%; position: relative; overflow: hidden; }
   .tend-right { background: #f9f8f4; padding: 3rem 2.5rem; flex: 1; min-width: 0; overflow-y: auto; position: relative; }
-  .tend-input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(46,59,43,0.16); padding: 0.75rem 0; font-family: 'DM Sans', sans-serif; font-weight: 300; font-size: 0.95rem; color: #0f0e0c; outline: none; transition: border-color 0.3s; }
+  .tend-input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(46,59,43,0.16); padding: 0.75rem 0; font-family: 'DM Sans', sans-serif; font-weight: 300; font-size: 0.95rem; color: #0f0e0c; outline: none; transition: border-color 0.25s; }
   .tend-input:focus { border-bottom-color: #2e3b2b; }
   .tend-input::placeholder { color: rgba(46,59,43,0.3); }
-  .tend-pill { position: fixed; bottom: 6rem; right: 2rem; z-index: 98; display: flex; align-items: center; gap: 0.5rem; padding: 0.62rem 1.1rem; background: rgba(46,59,43,0.94); border: 1px solid rgba(195,202,168,0.28); color: #c3caa8; font-family: 'DM Sans', sans-serif; font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 4px 20px rgba(15,14,12,0.28); transition: background 0.3s, transform 0.25s; }
+  .tend-pill { position: fixed; bottom: 6rem; right: 2rem; z-index: 98; display: flex; align-items: center; gap: 0.5rem; padding: 0.62rem 1.1rem; background: rgba(46,59,43,0.94); border: 1px solid rgba(195,202,168,0.28); color: #c3caa8; font-family: 'DM Sans', sans-serif; font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 4px 20px rgba(15,14,12,0.28); transition: background 0.25s, transform 0.2s; }
   .tend-pill:hover { background: rgba(46,59,43,1); transform: translateY(-2px); }
-  .tend-badge { display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.4rem 0.85rem; border: 1px solid rgba(184,153,106,0.5); background: rgba(184,153,106,0.1); align-self: flex-start; margin-bottom: 1.1rem; }
-  .tend-badge-dot { width: 5px; height: 5px; border-radius: 50%; background: #b8996a; flex: none; }
-  .tend-badge-text { font-family: 'DM Sans', sans-serif; font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: #b8996a; font-weight: 500; }
-  .tend-countdown { display: flex; gap: 0.65rem; margin: 1.3rem 0 1.6rem; }
-  .tend-countdown-unit { display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 46px; padding: 0.55rem 0.3rem; background: rgba(249,248,244,0.05); border: 1px solid rgba(195,202,168,0.15); }
-  .tend-countdown-num { font-family: 'Playfair Display', serif; font-size: 1.25rem; color: #f9f8f4; line-height: 1; }
-  .tend-countdown-label { font-family: 'DM Sans', sans-serif; font-size: 0.5rem; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(195,202,168,0.55); margin-top: 0.28rem; }
+  .tend-badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.38rem 0.05rem; align-self: flex-start; margin-bottom: 1.3rem; border-bottom: 1px solid rgba(184,153,106,0.35); }
+  .tend-badge-dot { width: 4px; height: 4px; border-radius: 50%; background: #b8996a; flex: none; }
+  .tend-badge-text { font-family: 'DM Sans', sans-serif; font-size: 0.6rem; letter-spacing: 0.22em; text-transform: uppercase; color: #b8996a; font-weight: 500; }
+  .tend-countdown { display: flex; align-items: center; gap: 1rem; margin: 0.1rem 0 1.6rem; }
+  .tend-countdown-item { display: flex; flex-direction: column; align-items: flex-start; }
+  .tend-countdown-num { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 400; color: #f9f8f4; line-height: 1; }
+  .tend-countdown-label { font-family: 'DM Sans', sans-serif; font-size: 0.52rem; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(195,202,168,0.5); margin-top: 0.35rem; }
+  .tend-countdown-sep { color: rgba(184,153,106,0.4); font-size: 0.85rem; }
+  .tend-flourish { text-align: center; color: rgba(184,153,106,0.45); font-size: 0.95rem; margin-top: 1.8rem; padding-top: 1.3rem; border-top: 1px solid rgba(195,202,168,0.1); }
   @media (max-width: 768px) {
-    .tend-overlay { padding: 0; align-items: flex-end; }
+    .tend-overlay { padding: 0; align-items: flex-end; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
     .tend-modal { flex-direction: column; max-height: 100dvh; height: 100%; max-width: 100%; }
     .tend-left { flex: none; padding: 1.75rem 1.5rem 1.4rem; }
     .tend-right { padding: 1.6rem 1.5rem 2rem; }
     .tend-pill { bottom: 5.8rem; right: 1.25rem; }
-    .tend-countdown { gap: 0.45rem; margin: 1rem 0 1.3rem; }
-    .tend-countdown-unit { min-width: 0; flex: 1; padding: 0.5rem 0.2rem; }
-    .tend-countdown-num { font-size: 1.1rem; }
+    .tend-countdown { gap: 0.8rem; margin: 0.1rem 0 1.3rem; }
+    .tend-countdown-num { font-size: 1.35rem; }
   }
   @media (max-width: 420px) {
     .tend-left { padding: 1.5rem 1.15rem 1.2rem; }
     .tend-right { padding: 1.4rem 1.15rem 1.75rem; }
-    .tend-countdown-num { font-size: 1rem; }
+    .tend-countdown { gap: 0.6rem; }
+    .tend-countdown-num { font-size: 1.15rem; }
     .tend-countdown-label { font-size: 0.46rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tend-overlay, .tend-modal { animation: none; }
   }
 `;
 
@@ -437,18 +442,19 @@ export default function App() {
   const [tendenciasSending, setTendenciasSending] = useState(false);
 
   // Countdown to the Tendencias 2027 event (24 de julio, 10:00 AM, hora del centro de México)
+  // Updates once a minute (not every second) — precision to the minute is plenty
+  // for an editorial "faltan" note, and it keeps re-renders light on mobile.
   const TEND_EVENT_TIME = "2026-07-24T10:00:00-06:00";
   const [tendCountdown, setTendCountdown] = useState(() => Math.max(0, new Date(TEND_EVENT_TIME).getTime() - Date.now()));
   useEffect(() => {
     const id = setInterval(() => {
       setTendCountdown(Math.max(0, new Date(TEND_EVENT_TIME).getTime() - Date.now()));
-    }, 1000);
+    }, 30000);
     return () => clearInterval(id);
   }, []);
   const tendDays = Math.floor(tendCountdown / 86400000);
   const tendHours = Math.floor((tendCountdown % 86400000) / 3600000);
   const tendMinutes = Math.floor((tendCountdown % 3600000) / 60000);
-  const tendSeconds = Math.floor((tendCountdown % 60000) / 1000);
 
   // Pillar gallery state
   const [activePillar, setActivePillar] = useState<string | null>(null);
@@ -1913,27 +1919,30 @@ export default function App() {
                 24, 25 y 26<br /><span style={{ fontSize: "1rem", color: "rgba(249,248,244,0.75)" }}>de julio</span>
               </p>
 
-              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.56rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(195,202,168,0.4)", marginBottom: "0.4rem" }}>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.56rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(195,202,168,0.4)", marginBottom: "0.6rem" }}>
                 Faltan
               </p>
               <div className="tend-countdown">
-                {[
-                  { label: "Días", value: tendDays },
-                  { label: "Hrs", value: tendHours },
-                  { label: "Min", value: tendMinutes },
-                  { label: "Seg", value: tendSeconds },
-                ].map((u) => (
-                  <div key={u.label} className="tend-countdown-unit">
-                    <span className="tend-countdown-num">{String(u.value).padStart(2, "0")}</span>
-                    <span className="tend-countdown-label">{u.label}</span>
-                  </div>
-                ))}
+                <div className="tend-countdown-item">
+                  <span className="tend-countdown-num">{tendDays}</span>
+                  <span className="tend-countdown-label">Días</span>
+                </div>
+                <span className="tend-countdown-sep">·</span>
+                <div className="tend-countdown-item">
+                  <span className="tend-countdown-num">{String(tendHours).padStart(2, "0")}</span>
+                  <span className="tend-countdown-label">Hrs</span>
+                </div>
+                <span className="tend-countdown-sep">·</span>
+                <div className="tend-countdown-item">
+                  <span className="tend-countdown-num">{String(tendMinutes).padStart(2, "0")}</span>
+                  <span className="tend-countdown-label">Min</span>
+                </div>
               </div>
 
               <div style={{ display: "flex", flexDirection: "column", gap: "0.55rem" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(195,202,168,0.5)" strokeWidth="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.7rem", color: "rgba(249,248,244,0.6)", letterSpacing: "0.03em" }}>10:00 AM – 6:00 PM · Evento gratuito</span>
+                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.7rem", color: "rgba(249,248,244,0.6)", letterSpacing: "0.03em" }}>10:00 AM – 6:00 PM</span>
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(195,202,168,0.5)" strokeWidth="1.5"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -1941,13 +1950,7 @@ export default function App() {
                 </div>
               </div>
 
-              <div style={{ marginTop: "2rem", paddingTop: "1.4rem", borderTop: "1px solid rgba(195,202,168,0.1)" }}>
-                <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-                  {["Muebles", "Decoración", "Iluminación"].map((item) => (
-                    <span key={item} style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.56rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(195,202,168,0.35)" }}>{item}</span>
-                  ))}
-                </div>
-              </div>
+              <div className="tend-flourish" aria-hidden="true">❦</div>
             </div>
 
             {/* ─── RIGHT PANEL ─── */}
@@ -1971,10 +1974,10 @@ export default function App() {
                     <div style={{ flex: 1, height: "1px", background: "rgba(46,59,43,0.08)" }} />
                   </div>
                   <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.7rem", fontWeight: 400, fontStyle: "italic", color: "#2e3b2b", lineHeight: 1.2, marginBottom: "1rem" }}>
-                    de parejas
+                    Reserva tu lugar
                   </h3>
                   <p style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 300, fontSize: "0.86rem", lineHeight: 1.75, color: "#929186", marginBottom: "2rem" }}>
-                    Conecta, disfruta y crea recuerdos en un entorno natural inolvidable.
+                    Conecta, disfruta y crea recuerdos en un entorno natural inolvidable. Cupo limitado por pareja.
                   </p>
 
                   <form onSubmit={handleTendenciasSubmit} style={{ display: "flex", flexDirection: "column", gap: "1.4rem" }}>
@@ -2012,9 +2015,8 @@ export default function App() {
                       </span>
                     </button>
 
-                    <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.63rem", letterSpacing: "0.08em", color: "#929186", textAlign: "center", lineHeight: 1.65 }}>
-                      Evento gratuito · Cupo limitado por parejas<br />
-                      <span style={{ opacity: 0.6 }}>Recibirás confirmación por correo</span>
+                    <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.63rem", letterSpacing: "0.08em", color: "#929186", textAlign: "center", opacity: 0.7 }}>
+                      Recibirás confirmación por correo
                     </p>
                   </form>
                 </>
