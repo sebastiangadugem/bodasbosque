@@ -64,30 +64,24 @@
       }
       </script>
 
-      <!-- Google Analytics 4 (gtag.js) -->
-      <!-- Reemplaza G-XXXXXXXXXX con tu ID de medición de https://analytics.google.com -->
-      <script>
-        (function () {
-          var GA_MEASUREMENT_ID = 'G-XXXXXXXXXX';
-          if (GA_MEASUREMENT_ID.indexOf('XXXXXXXXXX') !== -1) return; // aún sin configurar
-          var s = document.createElement('script');
-          s.async = true;
-          s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_MEASUREMENT_ID;
-          document.head.appendChild(s);
-          window.dataLayer = window.dataLayer || [];
-          function gtag() { dataLayer.push(arguments); }
-          window.gtag = gtag;
-          gtag('js', new Date());
-          gtag('config', GA_MEASUREMENT_ID);
-        })();
-      </script>
+      <!-- Google Tag Manager -->
+      <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer','GTM-NPV4LX4R');</script>
+      <!-- End Google Tag Manager -->
 
       <style>html, body { margin: 0; overflow-x: hidden; } body { min-height: 100%; }</style>
 
     </head>
 
     <body>
-      
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NPV4LX4R"
+      height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+
       <div id="root"></div>
       <script type="module" src="/src/main.tsx"></script>
       
