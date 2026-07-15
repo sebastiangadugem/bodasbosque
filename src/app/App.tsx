@@ -375,38 +375,59 @@ const CSS = `
   @keyframes tendOverlay { from { opacity: 0; } to { opacity: 1; } }
   @keyframes tendModal { from { opacity: 0; transform: translateY(18px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
   .tend-overlay { animation: tendOverlay 0.35s ease both; background: rgba(15,14,12,0.8); backdrop-filter: blur(7px); -webkit-backdrop-filter: blur(7px); position: fixed; inset: 0; z-index: 300; display: flex; align-items: center; justify-content: center; padding: 1rem; overflow-y: auto; }
-  .tend-modal { animation: tendModal 0.45s cubic-bezier(0.22,1,0.36,1) 0.05s both; max-width: 900px; width: 100%; display: flex; max-height: 92vh; overflow: hidden; box-shadow: 0 32px 80px rgba(15,14,12,0.5); }
-  .tend-left { background: #2e3b2b; padding: 3rem 2.5rem; display: flex; flex-direction: column; justify-content: center; flex: 0 0 42%; position: relative; overflow: hidden; }
-  .tend-right { background: #f9f8f4; padding: 3rem 2.5rem; flex: 1; min-width: 0; overflow-y: auto; position: relative; }
-  .tend-input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(46,59,43,0.16); padding: 0.75rem 0; font-family: 'DM Sans', sans-serif; font-weight: 300; font-size: 0.95rem; color: #0f0e0c; outline: none; transition: border-color 0.25s; }
-  .tend-input:focus { border-bottom-color: #2e3b2b; }
+  .tend-modal { animation: tendModal 0.45s cubic-bezier(0.22,1,0.36,1) 0.05s both; max-width: 900px; width: 100%; display: flex; max-height: 92vh; overflow: hidden; box-shadow: 0 32px 80px rgba(15,14,12,0.5); position: relative; }
+  .tend-left { background: #2e3b2b; padding: 2.75rem 2.5rem; display: flex; flex-direction: column; justify-content: center; flex: 0 0 42%; position: relative; overflow: hidden; }
+  .tend-right { background: #f9f8f4; padding: 2.75rem 2.5rem; flex: 1; min-width: 0; overflow-y: auto; position: relative; }
+  .tend-form { gap: 1.3rem; }
+  .tend-input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(46,59,43,0.16); padding: 0.75rem 0; font-family: 'DM Sans', sans-serif; font-weight: 300; font-size: 0.95rem; color: #0f0e0c; outline: none; transition: border-color 0.2s, background-color 0.2s; }
+  .tend-input:focus { border-bottom-color: #2e3b2b; background: rgba(46,59,43,0.03); }
   .tend-input::placeholder { color: rgba(46,59,43,0.3); }
   .tend-pill { position: fixed; bottom: 6rem; right: 2rem; z-index: 98; display: flex; align-items: center; gap: 0.5rem; padding: 0.62rem 1.1rem; background: rgba(46,59,43,0.94); border: 1px solid rgba(195,202,168,0.28); color: #c3caa8; font-family: 'DM Sans', sans-serif; font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 4px 20px rgba(15,14,12,0.28); transition: background 0.25s, transform 0.2s; }
   .tend-pill:hover { background: rgba(46,59,43,1); transform: translateY(-2px); }
-  .tend-badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.38rem 0.05rem; align-self: flex-start; margin-bottom: 1.3rem; border-bottom: 1px solid rgba(184,153,106,0.35); }
-  .tend-badge-dot { width: 4px; height: 4px; border-radius: 50%; background: #b8996a; flex: none; }
-  .tend-badge-text { font-family: 'DM Sans', sans-serif; font-size: 0.6rem; letter-spacing: 0.22em; text-transform: uppercase; color: #b8996a; font-weight: 500; }
-  .tend-countdown { display: flex; align-items: center; gap: 1rem; margin: 0.1rem 0 1.6rem; }
+
+  /* Close button — a direct child of .tend-modal (not the scrollable right panel)
+     so it never scrolls out of reach on mobile. */
+  .tend-close { position: absolute; top: 0.9rem; right: 0.9rem; z-index: 5; width: 36px; height: 36px; border-radius: 50%; background: rgba(15,14,12,0.32); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); border: 1px solid rgba(249,248,244,0.22); display: flex; align-items: center; justify-content: center; cursor: pointer; color: #f9f8f4; transition: background 0.2s, transform 0.2s; }
+  .tend-close:hover { background: rgba(15,14,12,0.55); transform: scale(1.06); }
+
+  /* Free-entry chip — a filled pill with a ticket glyph, not an underlined toggle */
+  .tend-badge { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.32rem 0.7rem; border-radius: 999px; background: rgba(184,153,106,0.16); border: 1px solid rgba(184,153,106,0.4); flex: none; }
+  .tend-badge-text { font-family: 'DM Sans', sans-serif; font-size: 0.58rem; letter-spacing: 0.16em; text-transform: uppercase; color: #d9c39a; font-weight: 500; white-space: nowrap; }
+  .tend-top-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 1.1rem; }
+  .tend-anniv { font-family: 'DM Sans', sans-serif; font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(195,202,168,0.5); white-space: nowrap; }
+  .tend-title-row { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.9rem; }
+  .tend-title-main { font-family: 'Playfair Display', serif; font-size: clamp(1.9rem, 4vw, 2.6rem); font-weight: 400; line-height: 1; color: #f9f8f4; letter-spacing: 0.06em; text-transform: uppercase; margin: 0; }
+  .tend-title-year { font-family: 'Playfair Display', serif; font-size: clamp(1.9rem, 4vw, 2.6rem); font-weight: 400; line-height: 1; color: #b8996a; letter-spacing: 0.02em; }
+  .tend-hide-mobile { display: block; }
+  .tend-countdown { display: flex; align-items: center; gap: 1rem; margin: 0.1rem 0 1.3rem; }
   .tend-countdown-item { display: flex; flex-direction: column; align-items: flex-start; }
-  .tend-countdown-num { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 400; color: #f9f8f4; line-height: 1; }
+  .tend-countdown-num { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 400; color: #f9f8f4; line-height: 1; }
   .tend-countdown-label { font-family: 'DM Sans', sans-serif; font-size: 0.52rem; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(195,202,168,0.5); margin-top: 0.35rem; }
   .tend-countdown-sep { color: rgba(184,153,106,0.4); font-size: 0.85rem; }
-  .tend-flourish { text-align: center; color: rgba(184,153,106,0.45); font-size: 0.95rem; margin-top: 1.8rem; padding-top: 1.3rem; border-top: 1px solid rgba(195,202,168,0.1); }
+  .tend-flourish { text-align: center; color: rgba(184,153,106,0.45); font-size: 0.95rem; margin-top: 1.6rem; padding-top: 1.2rem; border-top: 1px solid rgba(195,202,168,0.1); }
   @media (max-width: 768px) {
     .tend-overlay { padding: 0; align-items: flex-end; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
     .tend-modal { flex-direction: column; max-height: 100dvh; height: 100%; max-width: 100%; }
-    .tend-left { flex: none; padding: 1.75rem 1.5rem 1.4rem; }
-    .tend-right { padding: 1.6rem 1.5rem 2rem; }
+    .tend-left { flex: none; padding: 1.25rem 1.35rem 1.1rem; }
+    .tend-right { padding: 1.35rem 1.35rem 1.75rem; flex: 1; }
     .tend-pill { bottom: 5.8rem; right: 1.25rem; }
-    .tend-countdown { gap: 0.8rem; margin: 0.1rem 0 1.3rem; }
-    .tend-countdown-num { font-size: 1.35rem; }
+    .tend-close { top: 0.7rem; right: 0.7rem; width: 34px; height: 34px; }
+    .tend-hide-mobile { display: none; }
+    .tend-top-row { margin-bottom: 0.75rem; }
+    .tend-title-row { margin-bottom: 0.5rem; }
+    .tend-title-main, .tend-title-year { font-size: 1.55rem; }
+    .tend-countdown { gap: 0.7rem; margin: 0.1rem 0 0.85rem; }
+    .tend-countdown-num { font-size: 1.15rem; }
+    .tend-form { gap: 1rem; }
   }
   @media (max-width: 420px) {
-    .tend-left { padding: 1.5rem 1.15rem 1.2rem; }
-    .tend-right { padding: 1.4rem 1.15rem 1.75rem; }
-    .tend-countdown { gap: 0.6rem; }
-    .tend-countdown-num { font-size: 1.15rem; }
+    .tend-left { padding: 1.1rem 1.15rem 1rem; }
+    .tend-right { padding: 1.2rem 1.15rem 1.6rem; }
+    .tend-title-main, .tend-title-year { font-size: 1.35rem; }
+    .tend-countdown { gap: 0.55rem; }
+    .tend-countdown-num { font-size: 1.05rem; }
     .tend-countdown-label { font-size: 0.46rem; }
+    .tend-form { gap: 0.85rem; }
   }
   @media (prefers-reduced-motion: reduce) {
     .tend-overlay, .tend-modal { animation: none; }
@@ -1870,56 +1891,42 @@ export default function App() {
 
             {/* ─── LEFT PANEL ─── */}
             <div className="tend-left">
-              {/* Botanical corner decoration top-right */}
-              <svg style={{ position: "absolute", top: 0, right: 0, opacity: 0.13, width: "130px", pointerEvents: "none" }} viewBox="0 0 130 130" fill="none">
+              {/* Botanical corner decoration — hidden on mobile to keep the hero condensed */}
+              <svg className="tend-hide-mobile" style={{ position: "absolute", top: 0, right: 0, opacity: 0.13, width: "130px", pointerEvents: "none" }} viewBox="0 0 130 130" fill="none">
                 <path d="M130 0 C95 18, 78 55, 55 130" stroke="#c3caa8" strokeWidth="0.7" fill="none"/>
                 <path d="M130 22 C105 38, 88 65, 72 130" stroke="#c3caa8" strokeWidth="0.5" fill="none"/>
                 <ellipse cx="88" cy="38" rx="17" ry="7" transform="rotate(-38 88 38)" fill="#c3caa8"/>
                 <ellipse cx="72" cy="68" rx="13" ry="5.5" transform="rotate(-26 72 68)" fill="#c3caa8"/>
                 <ellipse cx="57" cy="98" rx="10" ry="4" transform="rotate(-14 57 98)" fill="#c3caa8"/>
               </svg>
-              {/* Botanical corner decoration bottom-left */}
-              <svg style={{ position: "absolute", bottom: 0, left: 0, opacity: 0.1, width: "90px", pointerEvents: "none" }} viewBox="0 0 90 90" fill="none">
+              <svg className="tend-hide-mobile" style={{ position: "absolute", bottom: 0, left: 0, opacity: 0.1, width: "90px", pointerEvents: "none" }} viewBox="0 0 90 90" fill="none">
                 <path d="M0 90 C18 72, 48 62, 90 72" stroke="#c3caa8" strokeWidth="0.7" fill="none"/>
                 <ellipse cx="28" cy="68" rx="13" ry="4.5" transform="rotate(22 28 68)" fill="#c3caa8"/>
                 <ellipse cx="58" cy="70" rx="10" ry="3.5" transform="rotate(10 58 70)" fill="#c3caa8"/>
               </svg>
 
-              <div className="tend-badge">
-                <span className="tend-badge-dot" />
-                <span className="tend-badge-text">Entrada gratuita</span>
+              <div className="tend-top-row">
+                <div className="tend-badge">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#d9c39a" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M3 9a2 2 0 1 0 0 6" /><path d="M21 9a2 2 0 1 1 0 6" />
+                    <rect x="3" y="6" width="18" height="12" rx="2" />
+                    <path d="M13 6v2M13 11v2M13 16v2" strokeDasharray="1.5 2" />
+                  </svg>
+                  <span className="tend-badge-text">Entrada gratuita</span>
+                </div>
+                <span className="tend-anniv tend-hide-mobile">10 años · 2017 – 2027</span>
               </div>
 
-              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.6rem", letterSpacing: "0.28em", textTransform: "uppercase", color: "rgba(195,202,168,0.55)", marginBottom: "0.85rem" }}>
-                10 años · 2017 – 2027
-              </p>
-              <div style={{ width: "2rem", height: "1px", background: "rgba(195,202,168,0.3)", marginBottom: "1.2rem" }} />
-
-              <p style={{ fontFamily: "'Playfair Display', serif", fontSize: "0.72rem", letterSpacing: "0.26em", textTransform: "uppercase", color: "rgba(195,202,168,0.6)", marginBottom: "0.3rem", fontStyle: "italic" }}>
-                Décimo aniversario
-              </p>
-              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2rem, 4vw, 2.8rem)", fontWeight: 400, lineHeight: 1.05, color: "#f9f8f4", letterSpacing: "0.08em", textTransform: "uppercase", margin: 0 }}>
-                TENDENCIAS
-              </h2>
-              <p style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2.8rem, 5.5vw, 4.2rem)", fontWeight: 400, lineHeight: 1, color: "#b8996a", letterSpacing: "0.02em", margin: "0.15rem 0 0" }}>
-                2027
-              </p>
-
-              <div style={{ display: "flex", alignItems: "center", gap: "0.55rem", margin: "1.2rem 0" }}>
-                <div style={{ flex: 1, height: "1px", background: "rgba(195,202,168,0.18)" }} />
-                <span style={{ color: "rgba(195,202,168,0.4)", fontSize: "0.65rem" }}>♡</span>
-                <div style={{ flex: 1, height: "1px", background: "rgba(195,202,168,0.18)" }} />
+              <div className="tend-title-row">
+                <h2 className="tend-title-main">Tendencias</h2>
+                <span className="tend-title-year">2027</span>
               </div>
 
-              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.58rem", letterSpacing: "0.24em", textTransform: "uppercase", color: "rgba(195,202,168,0.45)", marginBottom: "1.4rem" }}>
-                Bodas Bosque
+              <p style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", fontStyle: "italic", fontWeight: 400, color: "rgba(249,248,244,0.85)", marginBottom: "1.1rem" }}>
+                24 – 26 de julio
               </p>
 
-              <p style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.55rem", fontStyle: "italic", fontWeight: 400, color: "#f9f8f4", lineHeight: 1.35, marginBottom: "1.75rem" }}>
-                24, 25 y 26<br /><span style={{ fontSize: "1rem", color: "rgba(249,248,244,0.75)" }}>de julio</span>
-              </p>
-
-              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.56rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(195,202,168,0.4)", marginBottom: "0.6rem" }}>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.56rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(195,202,168,0.4)", marginBottom: "0.5rem" }}>
                 Faltan
               </p>
               <div className="tend-countdown">
@@ -1939,48 +1946,43 @@ export default function App() {
                 </div>
               </div>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.55rem" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(195,202,168,0.5)" strokeWidth="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.7rem", color: "rgba(249,248,244,0.6)", letterSpacing: "0.03em" }}>10:00 AM – 6:00 PM</span>
-                </div>
-                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(195,202,168,0.5)" strokeWidth="1.5"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.7rem", color: "rgba(249,248,244,0.6)", letterSpacing: "0.03em" }}>Rincón del Bosque</span>
-                </div>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(195,202,168,0.5)" strokeWidth="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.7rem", color: "rgba(249,248,244,0.6)", letterSpacing: "0.03em" }}>10:00 AM – 6:00 PM</span>
+                <span style={{ color: "rgba(195,202,168,0.35)", fontSize: "0.7rem" }}>·</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(195,202,168,0.5)" strokeWidth="1.5"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.7rem", color: "rgba(249,248,244,0.6)", letterSpacing: "0.03em" }}>Rincón del Bosque</span>
               </div>
 
-              <div className="tend-flourish" aria-hidden="true">❦</div>
+              <div className="tend-flourish tend-hide-mobile" aria-hidden="true">❦</div>
             </div>
+
+            {/* Close — direct child of .tend-modal so it stays put even when the
+                form panel scrolls, and reads clearly against either half. */}
+            <button className="tend-close" onClick={() => setTendenciasOpen(false)} aria-label="Cerrar">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+                <line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/>
+              </svg>
+            </button>
 
             {/* ─── RIGHT PANEL ─── */}
             <div className="tend-right">
-              {/* Close */}
-              <button onClick={() => setTendenciasOpen(false)} aria-label="Cerrar"
-                style={{ position: "absolute", top: "1.1rem", right: "1.1rem", background: "none", border: "none", cursor: "pointer", color: "#929186", display: "flex", padding: "0.3rem", transition: "color 0.2s" }}
-                onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "#2e3b2b")}
-                onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "#929186")}>
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round">
-                  <line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/>
-                </svg>
-              </button>
-
               {!tendenciasSent ? (
                 <>
-                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.62rem", letterSpacing: "0.24em", textTransform: "uppercase", color: "#929186", marginBottom: "0.55rem" }}>Registro previo</p>
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem" }}>
+                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.62rem", letterSpacing: "0.24em", textTransform: "uppercase", color: "#929186", marginBottom: "0.5rem" }}>Registro previo</p>
+                  <div className="tend-hide-mobile" style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem" }}>
                     <div style={{ flex: 1, height: "1px", background: "rgba(46,59,43,0.08)" }} />
                     <span style={{ color: "rgba(46,59,43,0.25)", fontSize: "0.65rem" }}>♡</span>
                     <div style={{ flex: 1, height: "1px", background: "rgba(46,59,43,0.08)" }} />
                   </div>
-                  <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.7rem", fontWeight: 400, fontStyle: "italic", color: "#2e3b2b", lineHeight: 1.2, marginBottom: "1rem" }}>
+                  <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.7rem", fontWeight: 400, fontStyle: "italic", color: "#2e3b2b", lineHeight: 1.2, marginBottom: "0.6rem" }}>
                     Reserva tu lugar
                   </h3>
-                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 300, fontSize: "0.86rem", lineHeight: 1.75, color: "#929186", marginBottom: "2rem" }}>
+                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 300, fontSize: "0.86rem", lineHeight: 1.6, color: "#929186", marginBottom: "1.5rem" }}>
                     Conecta, disfruta y crea recuerdos en un entorno natural inolvidable. Cupo limitado por pareja.
                   </p>
 
-                  <form onSubmit={handleTendenciasSubmit} style={{ display: "flex", flexDirection: "column", gap: "1.4rem" }}>
+                  <form onSubmit={handleTendenciasSubmit} className="tend-form" style={{ display: "flex", flexDirection: "column" }}>
                     <div>
                       <label style={labelStyle}>Nombres</label>
                       <input className="tend-input" type="text" required placeholder="Tu nombre completo"
