@@ -127,7 +127,7 @@ const SPACES = [
   {
     key: "rincon",
     name: "Rincón del Bosque",
-    location: "Estado de México",
+    location: "Morelos",
     desc: "Un claro entre encinos centenarios. Íntimo, umbroso y lleno de musgo.",
     images: RINCON_IMGS,
   },
@@ -2092,9 +2092,9 @@ export default function App() {
               </svg>
             </button>
 
-            <p className="loc-eyebrow">Sede</p>
+            <p className="loc-eyebrow">Venue</p>
             <h3 className="loc-title">Rincón del Bosque</h3>
-            <p className="loc-address">Estado de México</p>
+            <p className="loc-address">Av. del Bosque 214, Cuernavaca, Morelos</p>
 
             <iframe
               className="loc-map"
