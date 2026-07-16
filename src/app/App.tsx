@@ -375,13 +375,15 @@ const CSS = `
   @keyframes tendOverlay { from { opacity: 0; } to { opacity: 1; } }
   @keyframes tendModal { from { opacity: 0; transform: translateY(18px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
   .tend-overlay { animation: tendOverlay 0.35s ease both; background: rgba(15,14,12,0.8); backdrop-filter: blur(7px); -webkit-backdrop-filter: blur(7px); position: fixed; inset: 0; z-index: 300; display: flex; align-items: center; justify-content: center; padding: 1rem; overflow-y: auto; }
-  .tend-modal { animation: tendModal 0.45s cubic-bezier(0.22,1,0.36,1) 0.05s both; max-width: 900px; width: 100%; display: flex; max-height: 92vh; overflow: hidden; box-shadow: 0 32px 80px rgba(15,14,12,0.5); position: relative; }
-  .tend-left { background: #2e3b2b; padding: 2.75rem 2.5rem; display: flex; flex-direction: column; justify-content: center; flex: 0 0 42%; position: relative; overflow: hidden; }
-  .tend-right { background: #f9f8f4; padding: 2.75rem 2.5rem; flex: 1; min-width: 0; overflow-y: auto; position: relative; }
-  .tend-form { gap: 1.3rem; }
-  .tend-input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(46,59,43,0.16); padding: 0.75rem 0; font-family: 'DM Sans', sans-serif; font-weight: 300; font-size: 0.95rem; color: #0f0e0c; outline: none; transition: border-color 0.2s, background-color 0.2s; }
+  .tend-modal { animation: tendModal 0.45s cubic-bezier(0.22,1,0.36,1) 0.05s both; max-width: 900px; width: 100%; display: flex; max-height: 92vh; overflow: hidden; border-radius: 18px; box-shadow: 0 32px 80px rgba(15,14,12,0.5); position: relative; }
+  /* Radial wash brightens the top-right, echoing the ring motif above it */
+  .tend-left { background: radial-gradient(120% 100% at 85% 0%, #3a4b35 0%, #2e3b2b 55%); padding: 2.75rem 2.5rem; display: flex; flex-direction: column; justify-content: center; flex: 0 0 46%; position: relative; overflow: hidden; }
+  .tend-right { background: #f9f8f4; padding: 2.75rem 2.5rem; flex: 1; min-width: 0; overflow-y: auto; position: relative; display: flex; flex-direction: column; justify-content: center; }
+  .tend-input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(46,59,43,0.16); padding: 0.75rem 0; font-family: 'DM Sans', sans-serif; font-weight: 300; font-size: 1rem; color: #0f0e0c; outline: none; transition: border-color 0.2s, background-color 0.2s; }
   .tend-input:focus { border-bottom-color: #2e3b2b; background: rgba(46,59,43,0.03); }
   .tend-input::placeholder { color: rgba(46,59,43,0.3); }
+  .tend-input.has-error { border-bottom-color: #8c2f24; }
+  .tend-error { font-family: 'DM Sans', sans-serif; font-size: 0.75rem; color: #8c2f24; margin: 0.5rem 0 0; }
   .tend-pill { position: fixed; bottom: 6rem; right: 2rem; z-index: 98; display: flex; align-items: center; gap: 0.5rem; padding: 0.62rem 1.1rem; background: rgba(46,59,43,0.94); border: 1px solid rgba(195,202,168,0.28); color: #c3caa8; font-family: 'DM Sans', sans-serif; font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 4px 20px rgba(15,14,12,0.28); transition: background 0.25s, transform 0.2s; }
   .tend-pill:hover { background: rgba(46,59,43,1); transform: translateY(-2px); }
 
@@ -390,68 +392,64 @@ const CSS = `
   .tend-close { position: absolute; top: 0.9rem; right: 0.9rem; z-index: 5; width: 36px; height: 36px; border-radius: 50%; background: rgba(15,14,12,0.32); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); border: 1px solid rgba(249,248,244,0.22); display: flex; align-items: center; justify-content: center; cursor: pointer; color: #f9f8f4; transition: background 0.2s, transform 0.2s; }
   .tend-close:hover { background: rgba(15,14,12,0.55); transform: scale(1.06); }
 
-  /* Free-entry chip — a filled pill with a ticket glyph, not an underlined toggle */
-  .tend-badge { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.32rem 0.7rem; border-radius: 999px; background: rgba(184,153,106,0.16); border: 1px solid rgba(184,153,106,0.4); flex: none; }
-  .tend-badge-text { font-family: 'DM Sans', sans-serif; font-size: 0.58rem; letter-spacing: 0.16em; text-transform: uppercase; color: #d9c39a; font-weight: 500; white-space: nowrap; }
-  .tend-top-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 1.1rem; }
-  .tend-anniv { font-family: 'DM Sans', sans-serif; font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(195,202,168,0.5); white-space: nowrap; }
-  .tend-title-row { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.9rem; }
-  .tend-title-main { font-family: 'Playfair Display', serif; font-size: clamp(1.9rem, 4vw, 2.6rem); font-weight: 400; line-height: 1; color: #f9f8f4; letter-spacing: 0.06em; text-transform: uppercase; margin: 0; }
-  .tend-title-year { font-family: 'Playfair Display', serif; font-size: clamp(1.9rem, 4vw, 2.6rem); font-weight: 400; line-height: 1; color: #b8996a; letter-spacing: 0.02em; }
-  .tend-hide-mobile { display: block; }
-  .tend-countdown { display: flex; align-items: center; gap: 1rem; margin: 0.1rem 0 1.3rem; }
+  .tend-urgency { font-family: 'DM Sans', sans-serif; font-size: 0.66rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: #f9f8f4; margin: 0 0 1.5rem; }
+  .tend-kicker { font-family: 'DM Sans', sans-serif; font-size: 0.62rem; font-weight: 400; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(195,202,168,0.6); margin: 0 0 0.7rem; }
+  .tend-title { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4.2vw, 2.7rem); font-style: italic; font-weight: 400; line-height: 1.15; color: #f9f8f4; margin: 0 0 0.9rem; }
+  .tend-meta { font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 300; color: rgba(249,248,244,0.65); margin: 0; }
+  .tend-directions-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.7rem 1.15rem; margin-top: 1.4rem; align-self: flex-start; border: 1px solid rgba(201,162,39,0.5); border-radius: 8px; background: transparent; color: #d9b84a; font-family: 'DM Sans', sans-serif; font-size: 0.66rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; transition: background 0.2s, border-color 0.2s; }
+  .tend-directions-btn:hover { background: rgba(201,162,39,0.12); border-color: rgba(201,162,39,0.85); }
+
+  .tend-countdown { display: flex; align-items: flex-start; gap: 0.9rem; margin: 2.4rem 0 0; }
   .tend-countdown-item { display: flex; flex-direction: column; align-items: flex-start; }
-  .tend-countdown-num { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 400; color: #f9f8f4; line-height: 1; }
-  .tend-countdown-label { font-family: 'DM Sans', sans-serif; font-size: 0.52rem; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(195,202,168,0.5); margin-top: 0.35rem; }
-  .tend-countdown-sep { color: rgba(184,153,106,0.4); font-size: 0.85rem; }
-  .tend-flourish { text-align: center; color: rgba(184,153,106,0.45); font-size: 0.95rem; margin-top: 1.6rem; padding-top: 1.2rem; border-top: 1px solid rgba(195,202,168,0.1); }
-  .tend-urgency { font-family: 'Playfair Display', serif; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #f9f8f4; margin: 0 0 0.7rem; }
-  .tend-directions-btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1rem; margin-top: 1rem; border: 1px solid rgba(184,153,106,0.45); background: transparent; color: #d9c39a; font-family: 'DM Sans', sans-serif; font-size: 0.62rem; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; cursor: pointer; transition: background 0.2s, border-color 0.2s; }
-  .tend-directions-btn:hover { background: rgba(184,153,106,0.12); border-color: rgba(184,153,106,0.7); }
-  .tend-select { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(46,59,43,0.16); padding: 0.75rem 1.6rem 0.75rem 0; font-family: 'DM Sans', sans-serif; font-weight: 300; font-size: 0.95rem; color: #0f0e0c; outline: none; transition: border-color 0.2s, background-color 0.2s; appearance: none; -webkit-appearance: none; border-radius: 0; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23929186' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.1rem center; background-size: 14px; }
-  .tend-select:focus { border-bottom-color: #2e3b2b; background-color: rgba(46,59,43,0.03); }
-  .tend-select:invalid { color: rgba(46,59,43,0.3); }
+  .tend-countdown-num { font-family: 'Playfair Display', serif; font-size: 1.9rem; font-weight: 400; color: #f9f8f4; line-height: 1; font-variant-numeric: tabular-nums; }
+  .tend-countdown-label { font-family: 'DM Sans', sans-serif; font-size: 0.56rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(195,202,168,0.55); margin-top: 0.5rem; }
+  .tend-countdown-sep { color: rgba(195,202,168,0.3); font-size: 0.9rem; line-height: 1; padding-top: 0.5rem; }
+
+  .tend-offer-title { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-style: italic; font-weight: 400; color: #2e3b2b; line-height: 1.25; margin: 0 0 0.85rem; }
+  .tend-offer-body { font-family: 'DM Sans', sans-serif; font-weight: 300; font-size: 0.92rem; line-height: 1.65; color: #6f6e66; margin: 0 0 1.9rem; }
+  .tend-cta { display: flex; align-items: center; justify-content: center; gap: 0.55rem; width: 100%; margin-top: 1.6rem; padding: 1.15rem 1.5rem; background: #24301f; color: #f4f2e9; border: none; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: background 0.2s, transform 0.2s; }
+  .tend-cta:hover { background: #2e3b2b; transform: translateY(-1px); }
+  .tend-cta:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
   /* Location modal — a compact venue card, separate from the campaign modal */
   @keyframes locModal { from { opacity: 0; transform: translateY(14px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
   .loc-overlay { position: fixed; inset: 0; z-index: 320; background: rgba(15,14,12,0.75); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; padding: 1rem; animation: tendOverlay 0.3s ease both; }
-  .loc-card { background: #f9f8f4; width: 100%; max-width: 420px; max-height: 90vh; overflow-y: auto; box-shadow: 0 32px 80px rgba(15,14,12,0.5); animation: locModal 0.35s cubic-bezier(0.22,1,0.36,1) both; position: relative; padding: 2.25rem 2rem; }
-  .loc-eyebrow { font-family: 'DM Sans', sans-serif; font-size: 0.6rem; letter-spacing: 0.24em; text-transform: uppercase; color: #929186; margin: 0 0 0.5rem; }
-  .loc-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 400; color: #2e3b2b; margin: 0 0 0.35rem; }
-  .loc-address { font-family: 'DM Sans', sans-serif; font-weight: 300; font-size: 0.85rem; color: #929186; margin: 0 0 1.2rem; }
-  .loc-map { width: 100%; height: 220px; border: 1px solid rgba(46,59,43,0.1); }
-  .loc-cta { display: flex; align-items: center; justify-content: center; gap: 0.5rem; width: 100%; margin-top: 1.3rem; padding: 1rem 1.5rem; background: #2e3b2b; color: #c3caa8; border: 1px solid #2e3b2b; font-family: 'DM Sans', sans-serif; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; cursor: pointer; text-decoration: none; transition: background 0.2s; }
-  .loc-cta:hover { background: #3a4a36; }
+  .loc-card { background: #f9f8f4; width: 100%; max-width: 460px; max-height: 90vh; overflow-y: auto; border-radius: 18px; box-shadow: 0 32px 80px rgba(15,14,12,0.5); animation: locModal 0.35s cubic-bezier(0.22,1,0.36,1) both; position: relative; padding: 2.25rem 2rem; }
+  .loc-eyebrow { font-family: 'DM Sans', sans-serif; font-size: 0.62rem; letter-spacing: 0.22em; text-transform: uppercase; color: #8a9a7b; margin: 0 0 0.5rem; }
+  .loc-title { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 400; color: #2e3b2b; margin: 0 0 0.4rem; }
+  .loc-address { font-family: 'DM Sans', sans-serif; font-weight: 300; font-size: 0.9rem; color: #6f6e66; margin: 0 0 1.2rem; }
+  .loc-map { width: 100%; height: 260px; border: none; border-radius: 12px; display: block; }
+  .loc-cta { display: flex; align-items: center; justify-content: center; gap: 0.5rem; width: 100%; margin-top: 1.3rem; padding: 1.05rem 1.5rem; background: #24301f; color: #f4f2e9; border: none; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 500; cursor: pointer; text-decoration: none; transition: background 0.2s; }
+  .loc-cta:hover { background: #2e3b2b; }
   @media (max-width: 480px) {
     .loc-card { padding: 1.6rem 1.4rem; }
-    .loc-map { height: 180px; }
+    .loc-map { height: 220px; }
   }
   @media (prefers-reduced-motion: reduce) {
     .loc-overlay, .loc-card { animation: none; }
   }
   @media (max-width: 768px) {
     .tend-overlay { padding: 0; align-items: flex-end; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
-    .tend-modal { flex-direction: column; max-height: 100dvh; height: 100%; max-width: 100%; }
-    .tend-left { flex: none; padding: 1.25rem 1.35rem 1.1rem; }
-    .tend-right { padding: 1.35rem 1.35rem 1.75rem; flex: 1; }
+    .tend-modal { flex-direction: column; max-height: 100dvh; height: 100%; max-width: 100%; border-radius: 0; }
+    .tend-left { flex: none; padding: 1.6rem 1.5rem 1.5rem; }
+    .tend-right { padding: 1.6rem 1.5rem 2rem; flex: 1; }
     .tend-pill { bottom: 5.8rem; right: 1.25rem; }
     .tend-close { top: 0.7rem; right: 0.7rem; width: 34px; height: 34px; }
     .tend-hide-mobile { display: none; }
-    .tend-top-row { margin-bottom: 0.75rem; }
-    .tend-title-row { margin-bottom: 0.5rem; }
-    .tend-title-main, .tend-title-year { font-size: 1.55rem; }
-    .tend-countdown { gap: 0.7rem; margin: 0.1rem 0 0.85rem; }
-    .tend-countdown-num { font-size: 1.15rem; }
-    .tend-form { gap: 1rem; }
+    .tend-urgency { margin-bottom: 1.1rem; }
+    .tend-title { font-size: 1.9rem; }
+    .tend-countdown { margin-top: 1.6rem; gap: 0.7rem; }
+    .tend-countdown-num { font-size: 1.5rem; }
+    .tend-offer-title { font-size: 1.4rem; }
+    .tend-offer-body { margin-bottom: 1.4rem; }
   }
   @media (max-width: 420px) {
-    .tend-left { padding: 1.1rem 1.15rem 1rem; }
-    .tend-right { padding: 1.2rem 1.15rem 1.6rem; }
-    .tend-title-main, .tend-title-year { font-size: 1.35rem; }
-    .tend-countdown { gap: 0.55rem; }
-    .tend-countdown-num { font-size: 1.05rem; }
-    .tend-countdown-label { font-size: 0.46rem; }
-    .tend-form { gap: 0.85rem; }
+    .tend-left { padding: 1.4rem 1.2rem 1.3rem; }
+    .tend-right { padding: 1.4rem 1.2rem 1.75rem; }
+    .tend-title { font-size: 1.65rem; }
+    .tend-countdown { gap: 0.5rem; }
+    .tend-countdown-num { font-size: 1.3rem; }
+    .tend-countdown-label { font-size: 0.5rem; letter-spacing: 0.12em; }
   }
   @media (prefers-reduced-motion: reduce) {
     .tend-overlay, .tend-modal { animation: none; }
@@ -482,25 +480,27 @@ export default function App() {
 
   // Tendencias 2027 modal
   const [tendenciasOpen, setTendenciasOpen] = useState(false);
-  const [tendenciasForm, setTendenciasForm] = useState({ nombres: "", email: "", telefono: "", comoTeEnteraste: "" });
+  const [tendenciasEmail, setTendenciasEmail] = useState("");
+  const [tendenciasEmailError, setTendenciasEmailError] = useState(false);
   const [tendenciasSent, setTendenciasSent] = useState(false);
   const [locationModalOpen, setLocationModalOpen] = useState(false);
   const [tendenciasSending, setTendenciasSending] = useState(false);
 
   // Countdown to the Tendencias 2027 event (24 de julio, 10:00 AM, hora del centro de México)
-  // Updates once a minute (not every second) — precision to the minute is plenty
-  // for an editorial "faltan" note, and it keeps re-renders light on mobile.
+  // Ticks every second — the panel shows seconds, so anything slower would visibly stall.
   const TEND_EVENT_TIME = "2026-07-24T10:00:00-06:00";
   const [tendCountdown, setTendCountdown] = useState(() => Math.max(0, new Date(TEND_EVENT_TIME).getTime() - Date.now()));
   useEffect(() => {
+    if (!tendenciasOpen) return;
     const id = setInterval(() => {
       setTendCountdown(Math.max(0, new Date(TEND_EVENT_TIME).getTime() - Date.now()));
-    }, 30000);
+    }, 1000);
     return () => clearInterval(id);
-  }, []);
+  }, [tendenciasOpen]);
   const tendDays = Math.floor(tendCountdown / 86400000);
   const tendHours = Math.floor((tendCountdown % 86400000) / 3600000);
   const tendMinutes = Math.floor((tendCountdown % 3600000) / 60000);
+  const tendSeconds = Math.floor((tendCountdown % 60000) / 1000);
 
   // Pillar gallery state
   const [activePillar, setActivePillar] = useState<string | null>(null);
@@ -759,12 +759,18 @@ export default function App() {
   async function handleTendenciasSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (tendenciasSending) return;
+    const email = tendenciasEmail.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+      setTendenciasEmailError(true);
+      return;
+    }
+    setTendenciasEmailError(false);
     setTendenciasSending(true);
     try {
       const res = await fetch("/api/tendencias", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(tendenciasForm),
+        body: JSON.stringify({ email }),
       });
       if (!res.ok) throw new Error("failed");
       setTendenciasSent(true);
@@ -1916,49 +1922,29 @@ export default function App() {
 
             {/* ─── LEFT PANEL ─── */}
             <div className="tend-left">
-              {/* Botanical corner decoration — hidden on mobile to keep the hero condensed */}
-              <svg className="tend-hide-mobile" style={{ position: "absolute", top: 0, right: 0, opacity: 0.13, width: "130px", pointerEvents: "none" }} viewBox="0 0 130 130" fill="none">
-                <path d="M130 0 C95 18, 78 55, 55 130" stroke="#c3caa8" strokeWidth="0.7" fill="none"/>
-                <path d="M130 22 C105 38, 88 65, 72 130" stroke="#c3caa8" strokeWidth="0.5" fill="none"/>
-                <ellipse cx="88" cy="38" rx="17" ry="7" transform="rotate(-38 88 38)" fill="#c3caa8"/>
-                <ellipse cx="72" cy="68" rx="13" ry="5.5" transform="rotate(-26 72 68)" fill="#c3caa8"/>
-                <ellipse cx="57" cy="98" rx="10" ry="4" transform="rotate(-14 57 98)" fill="#c3caa8"/>
-              </svg>
-              <svg className="tend-hide-mobile" style={{ position: "absolute", bottom: 0, left: 0, opacity: 0.1, width: "90px", pointerEvents: "none" }} viewBox="0 0 90 90" fill="none">
-                <path d="M0 90 C18 72, 48 62, 90 72" stroke="#c3caa8" strokeWidth="0.7" fill="none"/>
-                <ellipse cx="28" cy="68" rx="13" ry="4.5" transform="rotate(22 28 68)" fill="#c3caa8"/>
-                <ellipse cx="58" cy="70" rx="10" ry="3.5" transform="rotate(10 58 70)" fill="#c3caa8"/>
+              {/* Concentric rings, echoing the radial wash behind them */}
+              <svg style={{ position: "absolute", top: "-70px", right: "-90px", width: "330px", opacity: 0.5, pointerEvents: "none" }} viewBox="0 0 330 330" fill="none" aria-hidden="true">
+                <circle cx="165" cy="165" r="164" stroke="rgba(195,202,168,0.16)" strokeWidth="1" />
+                <circle cx="165" cy="165" r="126" stroke="rgba(195,202,168,0.12)" strokeWidth="1" />
+                <circle cx="165" cy="165" r="88" stroke="rgba(195,202,168,0.09)" strokeWidth="1" />
               </svg>
 
               <p className="tend-urgency">Últimos espacios disponibles</p>
 
-              <div className="tend-top-row">
-                <div className="tend-badge">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#d9c39a" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M3 9a2 2 0 1 0 0 6" /><path d="M21 9a2 2 0 1 1 0 6" />
-                    <rect x="3" y="6" width="18" height="12" rx="2" />
-                    <path d="M13 6v2M13 11v2M13 16v2" strokeDasharray="1.5 2" />
-                  </svg>
-                  <span className="tend-badge-text">Entrada gratuita</span>
-                </div>
-                <span className="tend-anniv tend-hide-mobile">10 años · 2017 – 2027</span>
-              </div>
+              <p className="tend-kicker">Showroom · Edición 2027</p>
 
-              <div className="tend-title-row">
-                <h2 className="tend-title-main">Tendencias</h2>
-                <span className="tend-title-year">2027</span>
-              </div>
+              <h2 className="tend-title">Tendencias<br />en Bodas</h2>
 
-              <p style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", fontStyle: "italic", fontWeight: 400, color: "rgba(249,248,244,0.85)", marginBottom: "1.1rem" }}>
-                24 – 26 de julio
-              </p>
+              <p className="tend-meta">24 — 26 de julio · Rincón del Bosque</p>
 
-              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.56rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(195,202,168,0.4)", marginBottom: "0.5rem" }}>
-                Faltan
-              </p>
+              <button type="button" className="tend-directions-btn" onClick={() => setLocationModalOpen(true)}>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Cómo llegar
+              </button>
+
               <div className="tend-countdown">
                 <div className="tend-countdown-item">
-                  <span className="tend-countdown-num">{tendDays}</span>
+                  <span className="tend-countdown-num">{String(tendDays).padStart(2, "0")}</span>
                   <span className="tend-countdown-label">Días</span>
                 </div>
                 <span className="tend-countdown-sep">·</span>
@@ -1971,22 +1957,12 @@ export default function App() {
                   <span className="tend-countdown-num">{String(tendMinutes).padStart(2, "0")}</span>
                   <span className="tend-countdown-label">Min</span>
                 </div>
+                <span className="tend-countdown-sep">·</span>
+                <div className="tend-countdown-item">
+                  <span className="tend-countdown-num">{String(tendSeconds).padStart(2, "0")}</span>
+                  <span className="tend-countdown-label">Seg</span>
+                </div>
               </div>
-
-              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(195,202,168,0.5)" strokeWidth="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.7rem", color: "rgba(249,248,244,0.6)", letterSpacing: "0.03em" }}>10:00 AM – 6:00 PM</span>
-                <span style={{ color: "rgba(195,202,168,0.35)", fontSize: "0.7rem" }}>·</span>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(195,202,168,0.5)" strokeWidth="1.5"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.7rem", color: "rgba(249,248,244,0.6)", letterSpacing: "0.03em" }}>Rincón del Bosque</span>
-              </div>
-
-              <button type="button" className="tend-directions-btn" onClick={() => setLocationModalOpen(true)}>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                Cómo llegar
-              </button>
-
-              <div className="tend-flourish tend-hide-mobile" aria-hidden="true">❦</div>
             </div>
 
             {/* Close — direct child of .tend-modal so it stays put even when the
@@ -2001,64 +1977,37 @@ export default function App() {
             <div className="tend-right">
               {!tendenciasSent ? (
                 <>
-                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.62rem", letterSpacing: "0.24em", textTransform: "uppercase", color: "#929186", marginBottom: "0.5rem" }}>Registro previo</p>
-                  <div className="tend-hide-mobile" style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem" }}>
-                    <div style={{ flex: 1, height: "1px", background: "rgba(46,59,43,0.08)" }} />
-                    <span style={{ color: "rgba(46,59,43,0.25)", fontSize: "0.65rem" }}>♡</span>
-                    <div style={{ flex: 1, height: "1px", background: "rgba(46,59,43,0.08)" }} />
-                  </div>
-                  <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.7rem", fontWeight: 400, fontStyle: "italic", color: "#2e3b2b", lineHeight: 1.2, marginBottom: "0.6rem" }}>
-                    Reserva tu lugar
-                  </h3>
-                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 300, fontSize: "0.86rem", lineHeight: 1.6, color: "#929186", marginBottom: "1.5rem" }}>
-                    Conecta, disfruta y crea recuerdos en un entorno natural inolvidable. Cupo limitado por pareja.
+                  <h3 className="tend-offer-title">Tenemos una entrada para ti</h3>
+                  <p className="tend-offer-body">
+                    Tu pase de cortesía al Showroom.<br />
+                    Ingresa tu correo para enviártelo de inmediato.
                   </p>
 
-                  <form onSubmit={handleTendenciasSubmit} className="tend-form" style={{ display: "flex", flexDirection: "column" }}>
-                    <div>
-                      <label style={labelStyle}>Nombres</label>
-                      <input className="tend-input" type="text" required placeholder="Tu nombre completo"
-                        value={tendenciasForm.nombres}
-                        onChange={(e) => setTendenciasForm((f) => ({ ...f, nombres: e.target.value }))} />
-                    </div>
-                    <div>
-                      <label style={labelStyle}>Correo electrónico</label>
-                      <input className="tend-input" type="email" required placeholder="correo@ejemplo.com"
-                        value={tendenciasForm.email}
-                        onChange={(e) => setTendenciasForm((f) => ({ ...f, email: e.target.value }))} />
-                    </div>
-                    <div>
-                      <label style={labelStyle}>Teléfono celular</label>
-                      <input className="tend-input" type="tel" placeholder="55 1234 5678"
-                        value={tendenciasForm.telefono}
-                        onChange={(e) => setTendenciasForm((f) => ({ ...f, telefono: e.target.value }))} />
-                    </div>
-                    <div>
-                      <label style={labelStyle}>¿Cómo te enteraste de nosotros?</label>
-                      <select className="tend-select" required
-                        value={tendenciasForm.comoTeEnteraste}
-                        onChange={(e) => setTendenciasForm((f) => ({ ...f, comoTeEnteraste: e.target.value }))}>
-                        <option value="" disabled>Selecciona una opción</option>
-                        <option value="Instagram">Instagram</option>
-                        <option value="Facebook">Facebook</option>
-                        <option value="Google">Google</option>
-                        <option value="Recomendación">Recomendación de un amigo o familiar</option>
-                        <option value="Otro">Otro</option>
-                      </select>
-                    </div>
+                  <form onSubmit={handleTendenciasSubmit} noValidate>
+                    <label style={labelStyle} htmlFor="tend-email">Correo electrónico</label>
+                    <input
+                      id="tend-email"
+                      className={`tend-input${tendenciasEmailError ? " has-error" : ""}`}
+                      type="email"
+                      inputMode="email"
+                      autoComplete="email"
+                      placeholder="tu@correo.com"
+                      aria-invalid={tendenciasEmailError}
+                      aria-describedby={tendenciasEmailError ? "tend-email-error" : undefined}
+                      value={tendenciasEmail}
+                      onChange={(e) => {
+                        setTendenciasEmail(e.target.value);
+                        if (tendenciasEmailError) setTendenciasEmailError(false);
+                      }}
+                    />
+                    {tendenciasEmailError && (
+                      <p className="tend-error" id="tend-email-error">Ingresa un correo válido</p>
+                    )}
 
-                    <button type="submit" disabled={tendenciasSending}
-                      className="btn-wipe cta-hero"
-                      style={{ width: "100%", padding: "1.1rem 2rem", background: "#2e3b2b", color: "#c3caa8", border: "1px solid #2e3b2b", fontFamily: "'DM Sans', sans-serif", fontSize: "0.72rem", fontWeight: 500, letterSpacing: "0.2em", textTransform: "uppercase", cursor: tendenciasSending ? "not-allowed" : "pointer", opacity: tendenciasSending ? 0.65 : 1, ["--wipe" as string]: "#7c4a36" }}>
-                      <span className="btn-arrow-wrap">
-                        <span>{tendenciasSending ? "Enviando…" : "Registrarme"}</span>
-                        {!tendenciasSending && <span className="btn-arrow">→</span>}
-                      </span>
+                    <button type="submit" className="tend-cta" disabled={tendenciasSending}>
+                      <span>{tendenciasSending ? "Enviando…" : "Recibir mi pase gratis"}</span>
+                      {!tendenciasSending && <span aria-hidden="true">→</span>}
                     </button>
-
-                    <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.63rem", letterSpacing: "0.08em", color: "#929186", textAlign: "center", opacity: 0.7 }}>
-                      Recibirás confirmación por correo
-                    </p>
                   </form>
                 </>
               ) : (
@@ -2066,9 +2015,9 @@ export default function App() {
                   <div style={{ width: "50px", height: "50px", borderRadius: "50%", background: "rgba(46,59,43,0.07)", border: "1px solid rgba(46,59,43,0.12)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "1.5rem" }}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2e3b2b" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                   </div>
-                  <p style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.45rem", fontStyle: "italic", color: "#2e3b2b", marginBottom: "0.75rem" }}>¡Nos vemos pronto!</p>
-                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 300, fontSize: "0.87rem", color: "#929186", lineHeight: 1.75, maxWidth: "240px" }}>
-                    Tu registro para Tendencias 2027 fue recibido. Te confirmaremos por correo.
+                  <p style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.45rem", fontStyle: "italic", color: "#2e3b2b", marginBottom: "0.75rem" }}>Tu pase va en camino</p>
+                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 300, fontSize: "0.87rem", color: "#929186", lineHeight: 1.75, maxWidth: "260px" }}>
+                    Lo enviamos a tu correo. Revisa tu bandeja de entrada. Nos vemos en el Showroom.
                   </p>
                   <button onClick={() => setTendenciasOpen(false)}
                     style={{ marginTop: "2rem", background: "none", border: "1px solid rgba(46,59,43,0.16)", padding: "0.72rem 1.6rem", fontFamily: "'DM Sans', sans-serif", fontSize: "0.66rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "#2e3b2b", cursor: "pointer", transition: "border-color 0.25s" }}>
@@ -2094,12 +2043,14 @@ export default function App() {
 
             <p className="loc-eyebrow">Venue</p>
             <h3 className="loc-title">Rincón del Bosque</h3>
-            <p className="loc-address">Av. del Bosque 214, Cuernavaca, Morelos</p>
+            <p className="loc-address">Carr. Federal México–Cuernavaca Km 61+200<br />Rincón del Bosque, 62514 Huitzilac, Morelos</p>
 
+            {/* z=12 keeps Cuernavaca and the highway in frame for context; the
+                embed stays pannable/zoomable so visitors can explore from here. */}
             <iframe
               className="loc-map"
               title="Ubicación de Rincón del Bosque en el mapa"
-              src="https://www.google.com/maps?q=19.0094194,-99.2276144&z=15&output=embed"
+              src="https://www.google.com/maps?q=19.0094194,-99.2276144&z=12&output=embed"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
             />

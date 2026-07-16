@@ -1,5 +1,5 @@
 // Vercel Serverless Function — proxies the Tendencias 2027 campaign form to n8n.
-// Fields sent to n8n: nombres, email, telefono, comoTeEnteraste, submittedAt (→ enviado).
+// Fields sent to n8n: email, submittedAt (→ enviado).
 const WEBHOOK = "https://lowcode.morelos.gob.mx/webhook/91d44fd2-572b-4a9c-ad2b-72d2e5ea0faa";
 
 export default async function handler(req: any, res: any) {
@@ -11,9 +11,9 @@ export default async function handler(req: any, res: any) {
   try {
     const body =
       typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body || {};
-    const { nombres, email, telefono, comoTeEnteraste } = body;
+    const { email } = body;
 
-    if (!nombres || !email) {
+    if (!email) {
       res.status(400).json({ error: "Faltan campos obligatorios" });
       return;
     }
@@ -22,10 +22,7 @@ export default async function handler(req: any, res: any) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        nombres,
         email,
-        telefono: telefono || "",
-        comoTeEnteraste: comoTeEnteraste || "",
         submittedAt: new Date().toISOString(),
       }),
     });
