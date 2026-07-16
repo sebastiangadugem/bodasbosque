@@ -405,6 +405,30 @@ const CSS = `
   .tend-countdown-label { font-family: 'DM Sans', sans-serif; font-size: 0.52rem; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(195,202,168,0.5); margin-top: 0.35rem; }
   .tend-countdown-sep { color: rgba(184,153,106,0.4); font-size: 0.85rem; }
   .tend-flourish { text-align: center; color: rgba(184,153,106,0.45); font-size: 0.95rem; margin-top: 1.6rem; padding-top: 1.2rem; border-top: 1px solid rgba(195,202,168,0.1); }
+  .tend-urgency { font-family: 'Playfair Display', serif; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #f9f8f4; margin: 0 0 0.7rem; }
+  .tend-directions-btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1rem; margin-top: 1rem; border: 1px solid rgba(184,153,106,0.45); background: transparent; color: #d9c39a; font-family: 'DM Sans', sans-serif; font-size: 0.62rem; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; cursor: pointer; transition: background 0.2s, border-color 0.2s; }
+  .tend-directions-btn:hover { background: rgba(184,153,106,0.12); border-color: rgba(184,153,106,0.7); }
+  .tend-select { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(46,59,43,0.16); padding: 0.75rem 1.6rem 0.75rem 0; font-family: 'DM Sans', sans-serif; font-weight: 300; font-size: 0.95rem; color: #0f0e0c; outline: none; transition: border-color 0.2s, background-color 0.2s; appearance: none; -webkit-appearance: none; border-radius: 0; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23929186' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.1rem center; background-size: 14px; }
+  .tend-select:focus { border-bottom-color: #2e3b2b; background-color: rgba(46,59,43,0.03); }
+  .tend-select:invalid { color: rgba(46,59,43,0.3); }
+
+  /* Location modal — a compact venue card, separate from the campaign modal */
+  @keyframes locModal { from { opacity: 0; transform: translateY(14px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+  .loc-overlay { position: fixed; inset: 0; z-index: 320; background: rgba(15,14,12,0.75); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; padding: 1rem; animation: tendOverlay 0.3s ease both; }
+  .loc-card { background: #f9f8f4; width: 100%; max-width: 420px; max-height: 90vh; overflow-y: auto; box-shadow: 0 32px 80px rgba(15,14,12,0.5); animation: locModal 0.35s cubic-bezier(0.22,1,0.36,1) both; position: relative; padding: 2.25rem 2rem; }
+  .loc-eyebrow { font-family: 'DM Sans', sans-serif; font-size: 0.6rem; letter-spacing: 0.24em; text-transform: uppercase; color: #929186; margin: 0 0 0.5rem; }
+  .loc-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 400; color: #2e3b2b; margin: 0 0 0.35rem; }
+  .loc-address { font-family: 'DM Sans', sans-serif; font-weight: 300; font-size: 0.85rem; color: #929186; margin: 0 0 1.2rem; }
+  .loc-map { width: 100%; height: 220px; border: 1px solid rgba(46,59,43,0.1); }
+  .loc-cta { display: flex; align-items: center; justify-content: center; gap: 0.5rem; width: 100%; margin-top: 1.3rem; padding: 1rem 1.5rem; background: #2e3b2b; color: #c3caa8; border: 1px solid #2e3b2b; font-family: 'DM Sans', sans-serif; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; cursor: pointer; text-decoration: none; transition: background 0.2s; }
+  .loc-cta:hover { background: #3a4a36; }
+  @media (max-width: 480px) {
+    .loc-card { padding: 1.6rem 1.4rem; }
+    .loc-map { height: 180px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .loc-overlay, .loc-card { animation: none; }
+  }
   @media (max-width: 768px) {
     .tend-overlay { padding: 0; align-items: flex-end; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
     .tend-modal { flex-direction: column; max-height: 100dvh; height: 100%; max-width: 100%; }
@@ -458,8 +482,9 @@ export default function App() {
 
   // Tendencias 2027 modal
   const [tendenciasOpen, setTendenciasOpen] = useState(false);
-  const [tendenciasForm, setTendenciasForm] = useState({ nombres: "", email: "", telefono: "", ubicacion: "" });
+  const [tendenciasForm, setTendenciasForm] = useState({ nombres: "", email: "", telefono: "", comoTeEnteraste: "" });
   const [tendenciasSent, setTendenciasSent] = useState(false);
+  const [locationModalOpen, setLocationModalOpen] = useState(false);
   const [tendenciasSending, setTendenciasSending] = useState(false);
 
   // Countdown to the Tendencias 2027 event (24 de julio, 10:00 AM, hora del centro de México)
@@ -1905,6 +1930,8 @@ export default function App() {
                 <ellipse cx="58" cy="70" rx="10" ry="3.5" transform="rotate(10 58 70)" fill="#c3caa8"/>
               </svg>
 
+              <p className="tend-urgency">Últimos espacios disponibles</p>
+
               <div className="tend-top-row">
                 <div className="tend-badge">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#d9c39a" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
@@ -1954,6 +1981,11 @@ export default function App() {
                 <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.7rem", color: "rgba(249,248,244,0.6)", letterSpacing: "0.03em" }}>Rincón del Bosque</span>
               </div>
 
+              <button type="button" className="tend-directions-btn" onClick={() => setLocationModalOpen(true)}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Cómo llegar
+              </button>
+
               <div className="tend-flourish tend-hide-mobile" aria-hidden="true">❦</div>
             </div>
 
@@ -2002,10 +2034,17 @@ export default function App() {
                         onChange={(e) => setTendenciasForm((f) => ({ ...f, telefono: e.target.value }))} />
                     </div>
                     <div>
-                      <label style={labelStyle}>Ciudad o ubicación</label>
-                      <input className="tend-input" type="text" placeholder="¿Desde dónde nos escribes?"
-                        value={tendenciasForm.ubicacion}
-                        onChange={(e) => setTendenciasForm((f) => ({ ...f, ubicacion: e.target.value }))} />
+                      <label style={labelStyle}>¿Cómo te enteraste de nosotros?</label>
+                      <select className="tend-select" required
+                        value={tendenciasForm.comoTeEnteraste}
+                        onChange={(e) => setTendenciasForm((f) => ({ ...f, comoTeEnteraste: e.target.value }))}>
+                        <option value="" disabled>Selecciona una opción</option>
+                        <option value="Instagram">Instagram</option>
+                        <option value="Facebook">Facebook</option>
+                        <option value="Google">Google</option>
+                        <option value="Recomendación">Recomendación de un amigo o familiar</option>
+                        <option value="Otro">Otro</option>
+                      </select>
                     </div>
 
                     <button type="submit" disabled={tendenciasSending}
@@ -2038,6 +2077,39 @@ export default function App() {
                 </div>
               )}
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── CÓMO LLEGAR — Rincón del Bosque location modal ── */}
+      {locationModalOpen && (
+        <div className="loc-overlay" onClick={() => setLocationModalOpen(false)}>
+          <div className="loc-card" onClick={(e) => e.stopPropagation()}>
+            <button className="tend-close" style={{ position: "absolute", top: "0.9rem", right: "0.9rem", background: "rgba(46,59,43,0.08)", border: "1px solid rgba(46,59,43,0.14)", color: "#2e3b2b" }}
+              onClick={() => setLocationModalOpen(false)} aria-label="Cerrar">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+                <line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/>
+              </svg>
+            </button>
+
+            <p className="loc-eyebrow">Sede</p>
+            <h3 className="loc-title">Rincón del Bosque</h3>
+            <p className="loc-address">Estado de México</p>
+
+            <iframe
+              className="loc-map"
+              title="Ubicación de Rincón del Bosque en el mapa"
+              src="https://www.google.com/maps?q=19.0094194,-99.2276144&z=15&output=embed"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+
+            <a className="loc-cta" href="https://maps.app.goo.gl/sfwNPG9j4inYHE1T8" target="_blank" rel="noopener noreferrer">
+              Abrir en Google Maps
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+              </svg>
+            </a>
           </div>
         </div>
       )}
