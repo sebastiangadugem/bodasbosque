@@ -237,7 +237,10 @@ const CSS = `
 
   /* ── Nav dynamic contrast ── */
   .nav-bar { transition: background 0.45s ease, box-shadow 0.45s ease, backdrop-filter 0.45s ease; }
-  .nav-logo { transition: color 0.35s ease; }
+  /* Wordmark: tight tracking + an italic tail, echoing the hero lockup */
+  .nav-logo { transition: color 0.35s ease, opacity 0.25s ease; text-decoration: none; display: inline-block; font-family: 'Playfair Display', serif; font-size: 1.22rem; font-weight: 500; letter-spacing: -0.005em; line-height: 1; white-space: nowrap; }
+  .nav-logo em { font-style: italic; font-weight: 400; }
+  .nav-logo:hover { opacity: 0.72; }
   .nav-link { transition: color 0.25s ease !important; }
 
   /* ── iPad (769 – 1024px) ── */
@@ -921,13 +924,14 @@ export default function App() {
           boxShadow: navTheme === "light" ? "0 1px 0 rgba(46,59,43,0.08)" : "none",
         }}
       >
-        <div
+        <a
+          href="#inicio"
           className="nav-logo"
-          style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", letterSpacing: "0.04em",
-            color: navTheme === "light" ? "#2e3b2b" : "#f9f8f4" }}
+          aria-label="Bodas en el Bosque — ir al inicio"
+          style={{ color: navTheme === "light" ? "#2e3b2b" : "#f9f8f4" }}
         >
-          Bodas en el Bosque
-        </div>
+          Bodas en <em>el Bosque</em>
+        </a>
         <div className="navlinks" style={{ display: "flex", gap: "2.5rem" }}>
           {["Filosofía", "Espacios", "Galería", "Proceso", "Contacto"].map((item) => (
             <a key={item} href={`#${item.toLowerCase()}`}
@@ -955,7 +959,11 @@ export default function App() {
           <div className="menu-overlay" style={{ position: "fixed", inset: 0, background: "rgba(18,23,15,0.96)", backdropFilter: "blur(16px) saturate(1.2)", WebkitBackdropFilter: "blur(16px) saturate(1.2)", display: "flex", flexDirection: "column", zIndex: 100 }}>
             {/* Top bar */}
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "1.35rem 1.5rem", borderBottom: "1px solid rgba(195,202,168,0.1)" }}>
-              <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.05rem", letterSpacing: "0.04em", color: "#f9f8f4" }}>Bodas en el Bosque</span>
+              <a href="#inicio" className="nav-logo" onClick={() => setMenuOpen(false)}
+                aria-label="Bodas en el Bosque — ir al inicio"
+                style={{ fontSize: "1.12rem", color: "#f9f8f4" }}>
+                Bodas en <em>el Bosque</em>
+              </a>
               <button onClick={() => setMenuOpen(false)} aria-label="Cerrar menú"
                 style={{ background: "none", border: "none", cursor: "pointer", color: "#c3caa8", padding: "0.25rem", display: "flex" }}>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -1000,10 +1008,6 @@ export default function App() {
             Bodas en<br /><em style={{ fontStyle: "italic", color: "#c3caa8" }}>el Bosque</em>
           </h1>
 
-          <p className="hero-fade-3" style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 300, fontSize: "1.05rem", lineHeight: 1.58, color: "rgba(249,248,244,0.82)", maxWidth: "420px", marginBottom: "2rem", textShadow: "0 1px 12px rgba(15,20,12,0.45)" }}>
-            Diseñamos bodas que se sienten parte del bosque — de la primera idea al último brindis.
-          </p>
-
           {/* Social proof */}
           <div className="hero-fade-3" style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "2rem" }}>
             <div style={{ display: "flex" }}>
@@ -1036,6 +1040,78 @@ export default function App() {
 
         <div style={{ position: "absolute", bottom: "2.5rem", right: "3rem", zIndex: 2 }}>
           <div style={{ width: "1px", height: "48px", background: "linear-gradient(to bottom, transparent, #c3caa8)", animation: "scrollPulse 2.2s ease-in-out infinite" }} />
+        </div>
+      </section>
+
+      {/* ── TESTIMONIALS (#3) — carrusel editorial de recomendaciones reales ── */}
+      <section id="testimonios" className="cv-section" style={{ background: "#f9f8f4", padding: "5rem 3rem", overflow: "hidden" }}>
+        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: "3.5rem" }}>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.72rem", letterSpacing: "0.22em", textTransform: "uppercase", color: "#929186", marginBottom: "1.25rem" }}>Nuestras bodas</p>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2rem, 3.5vw, 3.2rem)", fontWeight: 400, color: "#2e3b2b", lineHeight: 1.15 }}>
+              Momentos mágicos <em style={{ fontStyle: "italic" }}>que hemos creado</em>
+            </h2>
+          </div>
+
+          {/* Stage: imagen activa centrada con vecinas atenuadas (estilo revista) */}
+          <div
+            className="testi-stage"
+            onMouseEnter={() => { testiHover.current = true; }}
+            onMouseLeave={() => { testiHover.current = false; }}
+            onTouchStart={(e) => { testiTouchX.current = e.touches[0].clientX; }}
+            onTouchEnd={(e) => {
+              if (testiTouchX.current == null) return;
+              const dx = e.changedTouches[0].clientX - testiTouchX.current;
+              testiTouchX.current = null;
+              if (Math.abs(dx) < 40) return;
+              const n = TESTIMONIO_IMGS.length;
+              setTestiIdx((i) => (dx < 0 ? (i + 1) % n : (i - 1 + n) % n));
+            }}
+          >
+            {TESTIMONIO_IMGS.map((src, i) => {
+              const n = TESTIMONIO_IMGS.length;
+              let pos = i - testiIdx;
+              if (pos > n / 2) pos -= n;
+              if (pos < -n / 2) pos += n;
+              const isActive = pos === 0;
+              const isNeighbor = Math.abs(pos) === 1;
+              if (!isActive && !isNeighbor) return null;
+              return (
+                <figure
+                  key={src}
+                  className="testi-frame"
+                  onClick={() => { if (isActive) setTestiZoom(src); else setTestiIdx(i); }}
+                  style={{
+                    transform: `translateX(${pos * 64}%) scale(${isActive ? 1 : 0.78})`,
+                    opacity: isActive ? 1 : 0.32,
+                    filter: isActive ? "none" : "blur(1px)",
+                    zIndex: isActive ? 3 : 1,
+                    cursor: "pointer",
+                  }}
+                >
+                  <img src={src} alt={`Momento de boda en el bosque ${i + 1}`} loading="lazy" decoding="async" />
+                </figure>
+              );
+            })}
+
+            {/* Flechas */}
+            <button className="testi-arrow testi-arrow-prev" aria-label="Anterior"
+              onClick={() => setTestiIdx((i) => (i - 1 + TESTIMONIO_IMGS.length) % TESTIMONIO_IMGS.length)}>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            </button>
+            <button className="testi-arrow testi-arrow-next" aria-label="Siguiente"
+              onClick={() => setTestiIdx((i) => (i + 1) % TESTIMONIO_IMGS.length)}>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            </button>
+          </div>
+
+          {/* Dots */}
+          <div style={{ display: "flex", gap: "6px", justifyContent: "center", marginTop: "2.25rem" }}>
+            {TESTIMONIO_IMGS.map((_, i) => (
+              <button key={i} aria-label={`Ir a recomendación ${i + 1}`} onClick={() => setTestiIdx(i)}
+                style={{ width: i === testiIdx ? "22px" : "7px", height: "7px", borderRadius: "999px", border: "none", padding: 0, cursor: "pointer", background: i === testiIdx ? "#2e3b2b" : "rgba(46,59,43,0.22)", transition: "width 0.3s ease, background 0.3s ease" }} />
+            ))}
+          </div>
         </div>
       </section>
 
@@ -1446,78 +1522,6 @@ export default function App() {
         </div>
       </section>
 
-      {/* ── TESTIMONIALS (#3) — carrusel editorial de recomendaciones reales ── */}
-      <section id="testimonios" className="cv-section" style={{ background: "#f9f8f4", padding: "5rem 3rem", overflow: "hidden" }}>
-        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: "3.5rem" }}>
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.72rem", letterSpacing: "0.22em", textTransform: "uppercase", color: "#929186", marginBottom: "1.25rem" }}>Nuestras bodas</p>
-            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2rem, 3.5vw, 3.2rem)", fontWeight: 400, color: "#2e3b2b", lineHeight: 1.15 }}>
-              Momentos mágicos <em style={{ fontStyle: "italic" }}>que hemos creado</em>
-            </h2>
-          </div>
-
-          {/* Stage: imagen activa centrada con vecinas atenuadas (estilo revista) */}
-          <div
-            className="testi-stage"
-            onMouseEnter={() => { testiHover.current = true; }}
-            onMouseLeave={() => { testiHover.current = false; }}
-            onTouchStart={(e) => { testiTouchX.current = e.touches[0].clientX; }}
-            onTouchEnd={(e) => {
-              if (testiTouchX.current == null) return;
-              const dx = e.changedTouches[0].clientX - testiTouchX.current;
-              testiTouchX.current = null;
-              if (Math.abs(dx) < 40) return;
-              const n = TESTIMONIO_IMGS.length;
-              setTestiIdx((i) => (dx < 0 ? (i + 1) % n : (i - 1 + n) % n));
-            }}
-          >
-            {TESTIMONIO_IMGS.map((src, i) => {
-              const n = TESTIMONIO_IMGS.length;
-              let pos = i - testiIdx;
-              if (pos > n / 2) pos -= n;
-              if (pos < -n / 2) pos += n;
-              const isActive = pos === 0;
-              const isNeighbor = Math.abs(pos) === 1;
-              if (!isActive && !isNeighbor) return null;
-              return (
-                <figure
-                  key={src}
-                  className="testi-frame"
-                  onClick={() => { if (isActive) setTestiZoom(src); else setTestiIdx(i); }}
-                  style={{
-                    transform: `translateX(${pos * 64}%) scale(${isActive ? 1 : 0.78})`,
-                    opacity: isActive ? 1 : 0.32,
-                    filter: isActive ? "none" : "blur(1px)",
-                    zIndex: isActive ? 3 : 1,
-                    cursor: "pointer",
-                  }}
-                >
-                  <img src={src} alt={`Momento de boda en el bosque ${i + 1}`} loading="lazy" decoding="async" />
-                </figure>
-              );
-            })}
-
-            {/* Flechas */}
-            <button className="testi-arrow testi-arrow-prev" aria-label="Anterior"
-              onClick={() => setTestiIdx((i) => (i - 1 + TESTIMONIO_IMGS.length) % TESTIMONIO_IMGS.length)}>
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
-            </button>
-            <button className="testi-arrow testi-arrow-next" aria-label="Siguiente"
-              onClick={() => setTestiIdx((i) => (i + 1) % TESTIMONIO_IMGS.length)}>
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
-            </button>
-          </div>
-
-          {/* Dots */}
-          <div style={{ display: "flex", gap: "6px", justifyContent: "center", marginTop: "2.25rem" }}>
-            {TESTIMONIO_IMGS.map((_, i) => (
-              <button key={i} aria-label={`Ir a recomendación ${i + 1}`} onClick={() => setTestiIdx(i)}
-                style={{ width: i === testiIdx ? "22px" : "7px", height: "7px", borderRadius: "999px", border: "none", padding: 0, cursor: "pointer", background: i === testiIdx ? "#2e3b2b" : "rgba(46,59,43,0.22)", transition: "width 0.3s ease, background 0.3s ease" }} />
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ── PROCESS ── */}
       <section id="proceso" className="cv-section" style={{ background: "#f4f2ec", padding: "5rem 3rem" }}>
         <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
@@ -1800,9 +1804,12 @@ export default function App() {
         <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "2.5rem" }}>
             <div>
-              <p style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", color: "#f9f8f4", marginBottom: "0.4rem" }}>Bodas en el Bosque</p>
+              <a href="#inicio" className="nav-logo" aria-label="Bodas en el Bosque — ir al inicio"
+                style={{ color: "#f9f8f4", marginBottom: "0.5rem" }}>
+                Bodas en <em>el Bosque</em>
+              </a>
               <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.76rem", color: "#929186", fontWeight: 300, marginBottom: "0.3rem" }}>Servicio integral de bodas en entornos naturales · México</p>
-              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.76rem", color: "#929186", fontWeight: 300 }}>Servicio en Estado de México, Morelos y CDMX</p>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.76rem", color: "#929186", fontWeight: 300 }}>Servicio en Morelos y CDMX</p>
             </div>
             {/* Contacto directo (#9) */}
             <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
