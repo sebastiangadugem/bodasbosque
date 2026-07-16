@@ -401,16 +401,20 @@ const CSS = `
   /* Title carries the panel on its own now — sized to fill the column's width */
   .tend-title { font-family: 'Playfair Display', serif; font-size: clamp(2.1rem, 5vw, 3.05rem); font-style: italic; font-weight: 400; line-height: 1.08; color: #f9f8f4; margin: 0 0 0.75rem; }
   .tend-meta { font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 300; color: rgba(249,248,244,0.65); margin: 0; }
-  .tend-directions { display: flex; align-items: center; gap: 0.9rem; flex-wrap: wrap; margin-top: 1.2rem; }
-  .tend-directions-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.7rem 1.15rem; border: 1px solid rgba(201,162,39,0.5); border-radius: 8px; background: transparent; color: #d9b84a; font-family: 'DM Sans', sans-serif; font-size: 0.66rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; transition: background 0.2s, border-color 0.2s; }
+  /* Button over its note, left-aligned — the note is too long to sit beside it
+     without wrapping raggedly at the panel's width */
+  .tend-directions { display: flex; flex-direction: column; align-items: flex-start; gap: 0.7rem; margin-top: 1.3rem; }
+  .tend-directions-btn { display: inline-flex; align-items: center; gap: 0.55rem; padding: 0.72rem 1.2rem; border: 1px solid rgba(201,162,39,0.5); border-radius: 8px; background: transparent; color: #d9b84a; font-family: 'DM Sans', sans-serif; font-size: 0.66rem; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; line-height: 1; white-space: nowrap; cursor: pointer; transition: background 0.2s, border-color 0.2s; }
   .tend-directions-btn:hover { background: rgba(201,162,39,0.12); border-color: rgba(201,162,39,0.85); }
-  .tend-directions-note { font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 300; line-height: 1.45; color: rgba(249,248,244,0.55); margin: 0; }
+  .tend-directions-note { font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 300; line-height: 1.45; color: rgba(249,248,244,0.55); margin: 0; max-width: 30ch; }
 
-  .tend-countdown { display: flex; align-items: flex-start; gap: 0.9rem; margin: 1.6rem 0 0; }
-  .tend-countdown-item { display: flex; flex-direction: column; align-items: flex-start; }
-  .tend-countdown-num { font-family: 'Playfair Display', serif; font-size: 1.9rem; font-weight: 400; color: #f9f8f4; line-height: 1; font-variant-numeric: tabular-nums; }
-  .tend-countdown-label { font-family: 'DM Sans', sans-serif; font-size: 0.56rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(195,202,168,0.55); margin-top: 0.5rem; }
-  .tend-countdown-sep { color: rgba(195,202,168,0.3); font-size: 0.9rem; line-height: 1; padding-top: 0.5rem; }
+  /* Countdown lives on the cream form panel now, so it reads dark-on-light */
+  .tend-countdown { display: flex; align-items: flex-start; justify-content: center; gap: 0.65rem; margin: 1.4rem 0 0; }
+  .tend-countdown-lead { font-family: 'DM Sans', sans-serif; font-size: 0.56rem; letter-spacing: 0.18em; text-transform: uppercase; color: #a3a299; align-self: center; margin-right: 0.15rem; }
+  .tend-countdown-item { display: flex; flex-direction: column; align-items: center; }
+  .tend-countdown-num { font-family: 'Playfair Display', serif; font-size: 1.35rem; font-weight: 400; color: #2e3b2b; line-height: 1; font-variant-numeric: tabular-nums; }
+  .tend-countdown-label { font-family: 'DM Sans', sans-serif; font-size: 0.5rem; letter-spacing: 0.16em; text-transform: uppercase; color: #a3a299; margin-top: 0.4rem; }
+  .tend-countdown-sep { color: rgba(46,59,43,0.25); font-size: 0.85rem; line-height: 1; padding-top: 0.25rem; }
 
   .tend-offer-title { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-style: italic; font-weight: 400; color: #2e3b2b; line-height: 1.25; margin: 0 0 0.85rem; }
   .tend-offer-body { font-family: 'DM Sans', sans-serif; font-weight: 300; font-size: 0.92rem; line-height: 1.65; color: #6f6e66; margin: 0 0 1.9rem; }
@@ -447,8 +451,6 @@ const CSS = `
     .tend-hide-mobile { display: none; }
     .tend-title { font-size: 2.05rem; margin-bottom: 0.55rem; }
     .tend-directions { margin-top: 1rem; }
-    .tend-countdown { margin-top: 1.15rem; gap: 0.7rem; }
-    .tend-countdown-num { font-size: 1.4rem; }
     .tend-offer-title { font-size: 1.4rem; }
     .tend-offer-body { margin-bottom: 1.4rem; }
   }
@@ -457,8 +459,7 @@ const CSS = `
     .tend-right { padding: 1.35rem 1.2rem 1.75rem; }
     .tend-title { font-size: 1.8rem; }
     .tend-countdown { gap: 0.5rem; }
-    .tend-countdown-num { font-size: 1.25rem; }
-    .tend-countdown-label { font-size: 0.5rem; letter-spacing: 0.12em; }
+    .tend-countdown-num { font-size: 1.2rem; }
   }
   @media (prefers-reduced-motion: reduce) {
     .tend-overlay, .tend-modal { animation: none; }
@@ -1959,29 +1960,7 @@ export default function App() {
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                   Cómo llegar
                 </button>
-                <p className="tend-directions-note">A 20 min de Cuernavaca<br />y a menos de 1 h de la CDMX</p>
-              </div>
-
-              <div className="tend-countdown">
-                <div className="tend-countdown-item">
-                  <span className="tend-countdown-num">{String(tendDays).padStart(2, "0")}</span>
-                  <span className="tend-countdown-label">Días</span>
-                </div>
-                <span className="tend-countdown-sep">·</span>
-                <div className="tend-countdown-item">
-                  <span className="tend-countdown-num">{String(tendHours).padStart(2, "0")}</span>
-                  <span className="tend-countdown-label">Hrs</span>
-                </div>
-                <span className="tend-countdown-sep">·</span>
-                <div className="tend-countdown-item">
-                  <span className="tend-countdown-num">{String(tendMinutes).padStart(2, "0")}</span>
-                  <span className="tend-countdown-label">Min</span>
-                </div>
-                <span className="tend-countdown-sep">·</span>
-                <div className="tend-countdown-item">
-                  <span className="tend-countdown-num">{String(tendSeconds).padStart(2, "0")}</span>
-                  <span className="tend-countdown-label">Seg</span>
-                </div>
+                <p className="tend-directions-note">A 20 min de Cuernavaca y a menos de 1 h de la CDMX</p>
               </div>
             </div>
 
@@ -2061,6 +2040,29 @@ export default function App() {
                       <span>{tendenciasSending ? "Enviando…" : "Recibir mi pase gratis"}</span>
                       {!tendenciasSending && <span aria-hidden="true">→</span>}
                     </button>
+
+                    <div className="tend-countdown">
+                      <span className="tend-countdown-lead">Faltan</span>
+                      <div className="tend-countdown-item">
+                        <span className="tend-countdown-num">{String(tendDays).padStart(2, "0")}</span>
+                        <span className="tend-countdown-label">Días</span>
+                      </div>
+                      <span className="tend-countdown-sep">·</span>
+                      <div className="tend-countdown-item">
+                        <span className="tend-countdown-num">{String(tendHours).padStart(2, "0")}</span>
+                        <span className="tend-countdown-label">Hrs</span>
+                      </div>
+                      <span className="tend-countdown-sep">·</span>
+                      <div className="tend-countdown-item">
+                        <span className="tend-countdown-num">{String(tendMinutes).padStart(2, "0")}</span>
+                        <span className="tend-countdown-label">Min</span>
+                      </div>
+                      <span className="tend-countdown-sep">·</span>
+                      <div className="tend-countdown-item">
+                        <span className="tend-countdown-num">{String(tendSeconds).padStart(2, "0")}</span>
+                        <span className="tend-countdown-label">Seg</span>
+                      </div>
+                    </div>
                   </form>
                 </>
               ) : (
