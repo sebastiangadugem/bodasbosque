@@ -384,6 +384,9 @@ const CSS = `
   .tend-input::placeholder { color: rgba(46,59,43,0.3); }
   .tend-input.has-error { border-bottom-color: #8c2f24; }
   .tend-error { font-family: 'DM Sans', sans-serif; font-size: 0.75rem; color: #8c2f24; margin: 0.5rem 0 0; }
+  .tend-field { margin-bottom: 1.15rem; }
+  .tend-select { width: 100%; background-color: transparent; border: none; border-bottom: 1px solid rgba(46,59,43,0.16); border-radius: 0; padding: 0.75rem 1.6rem 0.75rem 0; font-family: 'DM Sans', sans-serif; font-weight: 300; font-size: 1rem; color: #0f0e0c; outline: none; cursor: pointer; transition: border-color 0.2s, background-color 0.2s; appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23929186' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.1rem center; background-size: 14px; }
+  .tend-select:focus { border-bottom-color: #2e3b2b; background-color: rgba(46,59,43,0.03); }
   .tend-pill { position: fixed; bottom: 6rem; right: 2rem; z-index: 98; display: flex; align-items: center; gap: 0.5rem; padding: 0.62rem 1.1rem; background: rgba(46,59,43,0.94); border: 1px solid rgba(195,202,168,0.28); color: #c3caa8; font-family: 'DM Sans', sans-serif; font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 4px 20px rgba(15,14,12,0.28); transition: background 0.25s, transform 0.2s; }
   .tend-pill:hover { background: rgba(46,59,43,1); transform: translateY(-2px); }
 
@@ -396,8 +399,10 @@ const CSS = `
   .tend-kicker { font-family: 'DM Sans', sans-serif; font-size: 0.62rem; font-weight: 400; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(195,202,168,0.6); margin: 0 0 0.7rem; }
   .tend-title { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4.2vw, 2.7rem); font-style: italic; font-weight: 400; line-height: 1.15; color: #f9f8f4; margin: 0 0 0.9rem; }
   .tend-meta { font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 300; color: rgba(249,248,244,0.65); margin: 0; }
-  .tend-directions-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.7rem 1.15rem; margin-top: 1.4rem; align-self: flex-start; border: 1px solid rgba(201,162,39,0.5); border-radius: 8px; background: transparent; color: #d9b84a; font-family: 'DM Sans', sans-serif; font-size: 0.66rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; transition: background 0.2s, border-color 0.2s; }
+  .tend-directions { display: flex; align-items: center; gap: 0.9rem; flex-wrap: wrap; margin-top: 1.4rem; }
+  .tend-directions-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.7rem 1.15rem; border: 1px solid rgba(201,162,39,0.5); border-radius: 8px; background: transparent; color: #d9b84a; font-family: 'DM Sans', sans-serif; font-size: 0.66rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; transition: background 0.2s, border-color 0.2s; }
   .tend-directions-btn:hover { background: rgba(201,162,39,0.12); border-color: rgba(201,162,39,0.85); }
+  .tend-directions-note { font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 300; line-height: 1.45; color: rgba(249,248,244,0.55); margin: 0; }
 
   .tend-countdown { display: flex; align-items: flex-start; gap: 0.9rem; margin: 2.4rem 0 0; }
   .tend-countdown-item { display: flex; flex-direction: column; align-items: flex-start; }
@@ -481,6 +486,8 @@ export default function App() {
   // Tendencias 2027 modal
   const [tendenciasOpen, setTendenciasOpen] = useState(false);
   const [tendenciasEmail, setTendenciasEmail] = useState("");
+  const [tendenciasTelefono, setTendenciasTelefono] = useState("");
+  const [tendenciasOrigen, setTendenciasOrigen] = useState("");
   const [tendenciasEmailError, setTendenciasEmailError] = useState(false);
   const [tendenciasSent, setTendenciasSent] = useState(false);
   const [locationModalOpen, setLocationModalOpen] = useState(false);
@@ -770,7 +777,13 @@ export default function App() {
       const res = await fetch("/api/tendencias", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({
+          email,
+          telefono: tendenciasTelefono.trim(),
+          // The n8n webhook already has a field wired up as `ubicacion`; reuse it
+          // to carry the referral source instead of adding a new one upstream.
+          ubicacion: tendenciasOrigen,
+        }),
       });
       if (!res.ok) throw new Error("failed");
       setTendenciasSent(true);
@@ -1937,10 +1950,13 @@ export default function App() {
 
               <p className="tend-meta">24 — 26 de julio · Rincón del Bosque</p>
 
-              <button type="button" className="tend-directions-btn" onClick={() => setLocationModalOpen(true)}>
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                Cómo llegar
-              </button>
+              <div className="tend-directions">
+                <button type="button" className="tend-directions-btn" onClick={() => setLocationModalOpen(true)}>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  Cómo llegar
+                </button>
+                <p className="tend-directions-note">A 20 min de Cuernavaca<br />y a menos de 1 h de la CDMX</p>
+              </div>
 
               <div className="tend-countdown">
                 <div className="tend-countdown-item">
@@ -1984,25 +2000,58 @@ export default function App() {
                   </p>
 
                   <form onSubmit={handleTendenciasSubmit} noValidate>
-                    <label style={labelStyle} htmlFor="tend-email">Correo electrónico</label>
-                    <input
-                      id="tend-email"
-                      className={`tend-input${tendenciasEmailError ? " has-error" : ""}`}
-                      type="email"
-                      inputMode="email"
-                      autoComplete="email"
-                      placeholder="tu@correo.com"
-                      aria-invalid={tendenciasEmailError}
-                      aria-describedby={tendenciasEmailError ? "tend-email-error" : undefined}
-                      value={tendenciasEmail}
-                      onChange={(e) => {
-                        setTendenciasEmail(e.target.value);
-                        if (tendenciasEmailError) setTendenciasEmailError(false);
-                      }}
-                    />
-                    {tendenciasEmailError && (
-                      <p className="tend-error" id="tend-email-error">Ingresa un correo válido</p>
-                    )}
+                    <div className="tend-field">
+                      <label style={labelStyle} htmlFor="tend-email">Correo electrónico</label>
+                      <input
+                        id="tend-email"
+                        className={`tend-input${tendenciasEmailError ? " has-error" : ""}`}
+                        type="email"
+                        inputMode="email"
+                        autoComplete="email"
+                        placeholder="tu@correo.com"
+                        aria-invalid={tendenciasEmailError}
+                        aria-describedby={tendenciasEmailError ? "tend-email-error" : undefined}
+                        value={tendenciasEmail}
+                        onChange={(e) => {
+                          setTendenciasEmail(e.target.value);
+                          if (tendenciasEmailError) setTendenciasEmailError(false);
+                        }}
+                      />
+                      {tendenciasEmailError && (
+                        <p className="tend-error" id="tend-email-error">Ingresa un correo válido</p>
+                      )}
+                    </div>
+
+                    <div className="tend-field">
+                      <label style={labelStyle} htmlFor="tend-tel">Teléfono celular</label>
+                      <input
+                        id="tend-tel"
+                        className="tend-input"
+                        type="tel"
+                        inputMode="tel"
+                        autoComplete="tel"
+                        placeholder="55 1234 5678"
+                        value={tendenciasTelefono}
+                        onChange={(e) => setTendenciasTelefono(e.target.value)}
+                      />
+                    </div>
+
+                    <div className="tend-field">
+                      <label style={labelStyle} htmlFor="tend-origen">¿Cómo te enteraste de nosotros?</label>
+                      <select
+                        id="tend-origen"
+                        className="tend-select"
+                        value={tendenciasOrigen}
+                        onChange={(e) => setTendenciasOrigen(e.target.value)}
+                      >
+                        <option value="">Selecciona una opción</option>
+                        <option value="Instagram">Instagram</option>
+                        <option value="Facebook">Facebook</option>
+                        <option value="Google">Google</option>
+                        <option value="Recomendación">Recomendación de un amigo o familiar</option>
+                        <option value="Otro">Otro</option>
+                      </select>
+                    </div>
 
                     <button type="submit" className="tend-cta" disabled={tendenciasSending}>
                       <span>{tendenciasSending ? "Enviando…" : "Recibir mi pase gratis"}</span>

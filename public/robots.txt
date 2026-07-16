@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://bodasbosquevip.vercel.app/sitemap.xml
+Sitemap: https://bodasbosque.com.mx/sitemap.xml
