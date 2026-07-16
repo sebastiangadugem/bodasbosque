@@ -380,7 +380,7 @@ const CSS = `
   .tend-overlay { animation: tendOverlay 0.35s ease both; background: rgba(15,14,12,0.8); backdrop-filter: blur(7px); -webkit-backdrop-filter: blur(7px); position: fixed; inset: 0; z-index: 300; display: flex; align-items: center; justify-content: center; padding: 1rem; overflow-y: auto; }
   .tend-modal { animation: tendModal 0.45s cubic-bezier(0.22,1,0.36,1) 0.05s both; max-width: 900px; width: 100%; display: flex; max-height: 92vh; overflow: hidden; border-radius: 18px; box-shadow: 0 32px 80px rgba(15,14,12,0.5); position: relative; }
   /* Radial wash brightens the top-right, echoing the ring motif above it */
-  .tend-left { background: radial-gradient(120% 100% at 85% 0%, #3a4b35 0%, #2e3b2b 55%); padding: 2.75rem 2.5rem; display: flex; flex-direction: column; justify-content: center; flex: 0 0 46%; position: relative; overflow: hidden; }
+  .tend-left { background: radial-gradient(120% 100% at 85% 0%, #3a4b35 0%, #2e3b2b 55%); padding: 2.1rem 2.25rem; display: flex; flex-direction: column; justify-content: center; flex: 0 0 46%; position: relative; overflow: hidden; }
   .tend-right { background: #f9f8f4; padding: 2.75rem 2.5rem; flex: 1; min-width: 0; overflow-y: auto; position: relative; display: flex; flex-direction: column; justify-content: center; }
   .tend-input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(46,59,43,0.16); padding: 0.75rem 0; font-family: 'DM Sans', sans-serif; font-weight: 300; font-size: 1rem; color: #0f0e0c; outline: none; transition: border-color 0.2s, background-color 0.2s; }
   .tend-input:focus { border-bottom-color: #2e3b2b; background: rgba(46,59,43,0.03); }
@@ -398,16 +398,15 @@ const CSS = `
   .tend-close { position: absolute; top: 0.9rem; right: 0.9rem; z-index: 5; width: 36px; height: 36px; border-radius: 50%; background: rgba(15,14,12,0.32); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); border: 1px solid rgba(249,248,244,0.22); display: flex; align-items: center; justify-content: center; cursor: pointer; color: #f9f8f4; transition: background 0.2s, transform 0.2s; }
   .tend-close:hover { background: rgba(15,14,12,0.55); transform: scale(1.06); }
 
-  .tend-urgency { font-family: 'DM Sans', sans-serif; font-size: 0.66rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: #f9f8f4; margin: 0 0 1.5rem; }
-  .tend-kicker { font-family: 'DM Sans', sans-serif; font-size: 0.62rem; font-weight: 400; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(195,202,168,0.6); margin: 0 0 0.7rem; }
-  .tend-title { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4.2vw, 2.7rem); font-style: italic; font-weight: 400; line-height: 1.15; color: #f9f8f4; margin: 0 0 0.9rem; }
+  /* Title carries the panel on its own now — sized to fill the column's width */
+  .tend-title { font-family: 'Playfair Display', serif; font-size: clamp(2.1rem, 5vw, 3.05rem); font-style: italic; font-weight: 400; line-height: 1.08; color: #f9f8f4; margin: 0 0 0.75rem; }
   .tend-meta { font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 300; color: rgba(249,248,244,0.65); margin: 0; }
-  .tend-directions { display: flex; align-items: center; gap: 0.9rem; flex-wrap: wrap; margin-top: 1.4rem; }
+  .tend-directions { display: flex; align-items: center; gap: 0.9rem; flex-wrap: wrap; margin-top: 1.2rem; }
   .tend-directions-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.7rem 1.15rem; border: 1px solid rgba(201,162,39,0.5); border-radius: 8px; background: transparent; color: #d9b84a; font-family: 'DM Sans', sans-serif; font-size: 0.66rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; transition: background 0.2s, border-color 0.2s; }
   .tend-directions-btn:hover { background: rgba(201,162,39,0.12); border-color: rgba(201,162,39,0.85); }
   .tend-directions-note { font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 300; line-height: 1.45; color: rgba(249,248,244,0.55); margin: 0; }
 
-  .tend-countdown { display: flex; align-items: flex-start; gap: 0.9rem; margin: 2.4rem 0 0; }
+  .tend-countdown { display: flex; align-items: flex-start; gap: 0.9rem; margin: 1.6rem 0 0; }
   .tend-countdown-item { display: flex; flex-direction: column; align-items: flex-start; }
   .tend-countdown-num { font-family: 'Playfair Display', serif; font-size: 1.9rem; font-weight: 400; color: #f9f8f4; line-height: 1; font-variant-numeric: tabular-nums; }
   .tend-countdown-label { font-family: 'DM Sans', sans-serif; font-size: 0.56rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(195,202,168,0.55); margin-top: 0.5rem; }
@@ -439,24 +438,26 @@ const CSS = `
   @media (max-width: 768px) {
     .tend-overlay { padding: 0; align-items: flex-end; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
     .tend-modal { flex-direction: column; max-height: 100dvh; height: 100%; max-width: 100%; border-radius: 0; }
-    .tend-left { flex: none; padding: 1.6rem 1.5rem 1.5rem; }
-    .tend-right { padding: 1.6rem 1.5rem 2rem; flex: 1; }
+    .tend-left { flex: none; padding: 1.3rem 1.5rem 1.25rem; }
+    /* flex-start, not center: the form should sit right under the hero panel
+       instead of floating in the middle of the sheet */
+    .tend-right { padding: 1.5rem 1.5rem 2rem; flex: 1; justify-content: flex-start; }
     .tend-pill { bottom: 5.8rem; right: 1.25rem; }
     .tend-close { top: 0.7rem; right: 0.7rem; width: 34px; height: 34px; }
     .tend-hide-mobile { display: none; }
-    .tend-urgency { margin-bottom: 1.1rem; }
-    .tend-title { font-size: 1.9rem; }
-    .tend-countdown { margin-top: 1.6rem; gap: 0.7rem; }
-    .tend-countdown-num { font-size: 1.5rem; }
+    .tend-title { font-size: 2.05rem; margin-bottom: 0.55rem; }
+    .tend-directions { margin-top: 1rem; }
+    .tend-countdown { margin-top: 1.15rem; gap: 0.7rem; }
+    .tend-countdown-num { font-size: 1.4rem; }
     .tend-offer-title { font-size: 1.4rem; }
     .tend-offer-body { margin-bottom: 1.4rem; }
   }
   @media (max-width: 420px) {
-    .tend-left { padding: 1.4rem 1.2rem 1.3rem; }
-    .tend-right { padding: 1.4rem 1.2rem 1.75rem; }
-    .tend-title { font-size: 1.65rem; }
+    .tend-left { padding: 1.15rem 1.2rem 1.1rem; }
+    .tend-right { padding: 1.35rem 1.2rem 1.75rem; }
+    .tend-title { font-size: 1.8rem; }
     .tend-countdown { gap: 0.5rem; }
-    .tend-countdown-num { font-size: 1.3rem; }
+    .tend-countdown-num { font-size: 1.25rem; }
     .tend-countdown-label { font-size: 0.5rem; letter-spacing: 0.12em; }
   }
   @media (prefers-reduced-motion: reduce) {
@@ -1949,11 +1950,7 @@ export default function App() {
                 <circle cx="165" cy="165" r="88" stroke="rgba(195,202,168,0.09)" strokeWidth="1" />
               </svg>
 
-              <p className="tend-urgency">Últimos espacios disponibles</p>
-
-              <p className="tend-kicker">Showroom · Edición 2027</p>
-
-              <h2 className="tend-title">Tendencias<br />en Bodas</h2>
+              <h2 className="tend-title">Tendencias en Bodas</h2>
 
               <p className="tend-meta">24 — 26 de julio · Rincón del Bosque</p>
 
